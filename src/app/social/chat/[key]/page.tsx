@@ -27,7 +27,7 @@ export default async function ChatPage({ params }: { params: Promise<{ key: stri
     where = { squadId };
   } else if (key.startsWith('dm-')) {
     const dmKey = key.slice(3);
-    const [aId, bId] = dmKey.split('<');
+    const [aId, bId] = dmKey.split('_');
     if (![aId, bId].includes(user.id)) notFound();
     toUserId = aId === user.id ? bId : aId;
     const other = await prisma.user.findUnique({

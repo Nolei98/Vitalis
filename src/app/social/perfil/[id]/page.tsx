@@ -70,7 +70,7 @@ export default async function PerfilPage({ params }: { params: Promise<{ id: str
         {!isMe && (
           <div className="flex flex-col gap-2 shrink-0">
             {friendship?.status === 'accepted' ? (
-              <Link href={`/social/chat/dm-${[me.id, id].sort().join('<')}`}
+              <Link href={`/social/chat/dm-${[me.id, id].sort().join('_')}`}
                 className="clay-btn px-4 py-2 text-sm font-bold text-white"
                 style={{ background: 'var(--mod-social)' }}>
                 💬 Mensagem
