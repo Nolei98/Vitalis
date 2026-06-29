@@ -2,6 +2,7 @@ import React from 'react';
 import fs from 'fs';
 import path from 'path';
 import { saveGoogleKeys } from '@/app/actions/settings';
+import ThemePicker from '@/components/ThemePicker';
 
 export const dynamic = 'force-dynamic';
 
@@ -28,6 +29,8 @@ export default async function SettingsPage() {
           <p className="text-sm font-bold" style={{ color: 'var(--mod-config-strong)' }}>Configurações do sistema</p>
         </div>
       </header>
+
+      <ThemePicker />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 flex-1">
         

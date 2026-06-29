@@ -33,7 +33,7 @@ const LINKS: NavLink[] = [
 const HIDE_ON = ['/login', '/register'];
 
 const SIDEBAR_STYLE = {
-  background: 'linear-gradient(160deg, #6D49E8 0%, #9871F5 60%, #B794FF 100%)',
+  background: 'linear-gradient(160deg, var(--sidebar-from, #6D49E8) 0%, var(--sidebar-mid, #9871F5) 60%, var(--sidebar-to, #B794FF) 100%)',
   boxShadow: '0 18px 40px -10px rgba(108,76,252,0.40), inset 2px 2px 6px rgba(255,255,255,0.25)',
 };
 

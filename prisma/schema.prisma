@@ -17,22 +17,26 @@ model User {
   timezone      String   @default("America/Sao_Paulo")
   createdAt     DateTime @default(now())
 
-  // Auth local (perfis estilo Vitalis): senha SHA-256, sessão por cookie
+  // Auth local
   passwordHash  String?
-  // Último backup bem-sucedido para a planilha (Apps Script)
   lastBackupAt  DateTime?
 
-  // Perfil físico para nutrição (TMB/GET)
-  sex           String?  // 'male' | 'female'
+  // Perfil físico para nutrição
+  sex           String?
   age           Int?
   heightCm      Int?
   weightKg      Float?
-  activityLevel String?  // sedentary | light | moderate | active | very_active
-  goal          String?  // hipertrofia | emagrecimento | manutencao
+  activityLevel String?
+  goal          String?
   targetKcal    Int?
   targetProtein Int?
   targetCarbs   Int?
   targetFat     Int?
+
+  // Social
+  handle        String?  @unique
+  bio           String?
+  avatarUrl     String?
 
   accounts      Account[]
   sessions      Session[]
@@ -49,6 +53,16 @@ model User {
   budgets       Budget[]
   alarms        Alarm[]
   notifRules    NotificationRule[]
+
+  // Social relations
+  friendsSent       Friendship[]      @relation("sent")
+  friendsReceived   Friendship[]      @relation("received")
+  squadMemberships  SquadMember[]
+  sentMessages      Message[]
+  reactions         Reaction[]
+  activitySessions  ActivitySession[]
+  scores            UserScore[]
+  badges            Badge[]
 }
 
 model Account { 
@@ -258,12 +272,172 @@ model Alarm {
   user User @relation(fields:[userId], references:[id], onDelete: Cascade)
 }
 
-model NotificationRule { 
-  id String @id @default(cuid()) 
-  userId String 
-  event String 
-  channel String 
-  window String? 
-  enabled Boolean @default(true) 
-  user User @relation(fields:[userId], references:[id], onDelete: Cascade) 
+model NotificationRule {
+  id String @id @default(cuid())
+  userId String
+  event String
+  channel String
+  window String?
+  enabled Boolean @default(true)
+  user User @relation(fields:[userId], references:[id], onDelete: Cascade)
+}
+
+// ===== Social =====
+
+model Friendship {
+  id          String   @id @default(cuid())
+  requesterId String
+  addresseeId String
+  status      String   @default("pending") // pending | accepted | blocked
+  createdAt   DateTime @default(now())
+  requester   User     @relation("sent",     fields: [requesterId], references: [id], onDelete: Cascade)
+  addressee   User     @relation("received", fields: [addresseeId], references: [id], onDelete: Cascade)
+  @@unique([requesterId, addresseeId])
+  @@index([addresseeId, status])
+}
+
+model Squad {
+  id          String   @id @default(cuid())
+  name        String
+  type        String   // estudos | academia | compras | metas
+  description String?
+  coverEmoji  String   @default("🏆")
+  inviteCode  String   @unique @default(cuid())
+  ownerId     String
+  createdAt   DateTime @default(now())
+  members     SquadMember[]
+  messages    Message[]
+  squadGoals  SquadGoal[]
+  sessions    ActivitySession[]
+  challenges  Challenge[]
+  shoppingItems ShoppingItem[]
+  scores      UserScore[]
+}
+
+model SquadMember {
+  id       String   @id @default(cuid())
+  squadId  String
+  userId   String
+  role     String   @default("member") // admin | member
+  joinedAt DateTime @default(now())
+  squad    Squad    @relation(fields: [squadId], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [userId],  references: [id], onDelete: Cascade)
+  @@unique([squadId, userId])
+  @@index([userId])
+}
+
+model Message {
+  id          String       @id @default(cuid())
+  squadId     String?
+  dmKey       String?      // "uid1<uid2" sorted lexicographically
+  senderId    String
+  text        String?
+  replyToId   String?
+  createdAt   DateTime     @default(now())
+  sender      User         @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  squad       Squad?       @relation(fields: [squadId],  references: [id], onDelete: Cascade)
+  replyTo     Message?     @relation("replies", fields: [replyToId], references: [id])
+  replies     Message[]    @relation("replies")
+  attachments Attachment[]
+  reactions   Reaction[]
+  @@index([squadId, createdAt])
+  @@index([dmKey,   createdAt])
+}
+
+model Attachment {
+  id        String  @id @default(cuid())
+  messageId String
+  url       String
+  mime      String
+  size      Int
+  width     Int?
+  height    Int?
+  message   Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+}
+
+model Reaction {
+  id        String  @id @default(cuid())
+  messageId String
+  userId    String
+  emoji     String
+  createdAt DateTime @default(now())
+  message   Message  @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId],    references: [id], onDelete: Cascade)
+  @@unique([messageId, userId, emoji])
+}
+
+model SquadGoal {
+  id        String    @id @default(cuid())
+  squadId   String
+  title     String
+  metric    String?
+  target    Float?
+  deadline  DateTime?
+  createdAt DateTime  @default(now())
+  squad     Squad     @relation(fields: [squadId], references: [id], onDelete: Cascade)
+}
+
+model ActivitySession {
+  id            String    @id @default(cuid())
+  userId        String
+  squadId       String?
+  type          String    // estudos | treino | compras | meta
+  startedAt     DateTime
+  endedAt       DateTime?
+  durationMin   Int?
+  tags          String?
+  proofImageUrl String?
+  notes         String?
+  xpEarned      Int       @default(0)
+  createdAt     DateTime  @default(now())
+  user          User      @relation(fields: [userId],  references: [id], onDelete: Cascade)
+  squad         Squad?    @relation(fields: [squadId], references: [id], onDelete: SetNull)
+  @@index([userId, createdAt])
+  @@index([squadId, createdAt])
+}
+
+model ShoppingItem {
+  id         String   @id @default(cuid())
+  squadId    String
+  name       String
+  valor      Float?
+  bought     Boolean  @default(false)
+  boughtById String?
+  createdAt  DateTime @default(now())
+  squad      Squad    @relation(fields: [squadId], references: [id], onDelete: Cascade)
+  @@index([squadId])
+}
+
+model Challenge {
+  id           String   @id @default(cuid())
+  squadId      String
+  title        String
+  metricTarget Float?
+  startAt      DateTime
+  endAt        DateTime
+  createdAt    DateTime @default(now())
+  squad        Squad    @relation(fields: [squadId], references: [id], onDelete: Cascade)
+}
+
+model UserScore {
+  id        String   @id @default(cuid())
+  userId    String
+  squadId   String
+  period    String   // "2025-W26" | "2025-06"
+  points    Int      @default(0)
+  streak    Int      @default(0)
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId],  references: [id], onDelete: Cascade)
+  squad     Squad    @relation(fields: [squadId], references: [id], onDelete: Cascade)
+  @@unique([userId, squadId, period])
+  @@index([squadId, period, points])
+}
+
+model Badge {
+  id       String   @id @default(cuid())
+  userId   String
+  type     String   // streak_7d | streak_30d | hours_10 | hours_100 | checkin_10
+  earnedAt DateTime @default(now())
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@unique([userId, type])
 }

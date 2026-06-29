@@ -147,7 +147,7 @@ export default async function Dashboard() {
             )}
           </div>
           <p className="text-[11px] font-bold mb-0.5" style={{ color: 'var(--text-soft)' }}>Saldo Atual</p>
-          <BalanceDisplay balance={totalBalance} size="small" />
+          <BalanceDisplay balance={totalBalance} size="small" variant="light" />
           <div className="mt-2 -mx-1">
             <SparkLine data={[totalBalance * 0.9, totalBalance * 0.95, totalBalance * 0.92, totalBalance * 0.98, totalBalance * 0.96, totalBalance * 0.99, totalBalance]} color="var(--mod-financas)" height={32} />
           </div>

@@ -110,6 +110,7 @@
   /* Usuários   */ --mod-usuarios:   #A78BFA; --mod-usuarios-bg:   #EDE8FF; --mod-usuarios-strong:#7C5CFC;
   /* Conexões   */ --mod-conexoes:   #64748B; --mod-conexoes-bg:   #F1F5F9; --mod-conexoes-strong:#475569;
   /* Config     */ --mod-config:     #94A3B8; --mod-config-bg:     #F8FAFC; --mod-config-strong: #64748B;
+  /* Social     */ --mod-social:     #D946EF; --mod-social-bg:     #FDE7FF; --mod-social-strong: #B020C8;
 }
 
 .dark {
