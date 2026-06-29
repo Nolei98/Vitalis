@@ -1,16 +1,23 @@
 import 'server-only';
 import { cache } from 'react';
 import { prisma } from '@/lib/prisma';
+import { getSessionUserId } from '@/lib/session';
 
 /**
- * Single-user local: o LifeOS roda para um único dono.
- * getCurrentUser() centraliza o padrão prisma.user.findFirst() que estava
- * espalhado pelas páginas/actions. Memoizado por render com React cache().
+ * Multi-user com sessão local (perfis estilo Vitalis).
  *
- * Se nenhum usuário existir ainda (antes do seed/login), cria um placeholder
- * para que o app não quebre na primeira execução.
+ * getCurrentUser() resolve o usuário pela sessão (cookie assinado). Sem sessão
+ * válida, faz fallback ao primeiro usuário do banco (transição do modo
+ * single-user; o middleware normalmente já redireciona p/ /login antes disso).
+ * Memoizado por render com React cache().
  */
 export const getCurrentUser = cache(async () => {
+  const sessionId = await getSessionUserId();
+  if (sessionId) {
+    const u = await prisma.user.findUnique({ where: { id: sessionId } });
+    if (u) return u;
+  }
+
   let user = await prisma.user.findFirst();
   if (!user) {
     user = await prisma.user.create({

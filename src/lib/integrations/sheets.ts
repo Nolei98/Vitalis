@@ -229,5 +229,37 @@ export async function syncToSheets(userId: string): Promise<{ ok: true; meals: n
   }
 
   if (!resp.ok) throw new Error(resp.error || 'Falha ao sincronizar com a planilha.');
+
+  await prisma.user.update({ where: { id: userId }, data: { lastBackupAt: new Date() } });
   return { ok: true, meals: snapshot.meals.length, foods: snapshot.foods.length };
+}
+
+export interface AllUsersResult {
+  users: number;
+  succeeded: number;
+  failed: number;
+  errors: { email: string; error: string }[];
+}
+
+/**
+ * Backup de TODOS os usuários (cada linha da planilha = um usuário). Usado pelo
+ * scheduler de domingo 23:00 e pelo botão "Backup de todos". Isola falhas: um
+ * usuário com erro não derruba os demais.
+ */
+export async function syncAllUsersToSheets(): Promise<AllUsersResult> {
+  if (!sheetsConfigured()) throw new Error('Backend da planilha não configurado (SHEETS_API_URL).');
+
+  const users = await prisma.user.findMany({ where: { email: { not: null } } });
+  const result: AllUsersResult = { users: users.length, succeeded: 0, failed: 0, errors: [] };
+
+  for (const u of users) {
+    try {
+      await syncToSheets(u.id);
+      result.succeeded++;
+    } catch (e) {
+      result.failed++;
+      result.errors.push({ email: u.email ?? u.id, error: e instanceof Error ? e.message : String(e) });
+    }
+  }
+  return result;
 }

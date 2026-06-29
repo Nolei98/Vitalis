@@ -6,6 +6,11 @@ const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY
 
 const ALGORITHM = 'aes-256-gcm';
 
+/** Hash SHA-256 (hex) — mesma convenção do backend Vitalis/Apps Script. */
+export function sha256(text: string): string {
+  return crypto.createHash('sha256').update(String(text), 'utf8').digest('hex');
+}
+
 export function encrypt(text: string): string {
   if (!text) return text;
   try {

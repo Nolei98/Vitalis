@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getCurrentUserId } from '@/lib/user';
-import { syncToSheets, sheetsConfigured } from '@/lib/integrations/sheets';
+import { syncAllUsersToSheets, sheetsConfigured } from '@/lib/integrations/sheets';
 
 export const dynamic = 'force-dynamic';
 
@@ -20,8 +19,7 @@ async function handle(req: Request) {
     return NextResponse.json({ error: 'SHEETS_API_URL não configurada' }, { status: 503 });
   }
   try {
-    const userId = await getCurrentUserId();
-    const res = await syncToSheets(userId);
+    const res = await syncAllUsersToSheets();
     return NextResponse.json({ ok: true, ranAt: new Date().toISOString(), ...res });
   } catch (e) {
     const error = e instanceof Error ? e.message : String(e);

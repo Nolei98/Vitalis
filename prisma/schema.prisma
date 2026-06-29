@@ -17,6 +17,11 @@ model User {
   timezone      String   @default("America/Sao_Paulo")
   createdAt     DateTime @default(now())
 
+  // Auth local (perfis estilo Vitalis): senha SHA-256, sessão por cookie
+  passwordHash  String?
+  // Último backup bem-sucedido para a planilha (Apps Script)
+  lastBackupAt  DateTime?
+
   // Perfil físico para nutrição (TMB/GET)
   sex           String?  // 'male' | 'female'
   age           Int?
