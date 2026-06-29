@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // App Vite/Vitalis arquivado — não faz parte do build do LifeOS.
+    "legacy/**",
   ]),
 ]);
 

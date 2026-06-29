@@ -2,6 +2,8 @@ import React from 'react';
 import { prisma } from '@/lib/prisma';
 import { getCurrentUser } from '@/lib/user';
 import DietaClient from '@/components/nutrition/DietaClient';
+import SaveToSheetsButton from '@/components/nutrition/SaveToSheetsButton';
+import { sheetsConfigured } from '@/lib/integrations/sheets';
 import type { FoodItem, Goal } from '@/lib/nutrition/types';
 
 export const dynamic = 'force-dynamic';
@@ -56,6 +58,12 @@ export default async function DietaPage() {
       : null;
 
   return (
+    <>
+    {sheetsConfigured() && (
+      <div className="flex justify-end mb-3 px-2">
+        <SaveToSheetsButton />
+      </div>
+    )}
     <DietaClient
       profile={{
         name: user.name,
@@ -75,5 +83,6 @@ export default async function DietaPage() {
       customFoods={customFoods}
       aiEnabled={!!process.env.GEMINI_API_KEY}
     />
+    </>
   );
 }
