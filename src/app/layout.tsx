@@ -21,9 +21,9 @@ export default async function RootLayout({
 
   return (
     <html lang="pt-BR">
-      <body className={`${font.className} antialiased h-screen flex items-center justify-center p-4 md:p-6 overflow-hidden`} style={{ background: 'var(--app-bg)', color: 'var(--text-strong)' }}>
+      <body className={`${font.className} antialiased flex flex-col h-screen p-4 md:p-6 overflow-hidden`} style={{ background: 'var(--app-bg)', color: 'var(--text-strong)' }}>
         {/* Centered container wrapper */}
-        <div className="flex gap-6 w-full max-w-[1400px] h-full max-h-[900px]">
+        <div className="flex gap-6 w-full max-w-[1400px] mx-auto flex-1 min-h-0 max-h-[900px]">
 
           <Sidebar userName={firstName} />
 
@@ -33,6 +33,22 @@ export default async function RootLayout({
           </main>
 
         </div>
+
+        {/* Footer */}
+        <footer className="w-full max-w-[1400px] mx-auto flex items-center justify-between px-4 pt-2 pb-0.5">
+          <p className="text-[11px] font-bold" style={{ color: 'var(--text-soft)' }}>
+            © {new Date().getFullYear()} Nolei Creative · Todos os direitos reservados
+          </p>
+          <div className="flex items-center gap-3">
+            <a href="/termos" className="text-[11px] font-bold hover:underline" style={{ color: 'var(--text-soft)' }}>
+              Termos de uso
+            </a>
+            <span style={{ color: 'var(--text-soft)', opacity: 0.4 }}>·</span>
+            <span className="text-[11px] font-bold" style={{ color: 'var(--text-soft)', opacity: 0.7 }}>
+              Desenvolvido por <span style={{ color: 'var(--brand-500)' }}>Nolei Creative</span>
+            </span>
+          </div>
+        </footer>
       </body>
     </html>
   );

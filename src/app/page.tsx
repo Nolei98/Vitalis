@@ -85,6 +85,10 @@ export default async function Dashboard() {
           <p className="text-sm font-bold" style={{ color: 'var(--text-soft)' }}>Seu painel de vida</p>
         </div>
         <div className="flex gap-3">
+          <a href="/social" className="clay-card w-10 h-10 flex items-center justify-center relative group"
+            title="Mensagens e Social">
+            <span>💬</span>
+          </a>
           <a href="/notificacoes" className="clay-card w-10 h-10 flex items-center justify-center relative">
             <span>🔔</span>
             {alertCount > 0 && (
