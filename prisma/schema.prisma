@@ -20,6 +20,7 @@ model User {
   // Auth local
   passwordHash  String?
   lastBackupAt  DateTime?
+  role          String   @default("user") // user | admin
 
   // Perfil físico para nutrição
   sex           String?

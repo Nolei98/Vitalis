@@ -1,78 +1,81 @@
-﻿import { prisma } from '@/lib/prisma';
+import { prisma } from '@/lib/prisma';
 import { getCurrentUser } from '@/lib/user';
+import { redirect } from 'next/navigation';
+import AdminUserCard from '@/components/users/AdminUserCard';
 import { sheetsConfigured } from '@/lib/integrations/sheets';
-import UserBackupButton from '@/components/users/UserBackupButton';
 import BackupAllButton from '@/components/users/BackupAllButton';
 
 export const dynamic = 'force-dynamic';
 
-function fmt(d: Date | null): string {
-  if (!d) return 'nunca';
-  return new Intl.DateTimeFormat('pt-BR', {
-    day: '2-digit',
-    month: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-  }).format(d);
-}
-
 export default async function UsuariosPage() {
   const current = await getCurrentUser();
+
+  const isAdmin =
+    current.role === 'admin' ||
+    (process.env.ADMIN_EMAIL && current.email === process.env.ADMIN_EMAIL);
+
+  if (!isAdmin) redirect('/');
+
   const users = await prisma.user.findMany({
-    orderBy: { createdAt: 'asc' },
+    orderBy: [{ role: 'asc' }, { createdAt: 'asc' }],
     include: { _count: { select: { meals: true, foods: true, waterLogs: true } } },
   });
 
   const configured = sheetsConfigured();
+  const adminCount = users.filter((u) => u.role === 'admin').length;
 
   return (
-    <div className="p-4 md:p-6 max-w-3xl">
-      <div className="flex items-center justify-between mb-5">
-        <div>
-          <h1 className="text-2xl font-extrabold text-gray-800">Vitalis Usuários</h1>
-          <p className="text-sm text-gray-500 font-semibold">
-            Cada usuário é uma linha na planilha do Drive. Backup automático todo domingo 23:00.
-          </p>
+    <div className="h-full flex flex-col gap-3 page-enter">
+
+      {/* Header */}
+      <header className="flex-shrink-0 flex items-center justify-between pt-1 px-1">
+        <div className="flex items-center gap-3">
+          <span className="w-10 h-10 rounded-2xl flex items-center justify-center text-xl"
+            style={{ background: 'var(--brand-100)' }}>👥</span>
+          <div>
+            <h1 className="text-xl font-black" style={{ color: 'var(--text-strong)' }}>Vitalis Usuários</h1>
+            <p className="text-[11px] font-bold" style={{ color: 'var(--text-soft)' }}>
+              {users.length} cadastrados · {adminCount} admin · apenas admins veem esta página
+            </p>
+          </div>
         </div>
-        {configured && <BackupAllButton />}
-      </div>
+        <div className="flex gap-2 items-center">
+          {!configured && (
+            <span className="text-[10px] font-bold text-amber-600 bg-amber-50 px-2 py-1 rounded-xl">
+              ⚠️ Backup off
+            </span>
+          )}
+          {configured && <BackupAllButton />}
+        </div>
+      </header>
 
-      {!configured && (
-        <p className="mb-4 text-sm font-bold text-amber-600">
-          ⚠️ SHEETS_API_URL não configurada — backup desabilitado.
-        </p>
-      )}
-
-      <div className="space-y-3">
-        {users.map((u) => (
-          <div
-            key={u.id}
-            className="bg-white rounded-3xl p-5 shadow-[0_4px_14px_rgba(0,0,0,0.06)] flex items-center justify-between gap-4"
-          >
-            <div className="min-w-0">
-              <div className="flex items-center gap-2">
-                <span className="font-extrabold text-gray-800 truncate">{u.name || '(sem nome)'}</span>
-                {u.id === current.id && (
-                  <span className="text-[10px] font-bold bg-[#9871F5] text-white rounded-full px-2 py-0.5">
-                    você
-                  </span>
-                )}
-                {!u.passwordHash && (
-                  <span className="text-[10px] font-bold bg-gray-200 text-gray-600 rounded-full px-2 py-0.5">
-                    sem senha
-                  </span>
-                )}
-              </div>
-              <div className="text-xs text-gray-500 font-semibold truncate">{u.email || '—'}</div>
-              <div className="text-xs text-gray-400 font-semibold mt-1">
-                🥗 {u._count.meals} refeições · 🍎 {u._count.foods} alimentos · 💧 {u._count.waterLogs} regs ·
-                ☁️ último backup: {fmt(u.lastBackupAt)}
-              </div>
-            </div>
-            {configured && <UserBackupButton userId={u.id} />}
+      {/* Estatísticas rápidas */}
+      <div className="flex-shrink-0 grid grid-cols-4 gap-2 px-1">
+        {[
+          { label: 'Total', value: users.length, icon: '👥' },
+          { label: 'Admins', value: adminCount, icon: '👑' },
+          { label: 'Com senha', value: users.filter((u) => u.passwordHash).length, icon: '🔒' },
+          { label: 'Com backup', value: users.filter((u) => u.lastBackupAt).length, icon: '☁️' },
+        ].map((s) => (
+          <div key={s.label} className="clay-card p-3 text-center">
+            <p className="text-lg">{s.icon}</p>
+            <p className="text-xl font-black" style={{ color: 'var(--text-strong)' }}>{s.value}</p>
+            <p className="text-[10px] font-bold" style={{ color: 'var(--text-soft)' }}>{s.label}</p>
           </div>
         ))}
       </div>
+
+      {/* Lista de usuários — scroll interno */}
+      <div className="flex-1 min-h-0 overflow-y-auto no-scrollbar space-y-2 px-1 pb-2">
+        {users.map((u) => (
+          <AdminUserCard
+            key={u.id}
+            user={{ ...u, role: u.role ?? 'user' }}
+            isSelf={u.id === current.id}
+          />
+        ))}
+      </div>
+
     </div>
   );
 }
