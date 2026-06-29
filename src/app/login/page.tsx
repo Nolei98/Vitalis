@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useActionState } from 'react';
 import Link from 'next/link';
@@ -12,7 +12,7 @@ export default function LoginPage() {
       <div className="clay-panel p-8 text-white">
         <div className="text-center mb-6">
           <div className="text-4xl mb-2">🧬</div>
-          <h1 className="text-2xl font-extrabold">LifeOS</h1>
+          <h1 className="text-2xl font-extrabold">Vitalis</h1>
           <p className="text-purple-100 text-sm font-semibold">Entre na sua conta</p>
         </div>
         <form action={action} className="space-y-4">

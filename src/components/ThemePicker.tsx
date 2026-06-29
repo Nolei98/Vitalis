@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect } from 'react';
 import { THEMES } from '@/lib/themes';
@@ -28,7 +28,7 @@ export default function ThemePicker() {
         <div>
           <h2 className="text-base font-extrabold" style={{ color: 'var(--text-strong)' }}>Cor do App</h2>
           <p className="text-xs font-bold" style={{ color: 'var(--text-soft)' }}>
-            Escolha o tema visual do LifeOS
+            Escolha o tema visual do Vitalis
           </p>
         </div>
       </div>

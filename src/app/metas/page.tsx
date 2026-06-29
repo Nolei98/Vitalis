@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { prisma } from '@/lib/prisma';
 import { getCurrentUser } from '@/lib/user';
 import { createGoal, updateGoalProgress, deleteGoal } from '@/app/actions/goals';
@@ -25,7 +25,7 @@ export default async function MetasPage() {
         <span className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl"
           style={{ background: 'var(--mod-metas-bg)' }}>🎯</span>
         <div>
-          <h1 className="text-2xl font-black" style={{ color: 'var(--text-strong)' }}>Metas</h1>
+          <h1 className="text-2xl font-black" style={{ color: 'var(--text-strong)' }}>Vitalis Metas</h1>
           <p className="text-sm font-bold" style={{ color: 'var(--mod-metas)' }}>Acompanhe seu progresso</p>
         </div>
       </header>

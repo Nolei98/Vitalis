@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { prisma } from '@/lib/prisma';
 import WaterButtons from '@/components/WaterButtons';
 import DonutRing from '@/components/charts/DonutRing';
@@ -31,7 +31,7 @@ export default async function AguaPage() {
         <span className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl"
           style={{ background: 'var(--mod-agua-bg)' }}>💧</span>
         <div>
-          <h1 className="text-2xl font-black" style={{ color: 'var(--text-strong)' }}>Hidratação</h1>
+          <h1 className="text-2xl font-black" style={{ color: 'var(--text-strong)' }}>Vitalis Hidro</h1>
           <p className="text-sm font-bold" style={{ color: 'var(--mod-agua)' }}>Acompanhe sua ingestão de água</p>
         </div>
       </header>

@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/prisma';
+﻿import { prisma } from '@/lib/prisma';
 import { getCurrentUser } from '@/lib/user';
 import { sheetsConfigured } from '@/lib/integrations/sheets';
 import UserBackupButton from '@/components/users/UserBackupButton';
@@ -29,7 +29,7 @@ export default async function UsuariosPage() {
     <div className="p-4 md:p-6 max-w-3xl">
       <div className="flex items-center justify-between mb-5">
         <div>
-          <h1 className="text-2xl font-extrabold text-gray-800">👥 Usuários</h1>
+          <h1 className="text-2xl font-extrabold text-gray-800">Vitalis Usuários</h1>
           <p className="text-sm text-gray-500 font-semibold">
             Cada usuário é uma linha na planilha do Drive. Backup automático todo domingo 23:00.
           </p>

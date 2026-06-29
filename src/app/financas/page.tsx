@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { prisma } from '@/lib/prisma';
 import { addTransaction, addVault, depositToVault, addBudget, deleteBudget } from '@/app/actions/finance';
 import BalanceDisplay from '@/components/BalanceDisplay';
@@ -43,7 +43,7 @@ export default async function FinancasPage() {
   if (accounts.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center h-full text-[#4a3f72]">
-        <h1 className="text-2xl font-bold mb-4">Módulo Financeiro</h1>
+        <h1 className="text-2xl font-bold mb-4">Vitalis Finanças</h1>
         <p>Por favor, recarregue a página ou aguarde o seed ser finalizado.</p>
       </div>
     )
@@ -63,7 +63,7 @@ export default async function FinancasPage() {
         <span className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl"
           style={{ background: 'var(--mod-financas-bg)' }}>💰</span>
         <div>
-          <h1 className="text-2xl font-black" style={{ color: 'var(--text-strong)' }}>Finanças</h1>
+          <h1 className="text-2xl font-black" style={{ color: 'var(--text-strong)' }}>Vitalis Finanças</h1>
           <p className="text-sm font-bold" style={{ color: 'var(--mod-financas)' }}>Controle suas receitas e despesas</p>
         </div>
       </header>

@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { signIn } from '@/auth';
 import { listIntegrations, type Provider } from '@/lib/integrations/vault';
 import {
@@ -50,7 +50,7 @@ export default async function ConexoesPage() {
         <span className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl"
           style={{ background: 'var(--mod-conexoes-bg)' }}>🔌</span>
         <div>
-          <h1 className="text-2xl font-black" style={{ color: 'var(--text-strong)' }}>Conexões</h1>
+          <h1 className="text-2xl font-black" style={{ color: 'var(--text-strong)' }}>Vitalis Connect</h1>
           <p className="text-sm font-bold" style={{ color: 'var(--mod-conexoes)' }}>Integrações com serviços externos</p>
         </div>
       </header>
@@ -68,7 +68,7 @@ export default async function ConexoesPage() {
             <StatusBadge status={google?.status} />
           </div>
           <p className="text-gray-600 text-sm mb-6 font-medium">
-            Conta principal do LifeOS. O login libera Calendar e Drive (conforme permissões).
+            Conta principal do Vitalis. O login libera Calendar e Drive (conforme permissões).
           </p>
           {google?.connected ? (
             <div className="flex items-center justify-between">

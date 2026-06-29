@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { prisma } from '@/lib/prisma';
 import TaskCheckbox from '@/components/TaskCheckbox';
 import { createTaskForm, deleteTask } from '@/app/actions/tasks';
@@ -28,7 +28,7 @@ export default async function TarefasPage() {
           <span className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl"
             style={{ background: 'var(--mod-tarefas-bg)' }}>✅</span>
           <div>
-            <h1 className="text-2xl font-black" style={{ color: 'var(--text-strong)' }}>Tarefas</h1>
+            <h1 className="text-2xl font-black" style={{ color: 'var(--text-strong)' }}>Vitalis Tarefas</h1>
             <p className="text-sm font-bold" style={{ color: 'var(--mod-tarefas)' }}>{doneCount}/{totalCount} concluídas · {donePct}%</p>
           </div>
         </div>

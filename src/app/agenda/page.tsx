@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { prisma } from '@/lib/prisma';
 import { getCurrentUser } from '@/lib/user';
 import AgendaView from '@/components/AgendaView';
@@ -36,7 +36,7 @@ export default async function AgendaPage() {
             style={{ background: 'var(--mod-agenda-bg)' }}>📅</span>
           <div>
             <h1 className="text-2xl font-black" style={{ color: 'var(--text-strong)' }}>
-              Agenda
+              Vitalis Agenda
             </h1>
             <p className="text-sm font-bold" style={{ color: 'var(--mod-agenda)' }}>Google · Canvas · ClickUp — próximos 7 dias</p>
           </div>

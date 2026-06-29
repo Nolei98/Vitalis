@@ -1,4 +1,4 @@
-import { getCurrentUser } from '@/lib/user';
+﻿import { getCurrentUser } from '@/lib/user';
 import { getUserSquads, getFriends, getPendingRequests, currentWeekKey } from '@/lib/social';
 import { prisma } from '@/lib/prisma';
 import Link from 'next/link';
@@ -35,7 +35,7 @@ export default async function SocialHub() {
           <span className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl"
             style={{ background: 'var(--mod-social-bg)' }}>🤝</span>
           <div>
-            <h1 className="text-2xl font-black" style={{ color: 'var(--text-strong)' }}>Social</h1>
+            <h1 className="text-2xl font-black" style={{ color: 'var(--text-strong)' }}>Vitalis Social</h1>
             <p className="text-sm font-bold" style={{ color: 'var(--mod-social)' }}>Squads, chat e competição</p>
           </div>
         </div>

@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { prisma } from '@/lib/prisma';
 import { getCurrentUser } from '@/lib/user';
 import { subDays, startOfDay, format } from 'date-fns';
@@ -46,7 +46,7 @@ export default async function RelatoriosPage() {
         <span className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl"
           style={{ background: 'var(--mod-relatorios-bg)' }}>📊</span>
         <div>
-          <h1 className="text-2xl font-black" style={{ color: 'var(--text-strong)' }}>Relatórios</h1>
+          <h1 className="text-2xl font-black" style={{ color: 'var(--text-strong)' }}>Vitalis Insights</h1>
           <p className="text-sm font-bold" style={{ color: 'var(--mod-relatorios)' }}>
             {format(since, "dd 'de' MMM", { locale: ptBR })} → hoje
           </p>

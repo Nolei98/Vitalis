@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { prisma } from '@/lib/prisma';
 import { getCurrentUser } from '@/lib/user';
 import { createRule, toggleRule, deleteRule } from '@/app/actions/notifications';
@@ -23,7 +23,7 @@ export default async function NotificacoesPage() {
         <span className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl"
           style={{ background: 'var(--mod-notif-bg)' }}>🔔</span>
         <div>
-          <h1 className="text-2xl font-black" style={{ color: 'var(--text-strong)' }}>Notificações</h1>
+          <h1 className="text-2xl font-black" style={{ color: 'var(--text-strong)' }}>Vitalis Notificações</h1>
           <p className="text-sm font-bold" style={{ color: 'var(--mod-notif)' }}>Regras de o quê, quando e por qual canal</p>
         </div>
       </header>

@@ -17,17 +17,17 @@ const LINKS: NavLink[] = [
   { href: '/',              label: 'Dashboard',    icon: '🏠', accent: '#7C5CFC', accentBg: '#EDE8FF' },
   { href: '/agenda',        label: 'Agenda',       icon: '📅', accent: '#5B8DEF', accentBg: '#E5EFFD' },
   { href: '/tarefas',       label: 'Tarefas',      icon: '✅', accent: '#2BC48A', accentBg: '#E0F7EE' },
-  { href: '/dieta',         label: 'Dieta',        icon: '🥗', accent: '#FF8A5B', accentBg: '#FFF0E9' },
-  { href: '/agua',          label: 'Hidratação',   icon: '💧', accent: '#36C5F0', accentBg: '#E2F7FC' },
+  { href: '/dieta',         label: 'Nutri',        icon: '🥗', accent: '#FF8A5B', accentBg: '#FFF0E9' },
+  { href: '/agua',          label: 'Hidro',        icon: '💧', accent: '#36C5F0', accentBg: '#E2F7FC' },
   { href: '/financas',      label: 'Finanças',     icon: '💰', accent: '#8B5CF6', accentBg: '#EDE9FE' },
   { href: '/metas',         label: 'Metas',        icon: '🎯', accent: '#FF6FB5', accentBg: '#FFE9F4' },
   { href: '/alarmes',       label: 'Alarmes',      icon: '⏰', accent: '#FFB020', accentBg: '#FFF6DC' },
-  { href: '/relatorios',    label: 'Relatórios',   icon: '📊', accent: '#14B8A6', accentBg: '#E0F7F5' },
+  { href: '/relatorios',    label: 'Insights',     icon: '📊', accent: '#14B8A6', accentBg: '#E0F7F5' },
   { href: '/social',        label: 'Social',       icon: '🤝', accent: '#D946EF', accentBg: '#FDE7FF' },
   { href: '/usuarios',      label: 'Usuários',     icon: '👥', accent: '#A78BFA', accentBg: '#EDE8FF' },
   { href: '/notificacoes',  label: 'Notificações', icon: '🔔', accent: '#FB7185', accentBg: '#FFE5E9' },
-  { href: '/configuracoes', label: 'Ajustes',      icon: '⚙️', accent: '#94A3B8', accentBg: '#F8FAFC' },
-  { href: '/conexoes',      label: 'Conexões',     icon: '🔌', accent: '#64748B', accentBg: '#F1F5F9' },
+  { href: '/configuracoes', label: 'Config',       icon: '⚙️', accent: '#94A3B8', accentBg: '#F8FAFC' },
+  { href: '/conexoes',      label: 'Connect',      icon: '🔌', accent: '#64748B', accentBg: '#F1F5F9' },
 ];
 
 const HIDE_ON = ['/login', '/register'];
@@ -121,7 +121,7 @@ export default function Sidebar({ userName }: { userName: string }) {
         </button>
 
         <div className="flex-1 flex items-center gap-2">
-          <span className="text-white font-black text-base">LifeOS</span>
+          <span className="text-white font-black text-base">Vitalis</span>
           {activeLink && (
             <span className="text-xs font-bold px-2 py-0.5 rounded-full"
               style={{ background: 'rgba(255,255,255,0.18)', color: 'rgba(255,255,255,0.9)' }}>
@@ -165,7 +165,7 @@ export default function Sidebar({ userName }: { userName: string }) {
                 </div>
                 <div>
                   <p className="text-white font-bold text-sm">Olá, {userName}! 👋</p>
-                  <p className="text-white/60 text-xs font-semibold">LifeOS</p>
+                  <p className="text-white/60 text-xs font-semibold">Vitalis</p>
                 </div>
               </div>
               <button
