@@ -1,0 +1,264 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ===== Auth.js =====
+model User {
+  id            String   @id @default(cuid())
+  name          String?
+  email         String?  @unique
+  emailVerified DateTime?
+  image         String?
+  timezone      String   @default("America/Sao_Paulo")
+  createdAt     DateTime @default(now())
+
+  // Perfil físico para nutrição (TMB/GET)
+  sex           String?  // 'male' | 'female'
+  age           Int?
+  heightCm      Int?
+  weightKg      Float?
+  activityLevel String?  // sedentary | light | moderate | active | very_active
+  goal          String?  // hipertrofia | emagrecimento | manutencao
+  targetKcal    Int?
+  targetProtein Int?
+  targetCarbs   Int?
+  targetFat     Int?
+
+  accounts      Account[]
+  sessions      Session[]
+  tasks         Task[]
+  waterLogs     WaterLog[]
+  meals         Meal[]
+  foods         Food[]
+  events        CalendarEvent[]
+  integrations  Integration[]
+  goals         Goal[]
+  habits        Habit[]
+  finAccounts   FinAccount[]
+  transactions  Transaction[]
+  budgets       Budget[]
+  alarms        Alarm[]
+  notifRules    NotificationRule[]
+}
+
+model Account { 
+  id String @id @default(cuid()) 
+  userId String 
+  provider String 
+  providerAccountId String 
+  type String 
+  refresh_token String? 
+  access_token String? 
+  expires_at Int? 
+  token_type String? 
+  scope String?
+  id_token String?
+  session_state String?
+  user User @relation(fields:[userId], references:[id], onDelete: Cascade)
+  @@unique([provider, providerAccountId])
+}
+
+model Session { 
+  id String @id @default(cuid()) 
+  sessionToken String @unique 
+  userId String 
+  expires DateTime 
+  user User @relation(fields:[userId], references:[id], onDelete: Cascade) 
+}
+
+model VerificationToken { 
+  identifier String 
+  token String @unique 
+  expires DateTime 
+  @@unique([identifier, token]) 
+}
+
+// ===== Integrações =====
+model Integration {
+  id            String   @id @default(cuid())
+  userId        String
+  provider      String   // google | outlook | canvas | discord
+  label         String?  // ex.: "Google Pessoal", "Outlook Trabalho"
+  accessToken   String?  // CRIPTOGRAFADO
+  refreshToken  String?  // CRIPTOGRAFADO
+  expiresAt     DateTime?
+  scopes        String?
+  icalUrl       String?  // Canvas (feed .ics)
+  webhookUrl    String?  // Discord webhook (CRIPTOGRAFADO)
+  status        String   @default("connected") // connected | error | revoked
+  lastSyncAt    DateTime?
+  syncCursor    String?  // syncToken/deltaLink p/ sync incremental
+  user          User     @relation(fields:[userId], references:[id], onDelete: Cascade)
+  events        CalendarEvent[]
+  @@index([userId, provider])
+}
+
+// ===== Módulos =====
+model Task { 
+  id String @id @default(cuid()) 
+  userId String 
+  title String 
+  project String? 
+  status String @default("pending") 
+  priority Int @default(0) 
+  due DateTime? 
+  createdAt DateTime @default(now()) 
+  source String? @default("internal")
+  externalId String?
+  user User @relation(fields:[userId], references:[id], onDelete: Cascade) 
+}
+
+model WaterLog { 
+  id String @id @default(cuid()) 
+  userId String 
+  amount Int 
+  createdAt DateTime @default(now()) 
+  user User @relation(fields:[userId], references:[id], onDelete: Cascade) 
+  @@index([userId, createdAt]) 
+}
+
+model Meal {
+  id String @id @default(cuid())
+  userId String
+  type String
+  food String
+  grams Int?
+  foodId String?
+  calories Int?
+  protein Int?
+  carbs Int?
+  fat Int?
+  createdAt DateTime @default(now())
+  user User @relation(fields:[userId], references:[id], onDelete: Cascade)
+}
+
+model Food {
+  id         String   @id @default(cuid())
+  userId     String
+  name       String
+  brand      String?
+  category   String?
+  energyKcal Int
+  proteinG   Float
+  carbsG     Float
+  fatG       Float
+  goals      String?  // CSV: "hipertrofia,emagrecimento"
+  createdAt  DateTime @default(now())
+  user       User     @relation(fields:[userId], references:[id], onDelete: Cascade)
+  @@index([userId])
+}
+
+model CalendarEvent {
+  id String @id @default(cuid()) 
+  userId String 
+  integrationId String?
+  source String 
+  externalId String? 
+  title String
+  start DateTime 
+  end DateTime 
+  allDay Boolean @default(false)
+  timezone String?
+  location String? 
+  url String? 
+  category String?
+  user User @relation(fields:[userId], references:[id], onDelete: Cascade)
+  integration Integration? @relation(fields:[integrationId], references:[id], onDelete: SetNull)
+  @@unique([integrationId, externalId]) 
+  @@index([userId, start])
+}
+
+model Goal { 
+  id String @id @default(cuid()) 
+  userId String 
+  title String 
+  type String 
+  metric String? 
+  target Float? 
+  current Float @default(0) 
+  deadline DateTime? 
+  status String @default("active") 
+  user User @relation(fields:[userId], references:[id], onDelete: Cascade) 
+}
+
+model Habit {
+  id String @id @default(cuid())
+  userId String
+  title String
+  frequency String
+  streak Int @default(0)
+  createdAt DateTime @default(now())
+  user User @relation(fields:[userId], references:[id], onDelete: Cascade)
+  logs HabitLog[]
+}
+
+model HabitLog {
+  id String @id @default(cuid())
+  habitId String
+  userId String
+  date DateTime @default(now())
+  habit Habit @relation(fields:[habitId], references:[id], onDelete: Cascade)
+  @@index([habitId, date])
+  @@index([userId, date])
+}
+
+model FinAccount { 
+  id String @id @default(cuid()) 
+  userId String 
+  name String 
+  type String 
+  balance Float @default(0) 
+  user User @relation(fields:[userId], references:[id], onDelete: Cascade) 
+  transactions Transaction[] 
+}
+
+model Transaction { 
+  id String @id @default(cuid()) 
+  userId String 
+  accountId String 
+  amount Float 
+  kind String 
+  category String? 
+  note String? 
+  date DateTime @default(now()) 
+  recurring Boolean @default(false) 
+  user User @relation(fields:[userId], references:[id], onDelete: Cascade) 
+  account FinAccount @relation(fields:[accountId], references:[id], onDelete: Cascade) 
+  @@index([userId, date]) 
+}
+
+model Budget { 
+  id String @id @default(cuid()) 
+  userId String 
+  category String 
+  limit Float 
+  period String 
+  user User @relation(fields:[userId], references:[id], onDelete: Cascade) 
+}
+
+model Alarm {
+  id String @id @default(cuid())
+  userId String
+  label String
+  time String
+  recurrence String?
+  type String
+  channels String
+  lastFiredAt DateTime?
+  user User @relation(fields:[userId], references:[id], onDelete: Cascade)
+}
+
+model NotificationRule { 
+  id String @id @default(cuid()) 
+  userId String 
+  event String 
+  channel String 
+  window String? 
+  enabled Boolean @default(true) 
+  user User @relation(fields:[userId], references:[id], onDelete: Cascade) 
+}
