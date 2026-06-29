@@ -51,7 +51,9 @@ function getSheet_() {
 
 // Retorna o índice da linha (1-based) do usuário, ou -1.
 function findRow_(sheet, email) {
-  var col = sheet.getRange(2, 1, Math.max(0, sheet.getLastRow() - 1), 1).getValues();
+  var last = sheet.getLastRow();
+  if (last < 2) return -1; // só cabeçalho (ou vazia): nenhum usuário ainda
+  var col = sheet.getRange(2, 1, last - 1, 1).getValues();
   for (var i = 0; i < col.length; i++) {
     if (normEmail_(col[i][0]) === email) return i + 2;
   }
