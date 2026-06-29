@@ -17,8 +17,14 @@ const THEME_SCRIPT = `(function(){try{var t=localStorage.getItem('lifeos_theme')
 export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const user = await getCurrentUser();
-  const firstName = (user.name || "você").split(" ")[0];
+  // try/catch: durante o build do Vercel não há DB disponível
+  let firstName = 'você';
+  try {
+    const user = await getCurrentUser();
+    firstName = (user.name || 'você').split(' ')[0];
+  } catch {
+    // sem banco no build-time — usa fallback
+  }
 
   return (
     <html lang="pt-BR">
