@@ -6,6 +6,10 @@ import WaterButtons from '@/components/WaterButtons';
 import BalanceDisplay from '@/components/BalanceDisplay';
 import { fmtTime, sourceColor } from '@/lib/calendar';
 import { startOfDay, endOfDay, startOfMonth } from 'date-fns';
+import { kcalTrend, waterTrend, taskTrend, eventTrend } from '@/lib/weekTrend';
+import TrendArea from '@/components/charts/TrendArea';
+import SparkLine from '@/components/charts/SparkLine';
+import DonutRing from '@/components/charts/DonutRing';
 
 export const dynamic = 'force-dynamic';
 
@@ -34,15 +38,20 @@ export default async function Dashboard() {
     prisma.goal.findMany({ where: { userId: user.id, type: { not: 'vault' }, status: 'active' } }),
   ]);
 
+  const [kcalW, waterW, taskW, eventW] = await Promise.all([
+    kcalTrend(user.id),
+    waterTrend(user.id),
+    taskTrend(user.id),
+    eventTrend(user.id),
+  ]);
+
   const totalWater = waterLogs.reduce((a, l) => a + l.amount, 0);
   const waterPercent = Math.min(Math.round((totalWater / WATER_GOAL) * 100), 100);
-  const strokeDashoffset = 440 - (440 * waterPercent) / 100;
   const topTasks = pendingTasks.slice(0, 3);
   const totalBalance = finAccounts.reduce((a, acc) => a + acc.balance, 0);
   const calories = meals.reduce((a, m) => a + (m.calories ?? 0), 0);
   const protein = meals.reduce((a, m) => a + (m.protein ?? 0), 0);
 
-  // Alertas: orçamentos estourados + tarefas vencendo hoje
   const spentByCat = new Map<string, number>();
   for (const t of monthTx) {
     const k = (t.category || 'Outros').toLowerCase();
@@ -56,92 +65,165 @@ export default async function Dashboard() {
   const nextAction = nextEvent
     ? `${nextEvent.allDay ? 'Hoje' : fmtTime(nextEvent.start)} — ${nextEvent.title}`
     : topTasks[0]
-      ? `Tarefa: ${topTasks[0].title}`
-      : 'Aproveite o dia livre! 🎉';
+    ? `Tarefa: ${topTasks[0].title}`
+    : 'Aproveite o dia livre! 🎉';
+
+  const heroData = kcalW.map((p, i) => ({
+    label: p.label,
+    value: p.value,
+    target: user.targetKcal ?? undefined,
+  }));
 
   return (
-    <div className="space-y-8 pb-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+    <div className="space-y-6 pb-8 page-enter">
       {/* Header */}
-      <header className="flex justify-between items-center">
-        <h1 className="text-4xl font-extrabold text-[#4a3f72]">Vitalis <span className="text-[#9871F5]">Hub</span></h1>
-        <div className="flex gap-4">
-          <a href="/notificacoes" className="clay-card w-10 h-10 flex items-center justify-center text-[#9871F5] font-bold relative">
-            🔔
+      <header className="flex justify-between items-center pt-2">
+        <div>
+          <h1 className="text-3xl font-black" style={{ color: 'var(--text-strong)' }}>
+            Vitalis <span style={{ color: 'var(--brand-500)' }}>Hub</span>
+          </h1>
+          <p className="text-sm font-bold" style={{ color: 'var(--text-soft)' }}>Seu painel de vida</p>
+        </div>
+        <div className="flex gap-3">
+          <a href="/notificacoes" className="clay-card w-10 h-10 flex items-center justify-center relative">
+            <span>🔔</span>
             {alertCount > 0 && (
-              <span className="absolute -top-1 -right-1 bg-[#ffb6b9] text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+              <span className="absolute -top-1 -right-1 text-white text-[10px] font-black w-4 h-4 rounded-full flex items-center justify-center"
+                style={{ background: 'var(--mod-notif)' }}>
                 {alertCount}
               </span>
             )}
           </a>
-          <a href="/conexoes" className="clay-card w-10 h-10 flex items-center justify-center text-[#9871F5] font-bold">🔌</a>
+          <a href="/conexoes" className="clay-card w-10 h-10 flex items-center justify-center">🔌</a>
         </div>
       </header>
 
-      {/* Welcome / próxima ação */}
-      <div className="clay-panel !bg-[#a78bfa] p-8 flex items-center justify-between text-white overflow-hidden relative">
-        <div className="z-10">
-          <h2 className="text-3xl font-bold mb-2 text-white drop-shadow-sm">Bom dia, {user.name}! ☀️</h2>
-          <p className="text-purple-100 mb-1 font-medium">Próxima ação:</p>
-          <p className="text-white font-bold mb-6">{nextAction}</p>
-          <a href="/agenda" className="clay-btn inline-block bg-[#9871F5] text-white border-2 border-white/20 font-bold px-6 py-2">▶ Ver Agenda</a>
-        </div>
-        <div className="absolute right-[-5%] top-[-50%] w-[300px] h-[300px] bg-white/20 rounded-full blur-2xl pointer-events-none"></div>
-      </div>
-
-      {/* Stat cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-5 gap-6">
-        <div className="clay-card p-6 !bg-[#9871F5] text-white">
-          <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center text-2xl mb-4 shadow-sm border border-white/20">💰</div>
-          <p className="text-purple-200 text-sm font-bold">Saldo Atual</p>
-          <BalanceDisplay balance={totalBalance} size="small" />
-          <p className={`text-xs mt-2 font-bold ${overBudget.length ? 'text-pink-200' : 'text-purple-300'}`}>
-            {overBudget.length ? `⚠️ ${overBudget.length} orçamento(s) estourado(s)` : `${finAccounts.length} contas`}
-          </p>
-        </div>
-
-        <div className="clay-card p-6 flex flex-col justify-center">
-          <div className="w-12 h-12 bg-[#e0d4fc] rounded-2xl flex items-center justify-center text-2xl mb-4 shadow-sm border border-white">📅</div>
-          <p className="text-gray-500 text-sm font-bold">Eventos Hoje</p>
-          <p className="text-3xl font-black text-[#4a3f72] mt-1">{events.length}</p>
-          <p className="text-emerald-500 text-xs mt-2 font-bold">{dueToday.length} tarefa(s) hoje</p>
-        </div>
-
-        <div className="clay-card p-6 !bg-[#ffb6b9]">
-          <div className="w-12 h-12 bg-white/40 rounded-2xl flex items-center justify-center text-2xl mb-4 shadow-sm border border-white/30">✅</div>
-          <p className="text-pink-900/70 text-sm font-bold">Pendentes</p>
-          <p className="text-3xl font-black text-pink-950 mt-1">{pendingTasks.length}</p>
-          <p className="text-pink-800 text-xs mt-2 font-bold">tarefas em aberto</p>
-        </div>
-
-        <div className="clay-card p-6 !bg-[#fce38a]">
-          <div className="w-12 h-12 bg-white/40 rounded-2xl flex items-center justify-center text-2xl mb-4 shadow-sm border border-white/30">💧</div>
-          <p className="text-amber-900/70 text-sm font-bold">Água Hoje</p>
-          <p className="text-3xl font-black text-amber-950 mt-1">{totalWater}ml</p>
-          <p className="text-emerald-700 text-xs mt-2 font-bold">{waterPercent}% da meta</p>
-        </div>
-
-        <div className="clay-card p-6 !bg-[#a8e6cf]">
-          <div className="w-12 h-12 bg-white/40 rounded-2xl flex items-center justify-center text-2xl mb-4 shadow-sm border border-white/30">🥗</div>
-          <p className="text-teal-900/70 text-sm font-bold">Refeições</p>
-          <p className="text-3xl font-black text-teal-950 mt-1">{meals.length}</p>
-          <p className="text-teal-800 text-xs mt-2 font-bold">
-            {user.targetKcal
-              ? `${calories}/${user.targetKcal} kcal · ${Math.min(100, Math.round((calories / user.targetKcal) * 100))}%`
-              : `${calories} kcal · ${protein}g prot`}
-          </p>
-        </div>
-      </div>
-
-      {/* Timeline + Water + Focus */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Timeline de hoje */}
-        <div className="clay-card p-6">
-          <div className="flex justify-between items-center mb-6">
-            <h3 className="font-extrabold text-lg text-[#4a3f72]">Agenda de Hoje</h3>
-            <a href="/agenda" className="clay-card px-4 py-1 text-xs font-bold text-gray-500 hover:text-[#9871F5] transition-colors">Ver Mais</a>
+      {/* Hero card — gradiente + AreaChart */}
+      <div className="hero-gradient p-6 text-white overflow-hidden relative">
+        <div className="flex justify-between items-start mb-4 z-10 relative">
+          <div>
+            <p className="text-white/70 text-sm font-bold mb-0.5">Bom dia</p>
+            <h2 className="text-2xl font-black">{user.name} ☀️</h2>
+            <p className="text-white/80 text-sm font-medium mt-1 max-w-[220px]">{nextAction}</p>
           </div>
-          <div className="space-y-2 max-h-72 overflow-y-auto no-scrollbar">
-            {events.length === 0 && <p className="text-center text-gray-400 py-8 font-bold text-sm">Nada agendado hoje. 🌤️</p>}
+          <div className="text-right">
+            <p className="text-white/60 text-[11px] font-bold uppercase tracking-wider">Kcal semana</p>
+            <p className="text-3xl font-black">{kcalW.reduce((a, p) => a + p.value, 0)}</p>
+            {user.targetKcal && (
+              <p className="text-white/70 text-xs font-bold">meta {user.targetKcal}/dia</p>
+            )}
+          </div>
+        </div>
+
+        <div className="-mx-1">
+          <TrendArea
+            data={heroData}
+            color="rgba(255,255,255,0.9)"
+            secondColor={user.targetKcal ? 'rgba(255,255,255,0.35)' : undefined}
+            height={110}
+          />
+        </div>
+
+        <div className="absolute right-[-10%] top-[-40%] w-64 h-64 bg-white/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute left-[-5%] bottom-[-30%] w-48 h-48 bg-white/10 rounded-full blur-3xl pointer-events-none" />
+      </div>
+
+      {/* Stat cards com sparklines */}
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
+        {/* Saldo */}
+        <div className="clay-card p-4 flex flex-col" style={{ borderTop: '3px solid var(--mod-financas)' }}>
+          <div className="flex items-center justify-between mb-2">
+            <span className="w-9 h-9 rounded-2xl flex items-center justify-center text-lg"
+              style={{ background: 'var(--mod-financas-bg)' }}>💰</span>
+            {overBudget.length > 0 && (
+              <span className="text-[10px] font-black px-2 py-0.5 rounded-full"
+                style={{ background: '#FFE5E9', color: 'var(--mod-notif-strong)' }}>
+                ⚠️ {overBudget.length}
+              </span>
+            )}
+          </div>
+          <p className="text-[11px] font-bold mb-0.5" style={{ color: 'var(--text-soft)' }}>Saldo Atual</p>
+          <BalanceDisplay balance={totalBalance} size="small" />
+          <div className="mt-2 -mx-1">
+            <SparkLine data={[totalBalance * 0.9, totalBalance * 0.95, totalBalance * 0.92, totalBalance * 0.98, totalBalance * 0.96, totalBalance * 0.99, totalBalance]} color="var(--mod-financas)" height={32} />
+          </div>
+        </div>
+
+        {/* Eventos */}
+        <div className="clay-card p-4 flex flex-col" style={{ borderTop: '3px solid var(--mod-agenda)' }}>
+          <div className="flex items-center justify-between mb-2">
+            <span className="w-9 h-9 rounded-2xl flex items-center justify-center text-lg"
+              style={{ background: 'var(--mod-agenda-bg)' }}>📅</span>
+          </div>
+          <p className="text-[11px] font-bold mb-0.5" style={{ color: 'var(--text-soft)' }}>Eventos Hoje</p>
+          <p className="text-3xl font-black" style={{ color: 'var(--text-strong)' }}>{events.length}</p>
+          <div className="mt-2 -mx-1">
+            <SparkLine data={eventW.map((p) => p.value)} color="var(--mod-agenda)" height={32} />
+          </div>
+        </div>
+
+        {/* Tarefas */}
+        <div className="clay-card p-4 flex flex-col" style={{ borderTop: '3px solid var(--mod-tarefas)' }}>
+          <div className="flex items-center justify-between mb-2">
+            <span className="w-9 h-9 rounded-2xl flex items-center justify-center text-lg"
+              style={{ background: 'var(--mod-tarefas-bg)' }}>✅</span>
+          </div>
+          <p className="text-[11px] font-bold mb-0.5" style={{ color: 'var(--text-soft)' }}>Pendentes</p>
+          <p className="text-3xl font-black" style={{ color: 'var(--text-strong)' }}>{pendingTasks.length}</p>
+          <div className="mt-2 -mx-1">
+            <SparkLine data={taskW.map((p) => p.value)} color="var(--mod-tarefas)" height={32} />
+          </div>
+        </div>
+
+        {/* Água */}
+        <div className="clay-card p-4 flex flex-col" style={{ borderTop: '3px solid var(--mod-agua)' }}>
+          <div className="flex items-center justify-between mb-2">
+            <span className="w-9 h-9 rounded-2xl flex items-center justify-center text-lg"
+              style={{ background: 'var(--mod-agua-bg)' }}>💧</span>
+          </div>
+          <p className="text-[11px] font-bold mb-0.5" style={{ color: 'var(--text-soft)' }}>Água Hoje</p>
+          <p className="text-3xl font-black" style={{ color: 'var(--text-strong)' }}>{totalWater}ml</p>
+          <div className="mt-2 -mx-1">
+            <SparkLine data={waterW.map((p) => p.value)} color="var(--mod-agua)" height={32} />
+          </div>
+        </div>
+
+        {/* Refeições */}
+        <div className="clay-card p-4 flex flex-col" style={{ borderTop: '3px solid var(--mod-dieta)' }}>
+          <div className="flex items-center justify-between mb-2">
+            <span className="w-9 h-9 rounded-2xl flex items-center justify-center text-lg"
+              style={{ background: 'var(--mod-dieta-bg)' }}>🥗</span>
+          </div>
+          <p className="text-[11px] font-bold mb-0.5" style={{ color: 'var(--text-soft)' }}>Refeições</p>
+          <p className="text-3xl font-black" style={{ color: 'var(--text-strong)' }}>{meals.length}</p>
+          <p className="text-[11px] font-bold mt-0.5" style={{ color: 'var(--mod-dieta)' }}>
+            {user.targetKcal ? `${calories}/${user.targetKcal} kcal` : `${calories} kcal · ${protein}g prot`}
+          </p>
+          <div className="mt-1 -mx-1">
+            <SparkLine data={kcalW.map((p) => p.value)} color="var(--mod-dieta)" height={32} />
+          </div>
+        </div>
+      </div>
+
+      {/* Painéis: Agenda / Hidratação / Foco */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Agenda de hoje */}
+        <div className="clay-card p-5">
+          <div className="flex justify-between items-center mb-4">
+            <div className="flex items-center gap-2">
+              <span className="w-8 h-8 rounded-xl flex items-center justify-center text-base"
+                style={{ background: 'var(--mod-agenda-bg)', color: 'var(--mod-agenda-strong)' }}>📅</span>
+              <h3 className="font-extrabold text-base" style={{ color: 'var(--text-strong)' }}>Agenda de Hoje</h3>
+            </div>
+            <a href="/agenda" className="text-xs font-bold px-3 py-1 rounded-full"
+              style={{ background: 'var(--mod-agenda-bg)', color: 'var(--mod-agenda-strong)' }}>Ver mais</a>
+          </div>
+          <div className="space-y-2 max-h-64 overflow-y-auto no-scrollbar">
+            {events.length === 0 && (
+              <p className="text-center py-8 font-bold text-sm" style={{ color: 'var(--text-soft)' }}>
+                Nada agendado hoje. 🌤️
+              </p>
+            )}
             {events.map((e) => {
               const c = sourceColor(e.source);
               return (
@@ -155,53 +237,75 @@ export default async function Dashboard() {
           </div>
         </div>
 
-        {/* Hidratação */}
-        <div className="clay-card p-6">
-          <h3 className="font-extrabold text-lg text-[#4a3f72] mb-6">Hidratação</h3>
-          <div className="flex flex-col items-center justify-center">
-            <div className="relative w-40 h-40 flex items-center justify-center">
-              <svg className="absolute inset-0 w-full h-full transform -rotate-90">
-                <circle cx="50%" cy="50%" r="70" fill="none" stroke="currentColor" strokeWidth="12" className="text-gray-100" />
-              </svg>
-              <svg className="absolute inset-0 w-full h-full transform -rotate-90 drop-shadow-[0_0_8px_rgba(56,189,248,0.5)]">
-                <circle cx="50%" cy="50%" r="70" fill="none" stroke="currentColor" strokeWidth="12" className="text-sky-400" strokeDasharray="440" strokeDashoffset={strokeDashoffset} strokeLinecap="round" style={{ transition: 'stroke-dashoffset 1s ease-in-out' }} />
-              </svg>
-              <div className="text-center">
-                <span className="text-3xl font-extrabold text-[#4a3f72]">{waterPercent}%</span>
-                <p className="text-xs text-gray-500 font-medium">{totalWater}/{WATER_GOAL}ml</p>
-              </div>
+        {/* Hidratação — DonutRing */}
+        <div className="clay-card p-5 flex flex-col items-center">
+          <div className="flex justify-between items-center w-full mb-4">
+            <div className="flex items-center gap-2">
+              <span className="w-8 h-8 rounded-xl flex items-center justify-center text-base"
+                style={{ background: 'var(--mod-agua-bg)' }}>💧</span>
+              <h3 className="font-extrabold text-base" style={{ color: 'var(--text-strong)' }}>Hidratação</h3>
             </div>
-            <div className="mt-6 w-full"><WaterButtons /></div>
+            <span className="text-xs font-bold px-3 py-1 rounded-full"
+              style={{ background: 'var(--mod-agua-bg)', color: 'var(--mod-agua-strong)' }}>
+              {waterPercent}%
+            </span>
           </div>
+          <DonutRing
+            percent={waterPercent}
+            color="var(--mod-agua)"
+            size={148}
+            strokeWidth={14}
+            label={`${totalWater}ml`}
+            sublabel={`meta ${WATER_GOAL}ml`}
+          />
+          <div className="mt-4 w-full"><WaterButtons /></div>
         </div>
 
         {/* Foco do dia */}
-        <div className="clay-card p-6">
-          <div className="flex justify-between items-center mb-6">
-            <h3 className="font-extrabold text-lg text-[#4a3f72]">Foco do Dia</h3>
-            <a href="/tarefas" className="text-[#9871F5] text-sm font-bold bg-[#e0d4fc]/50 px-3 py-1 rounded-full">Ver tudo</a>
+        <div className="clay-card p-5">
+          <div className="flex justify-between items-center mb-4">
+            <div className="flex items-center gap-2">
+              <span className="w-8 h-8 rounded-xl flex items-center justify-center text-base"
+                style={{ background: 'var(--mod-tarefas-bg)' }}>✅</span>
+              <h3 className="font-extrabold text-base" style={{ color: 'var(--text-strong)' }}>Foco do Dia</h3>
+            </div>
+            <a href="/tarefas" className="text-xs font-bold px-3 py-1 rounded-full"
+              style={{ background: 'var(--mod-tarefas-bg)', color: 'var(--mod-tarefas-strong)' }}>Ver tudo</a>
           </div>
           <div className="space-y-2">
             {topTasks.map((task) => <TaskCheckbox key={task.id} task={task} />)}
-            {topTasks.length === 0 && <p className="text-center text-gray-500 py-4 font-bold">Sem tarefas pendentes! 🎉</p>}
+            {topTasks.length === 0 && (
+              <p className="text-center py-4 font-bold text-sm" style={{ color: 'var(--text-soft)' }}>
+                Sem tarefas pendentes! 🎉
+              </p>
+            )}
           </div>
         </div>
       </div>
 
-      {/* Metas da semana */}
+      {/* Metas ativas */}
       {goals.length > 0 && (
-        <div className="clay-card p-6">
-          <h3 className="font-extrabold text-lg text-[#4a3f72] mb-4">Progresso das Metas</h3>
+        <div className="clay-card p-5">
+          <div className="flex items-center gap-2 mb-4">
+            <span className="w-8 h-8 rounded-xl flex items-center justify-center text-base"
+              style={{ background: 'var(--mod-metas-bg)' }}>🎯</span>
+            <h3 className="font-extrabold text-base" style={{ color: 'var(--text-strong)' }}>Progresso das Metas</h3>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {goals.slice(0, 4).map((g) => {
               const pct = g.target ? Math.min(Math.round((g.current / g.target) * 100), 100) : 0;
               return (
                 <div key={g.id}>
-                  <div className="flex justify-between text-sm font-bold text-gray-600 mb-1">
-                    <span>{g.title}</span><span>{pct}%</span>
+                  <div className="flex justify-between text-sm font-bold mb-1.5"
+                    style={{ color: 'var(--text-soft)' }}>
+                    <span>{g.title}</span>
+                    <span style={{ color: 'var(--mod-metas)' }}>{pct}%</span>
                   </div>
-                  <div className="w-full h-3 bg-gray-100 rounded-full overflow-hidden">
-                    <div className="h-full bg-[#9871F5] rounded-full transition-all" style={{ width: `${pct}%` }} />
+                  <div className="w-full h-2.5 rounded-full overflow-hidden" style={{ background: 'var(--mod-metas-bg)' }}>
+                    <div
+                      className="h-full rounded-full transition-all duration-700"
+                      style={{ width: `${pct}%`, background: 'var(--mod-metas)' }}
+                    />
                   </div>
                 </div>
               );

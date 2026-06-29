@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { addTransaction, addVault, depositToVault, addBudget, deleteBudget } from '@/app/actions/finance';
 import BalanceDisplay from '@/components/BalanceDisplay';
 import { startOfMonth } from 'date-fns';
+import BarChartSimple from '@/components/charts/BarChartSimple';
 
 export const dynamic = 'force-dynamic';
 
@@ -50,25 +51,49 @@ export default async function FinancasPage() {
 
   const mainAccount = accounts[0];
 
+  const barData = budgets.slice(0, 6).map((b) => ({
+    label: b.category.slice(0, 8),
+    value: Math.round(spentByCategory.get(b.category.toLowerCase()) ?? 0),
+    value2: Math.round(b.limit),
+  }));
+
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 h-full flex flex-col">
-      <header className="flex justify-between items-center">
-        <h1 className="text-4xl font-extrabold text-[#4a3f72]">Vitalis <span className="text-[#9871F5]">Fin</span></h1>
+    <div className="space-y-6 page-enter h-full flex flex-col">
+      <header className="flex items-center gap-3 pt-2">
+        <span className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl"
+          style={{ background: 'var(--mod-financas-bg)' }}>💰</span>
+        <div>
+          <h1 className="text-2xl font-black" style={{ color: 'var(--text-strong)' }}>Finanças</h1>
+          <p className="text-sm font-bold" style={{ color: 'var(--mod-financas)' }}>Controle suas receitas e despesas</p>
+        </div>
       </header>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 flex-1">
-        
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-1">
+
         {/* Left Column: Form and Summary */}
-        <div className="lg:col-span-1 space-y-6">
-          <div className="clay-card p-6 flex flex-col items-center !bg-[#9871F5] text-white">
-            <h3 className="font-bold text-white/70 text-sm mb-2">SALDO ATUAL</h3>
+        <div className="lg:col-span-1 space-y-5">
+          <div className="clay-card p-5 flex flex-col items-center" style={{ background: `linear-gradient(135deg, var(--mod-financas), var(--brand-500))` }}>
+            <p className="text-white/70 text-xs font-black uppercase tracking-wider mb-1">SALDO ATUAL</p>
             <BalanceDisplay balance={totalBalance} />
-            <div className="w-full text-center text-sm font-bold bg-white/20 py-2 rounded-xl">
-              Conta: {mainAccount.name}
+            <div className="w-full text-center text-xs font-bold rounded-xl mt-2 py-1.5"
+              style={{ background: 'rgba(255,255,255,0.18)', color: 'white' }}>
+              {mainAccount.name}
             </div>
+            {barData.length > 0 && (
+              <div className="w-full mt-4">
+                <p className="text-white/60 text-[10px] font-bold uppercase mb-1">Gasto vs Limite</p>
+                <BarChartSimple
+                  data={barData}
+                  color="rgba(255,255,255,0.85)"
+                  color2="rgba(255,255,255,0.30)"
+                  height={90}
+                  formatValue={(v) => `R$${v}`}
+                />
+              </div>
+            )}
           </div>
 
-          <div className="clay-panel !bg-white p-6 text-gray-800 border border-gray-100">
+          <div className="clay-card p-5 text-gray-800">
             <h2 className="text-xl font-bold mb-4 text-[#4a3f72]">Nova Transação</h2>
             <form action={addTransaction} className="space-y-4">
               <input type="hidden" name="accountId" value={mainAccount.id} />
@@ -100,7 +125,8 @@ export default async function FinancasPage() {
                 <input name="note" type="text" className="w-full clay-card px-4 py-3 text-gray-700 outline-none" placeholder="Descrição (opcional)" />
               </div>
               
-              <button type="submit" className="clay-btn bg-[#9871F5] text-white w-full py-3 rounded-xl font-extrabold mt-2 hover:scale-95 transition-transform">
+              <button type="submit" className="clay-btn w-full py-3 rounded-xl font-extrabold mt-2 text-white"
+                style={{ background: 'var(--mod-financas)' }}>
                 Registrar +
               </button>
             </form>
@@ -155,7 +181,7 @@ export default async function FinancasPage() {
 
         {/* Right Column: Timeline */}
         <div className="lg:col-span-2 clay-card p-6 h-[700px] flex flex-col">
-          <h2 className="text-xl font-bold text-[#4a3f72] mb-6">Últimas Movimentações</h2>
+          <h2 className="text-xl font-extrabold mb-5" style={{ color: 'var(--text-strong)' }}>Últimas Movimentações</h2>
           
           <div className="space-y-3 overflow-y-auto flex-1 pr-2 no-scrollbar">
             {mainAccount.transactions.map((t) => (

@@ -17,16 +17,37 @@ export default async function TarefasPage() {
   const pendingTasks = user.tasks.filter(t => t.status === 'pending');
   const completedTasks = user.tasks.filter(t => t.status === 'completed');
 
+  const doneCount = completedTasks.length;
+  const totalCount = user.tasks.length;
+  const donePct = totalCount ? Math.round((doneCount / totalCount) * 100) : 0;
+
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 h-full flex flex-col">
-      <header className="flex justify-between items-center">
-        <h1 className="text-4xl font-extrabold text-[#4a3f72]">Vitalis <span className="text-[#9871F5]">Tasks</span></h1>
+    <div className="space-y-6 page-enter h-full flex flex-col">
+      <header className="flex items-center justify-between pt-2">
+        <div className="flex items-center gap-3">
+          <span className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl"
+            style={{ background: 'var(--mod-tarefas-bg)' }}>✅</span>
+          <div>
+            <h1 className="text-2xl font-black" style={{ color: 'var(--text-strong)' }}>Tarefas</h1>
+            <p className="text-sm font-bold" style={{ color: 'var(--mod-tarefas)' }}>{doneCount}/{totalCount} concluídas · {donePct}%</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-3">
+          <div className="w-32 h-2.5 rounded-full overflow-hidden" style={{ background: 'var(--mod-tarefas-bg)' }}>
+            <div className="h-full rounded-full transition-all" style={{ width: `${donePct}%`, background: 'var(--mod-tarefas)' }} />
+          </div>
+        </div>
       </header>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 flex-1">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-1">
         {/* Left Column: Task List */}
-        <div className="lg:col-span-2 clay-card p-6 h-[700px] flex flex-col">
-          <h2 className="text-xl font-bold text-[#4a3f72] mb-6">Pendentes ({pendingTasks.length})</h2>
+        <div className="lg:col-span-2 clay-card p-5 h-[680px] flex flex-col">
+          <h2 className="text-base font-extrabold mb-4" style={{ color: 'var(--text-strong)' }}>
+            Pendentes <span className="ml-1 px-2 py-0.5 rounded-full text-xs"
+              style={{ background: 'var(--mod-tarefas-bg)', color: 'var(--mod-tarefas-strong)' }}>
+              {pendingTasks.length}
+            </span>
+          </h2>
           <div className="space-y-2 overflow-y-auto flex-1 pr-2 no-scrollbar">
             {pendingTasks.map(task => (
               <div key={task.id} className="flex items-center gap-2 group">
@@ -53,12 +74,19 @@ export default async function TarefasPage() {
               </div>
             ))}
             {pendingTasks.length === 0 && (
-              <p className="text-gray-400 font-bold text-center py-8">Tudo limpo por aqui! 🎉</p>
+              <p className="text-center py-8 font-bold text-sm" style={{ color: 'var(--text-soft)' }}>
+                Tudo limpo por aqui! 🎉
+              </p>
             )}
           </div>
 
-          <h2 className="text-xl font-bold text-[#4a3f72] mt-8 mb-4">Concluídas ({completedTasks.length})</h2>
-          <div className="space-y-2 overflow-y-auto max-h-48 pr-2 no-scrollbar opacity-70">
+          <h2 className="text-base font-extrabold mt-6 mb-3" style={{ color: 'var(--text-strong)' }}>
+            Concluídas <span className="ml-1 px-2 py-0.5 rounded-full text-xs"
+              style={{ background: 'var(--mod-tarefas-bg)', color: 'var(--mod-tarefas-strong)' }}>
+              {completedTasks.length}
+            </span>
+          </h2>
+          <div className="space-y-2 overflow-y-auto max-h-40 no-scrollbar opacity-60">
             {completedTasks.map(task => (
               <TaskCheckbox key={task.id} task={task} />
             ))}
@@ -66,34 +94,29 @@ export default async function TarefasPage() {
         </div>
 
         {/* Right Column: Add Task */}
-        <div className="clay-panel !bg-[#ffb6b9] p-8 h-fit text-pink-950">
-          <h2 className="text-2xl font-bold mb-6">Nova Tarefa</h2>
-          <form action={createTaskForm} className="space-y-6">
-            <div>
-              <label className="block text-sm font-bold mb-2">O que você precisa fazer?</label>
-              <input name="title" type="text" required className="w-full clay-card px-4 py-3 text-gray-700 outline-none focus:ring-2 focus:ring-pink-400" placeholder="Ex: Pagar a conta de luz" />
-            </div>
-            <div>
-              <label className="block text-sm font-bold mb-2">Projeto / Categoria</label>
-              <input name="project" type="text" className="w-full clay-card px-4 py-3 text-gray-700 outline-none focus:ring-2 focus:ring-pink-400" placeholder="Ex: Casa, Trabalho" />
-            </div>
+        <div className="clay-card p-5 h-fit" style={{ borderTop: '3px solid var(--mod-tarefas)' }}>
+          <div className="flex items-center gap-2 mb-5">
+            <span className="w-8 h-8 rounded-xl flex items-center justify-center text-base"
+              style={{ background: 'var(--mod-tarefas-bg)' }}>➕</span>
+            <h2 className="text-base font-extrabold" style={{ color: 'var(--text-strong)' }}>Nova Tarefa</h2>
+          </div>
+          <form action={createTaskForm} className="space-y-4">
+            <input name="title" type="text" required className="w-full clay-card px-4 py-3 text-sm outline-none"
+              placeholder="O que precisa fazer?" />
+            <input name="project" type="text" className="w-full clay-card px-4 py-3 text-sm outline-none"
+              placeholder="Projeto / Categoria" />
             <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className="block text-sm font-bold mb-2">Prioridade</label>
-                <select name="priority" className="w-full clay-card px-3 py-3 text-gray-700 text-sm outline-none">
-                  <option value="0">⚪ Normal</option>
-                  <option value="1">🟡 Média</option>
-                  <option value="2">🟠 Alta</option>
-                  <option value="3">🔴 Urgente</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-bold mb-2">Prazo</label>
-                <input name="due" type="date" className="w-full clay-card px-3 py-3 text-gray-700 text-sm outline-none" />
-              </div>
+              <select name="priority" className="clay-card px-3 py-2.5 text-sm outline-none">
+                <option value="0">⚪ Normal</option>
+                <option value="1">🟡 Média</option>
+                <option value="2">🟠 Alta</option>
+                <option value="3">🔴 Urgente</option>
+              </select>
+              <input name="due" type="date" className="clay-card px-3 py-2.5 text-sm outline-none" />
             </div>
-            <button type="submit" className="clay-btn bg-white w-full py-3 rounded-xl font-extrabold text-pink-600 mt-4 hover:scale-95 transition-transform">
-              Adicionar Tarefa +
+            <button type="submit" className="clay-btn w-full py-3 rounded-xl font-extrabold text-white"
+              style={{ background: 'var(--mod-tarefas)' }}>
+              Adicionar +
             </button>
           </form>
         </div>

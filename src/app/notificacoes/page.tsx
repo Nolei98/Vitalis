@@ -18,42 +18,51 @@ export default async function NotificacoesPage() {
   const rules = await prisma.notificationRule.findMany({ where: { userId: user.id } });
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 pb-8">
-      <header>
-        <h1 className="text-4xl font-extrabold text-[#4a3f72]">Central de Notificações</h1>
-        <p className="text-gray-500 font-bold">Regras de o quê, quando e por qual canal</p>
+    <div className="space-y-6 page-enter pb-8">
+      <header className="flex items-center gap-3 pt-2">
+        <span className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl"
+          style={{ background: 'var(--mod-notif-bg)' }}>🔔</span>
+        <div>
+          <h1 className="text-2xl font-black" style={{ color: 'var(--text-strong)' }}>Notificações</h1>
+          <p className="text-sm font-bold" style={{ color: 'var(--mod-notif)' }}>Regras de o quê, quando e por qual canal</p>
+        </div>
       </header>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 clay-card p-6 space-y-3">
-          <h2 className="text-xl font-bold text-[#4a3f72]">Regras ativas</h2>
-          {rules.length === 0 && <p className="text-gray-400 font-bold text-center py-6">Sem regras.</p>}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2 clay-card p-5 space-y-3">
+          <h2 className="text-base font-extrabold mb-2" style={{ color: 'var(--text-strong)' }}>Regras ativas</h2>
+          {rules.length === 0 && (
+            <p className="text-center py-6 font-bold text-sm" style={{ color: 'var(--text-soft)' }}>Sem regras.</p>
+          )}
           {rules.map((r) => (
-            <div key={r.id} className="flex items-center justify-between border border-gray-100 rounded-2xl p-4">
+            <div key={r.id} className="flex items-center justify-between p-4 rounded-2xl"
+              style={{ background: r.enabled ? 'var(--mod-notif-bg)' : '#F8FAFC' }}>
               <div>
-                <p className="font-bold text-gray-700">{EVENT_LABEL[r.event] ?? r.event}</p>
-                <p className="text-xs font-bold text-gray-400">
+                <p className="font-bold text-sm" style={{ color: 'var(--text-strong)' }}>{EVENT_LABEL[r.event] ?? r.event}</p>
+                <p className="text-xs font-bold" style={{ color: 'var(--text-soft)' }}>
                   canal: {r.channel}{r.window ? ` · janela: ${r.window}` : ''}
                 </p>
               </div>
               <div className="flex items-center gap-3">
                 <form action={toggleRule}>
                   <input type="hidden" name="id" value={r.id} />
-                  <button className={`clay-btn text-xs font-bold px-3 py-2 ${r.enabled ? 'bg-emerald-400 text-white' : 'bg-gray-200 text-gray-500'}`}>
+                  <button className="clay-btn text-xs font-bold px-3 py-2 text-white"
+                    style={{ background: r.enabled ? 'var(--mod-notif)' : 'rgba(0,0,0,0.10)', color: r.enabled ? 'white' : 'var(--text-soft)' }}>
                     {r.enabled ? 'ativa' : 'pausada'}
                   </button>
                 </form>
                 <form action={deleteRule}>
                   <input type="hidden" name="id" value={r.id} />
-                  <button className="text-xs text-red-400 font-bold">✕</button>
+                  <button className="text-xs font-bold" style={{ color: '#FB7185' }}>✕</button>
                 </form>
               </div>
             </div>
           ))}
         </div>
 
-        <form action={createRule} className="clay-card p-6 space-y-3 h-fit">
-          <h2 className="text-lg font-bold text-[#4a3f72]">Nova Regra</h2>
+        <form action={createRule} className="clay-card p-5 space-y-3 h-fit"
+          style={{ borderTop: '3px solid var(--mod-notif)' }}>
+          <h2 className="text-base font-extrabold" style={{ color: 'var(--text-strong)' }}>Nova Regra</h2>
           <select name="event" className="clay-card w-full px-4 py-2 text-sm outline-none">
             <option value="daily_digest">Resumo diário</option>
             <option value="task_due">Tarefa vencendo</option>
@@ -66,7 +75,8 @@ export default async function NotificacoesPage() {
             <option value="app">App</option>
           </select>
           <input name="window" placeholder="Janela (ex: 07:00-21:00)" className="clay-card w-full px-4 py-2 text-sm outline-none" />
-          <button className="clay-btn w-full bg-[#9871F5] text-white font-bold py-2">Criar Regra +</button>
+          <button className="clay-btn w-full text-white font-bold py-2.5"
+            style={{ background: 'var(--mod-notif)' }}>Criar Regra +</button>
         </form>
       </div>
     </div>

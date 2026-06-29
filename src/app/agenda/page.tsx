@@ -29,11 +29,17 @@ export default async function AgendaPage() {
   }));
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 pb-8">
-      <header className="flex justify-between items-center">
-        <div>
-          <h1 className="text-4xl font-extrabold text-[#4a3f72]">Vitalis <span className="text-[#9871F5]">Agenda</span></h1>
-          <p className="text-gray-500 font-bold">Google · Canvas · ClickUp — próximos 7 dias</p>
+    <div className="space-y-6 page-enter pb-8">
+      <header className="flex justify-between items-center pt-2">
+        <div className="flex items-center gap-3">
+          <span className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl"
+            style={{ background: 'var(--mod-agenda-bg)' }}>📅</span>
+          <div>
+            <h1 className="text-2xl font-black" style={{ color: 'var(--text-strong)' }}>
+              Agenda
+            </h1>
+            <p className="text-sm font-bold" style={{ color: 'var(--mod-agenda)' }}>Google · Canvas · ClickUp — próximos 7 dias</p>
+          </div>
         </div>
         <SyncButton />
       </header>

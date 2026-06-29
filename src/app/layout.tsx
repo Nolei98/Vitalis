@@ -21,7 +21,7 @@ export default async function RootLayout({
 
   return (
     <html lang="pt-BR">
-      <body className={`${font.className} bg-[#F9F6FA] text-gray-800 antialiased h-screen flex items-center justify-center p-4 md:p-6 overflow-hidden`}>
+      <body className={`${font.className} antialiased h-screen flex items-center justify-center p-4 md:p-6 overflow-hidden`} style={{ background: 'var(--app-bg)', color: 'var(--text-strong)' }}>
         {/* Centered container wrapper */}
         <div className="flex gap-6 w-full max-w-[1400px] h-full max-h-[900px]">
 

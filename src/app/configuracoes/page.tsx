@@ -19,9 +19,14 @@ export default async function SettingsPage() {
   }
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 h-full flex flex-col">
-      <header className="flex justify-between items-center">
-        <h1 className="text-4xl font-extrabold text-[#4a3f72]">Ajustes do Sistema</h1>
+    <div className="space-y-6 page-enter h-full flex flex-col">
+      <header className="flex items-center gap-3 pt-2">
+        <span className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl"
+          style={{ background: 'var(--mod-config-bg)' }}>⚙️</span>
+        <div>
+          <h1 className="text-2xl font-black" style={{ color: 'var(--text-strong)' }}>Ajustes</h1>
+          <p className="text-sm font-bold" style={{ color: 'var(--mod-config-strong)' }}>Configurações do sistema</p>
+        </div>
       </header>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 flex-1">
