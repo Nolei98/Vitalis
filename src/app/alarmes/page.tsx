@@ -2,6 +2,7 @@
 import { prisma } from '@/lib/prisma';
 import { getCurrentUser } from '@/lib/user';
 import { createAlarm, deleteAlarm } from '@/app/actions/alarms';
+import PageFrame from '@/components/PageFrame';
 
 export const dynamic = 'force-dynamic';
 
@@ -14,8 +15,8 @@ export default async function AlarmesPage() {
   const alarms = await prisma.alarm.findMany({ where: { userId: user.id }, orderBy: { time: 'asc' } });
 
   return (
-    <div className="space-y-6 page-enter pb-8">
-      <header className="flex items-center gap-3 pt-2">
+    <PageFrame>
+      <header className="flex-shrink-0 flex items-center gap-3 pt-2">
         <span className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl"
           style={{ background: 'var(--mod-alarmes-bg)' }}>⏰</span>
         <div>
@@ -24,6 +25,7 @@ export default async function AlarmesPage() {
         </div>
       </header>
 
+      <div className="flex-1 min-h-0 overflow-y-auto no-scrollbar">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 clay-card p-5 space-y-3">
           <h2 className="text-base font-extrabold mb-2" style={{ color: 'var(--text-strong)' }}>Seus alarmes</h2>
@@ -78,6 +80,7 @@ export default async function AlarmesPage() {
             style={{ background: 'var(--mod-alarmes)' }}>Criar Alarme +</button>
         </form>
       </div>
-    </div>
+      </div>
+    </PageFrame>
   );
 }

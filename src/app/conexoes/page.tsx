@@ -9,6 +9,7 @@ import {
   testDiscord,
 } from '@/app/actions/integrations';
 import SyncButton from '@/components/SyncButton';
+import PageFrame from '@/components/PageFrame';
 
 export const dynamic = 'force-dynamic';
 
@@ -45,8 +46,8 @@ export default async function ConexoesPage() {
   const clickup = by('clickup');
 
   return (
-    <div className="space-y-6 page-enter pb-8">
-      <header className="flex items-center gap-3 pt-2">
+    <PageFrame>
+      <header className="flex-shrink-0 flex items-center gap-3 pt-2">
         <span className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl"
           style={{ background: 'var(--mod-conexoes-bg)' }}>🔌</span>
         <div>
@@ -54,6 +55,7 @@ export default async function ConexoesPage() {
           <p className="text-sm font-bold" style={{ color: 'var(--mod-conexoes)' }}>Integrações com serviços externos</p>
         </div>
       </header>
+      <div className="flex-1 min-h-0 overflow-y-auto no-scrollbar">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Google */}
         <div className="clay-card p-6">
@@ -163,6 +165,7 @@ export default async function ConexoesPage() {
           {clickup && <div className="mt-3 text-right"><Disconnect provider="clickup" /></div>}
         </div>
       </div>
-    </div>
+      </div>
+    </PageFrame>
   );
 }

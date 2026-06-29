@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import PageFrame from '@/components/PageFrame';
 
 export const metadata = { title: 'Termos de Uso — LifeOS' };
 
@@ -6,8 +7,8 @@ export default function TermosPage() {
   const updated = '29 de junho de 2026';
 
   return (
-    <div className="space-y-6 page-enter pb-12 max-w-3xl mx-auto">
-      <header className="pt-4 flex items-center gap-3">
+    <PageFrame>
+      <header className="flex-shrink-0 pt-4 flex items-center gap-3">
         <Link href="/" className="clay-btn px-3 py-2 text-sm font-bold"
           style={{ background: 'var(--mod-dash-bg)', color: 'var(--mod-dash-strong)' }}>
           ← Início
@@ -18,6 +19,8 @@ export default function TermosPage() {
         </div>
       </header>
 
+      <div className="flex-1 min-h-0 overflow-y-auto no-scrollbar">
+      <div className="max-w-3xl mx-auto space-y-6 pb-12">
       {[
         {
           title: '1. Aceitação dos Termos',
@@ -78,6 +81,8 @@ export default function TermosPage() {
           © {new Date().getFullYear()} <span style={{ color: 'var(--brand-500)' }}>Nolei Creative</span> — LifeOS · Todos os direitos reservados
         </p>
       </div>
-    </div>
+      </div>
+      </div>
+    </PageFrame>
   );
 }

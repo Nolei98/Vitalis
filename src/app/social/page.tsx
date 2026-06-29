@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { SQUAD_TYPE_META } from '@/lib/social';
 import CreateSquadForm from '@/components/social/CreateSquadForm';
 import JoinSquadForm from '@/components/social/JoinSquadForm';
+import PageFrame from '@/components/PageFrame';
 
 export const dynamic = 'force-dynamic';
 
@@ -28,9 +29,9 @@ export default async function SocialHub() {
   const week = await currentWeekKey();
 
   return (
-    <div className="space-y-6 page-enter pb-8">
+    <PageFrame>
       {/* Header */}
-      <header className="flex items-center justify-between pt-2">
+      <header className="flex-shrink-0 flex items-center justify-between pt-2">
         <div className="flex items-center gap-3">
           <span className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl"
             style={{ background: 'var(--mod-social-bg)' }}>🤝</span>
@@ -51,6 +52,7 @@ export default async function SocialHub() {
         </div>
       </header>
 
+      <div className="flex-1 min-h-0 overflow-y-auto no-scrollbar">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Squads */}
         <div className="lg:col-span-2 space-y-4">
@@ -150,6 +152,7 @@ export default async function SocialHub() {
           )}
         </div>
       </div>
-    </div>
+      </div>
+    </PageFrame>
   );
 }

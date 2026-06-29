@@ -2,6 +2,7 @@
 import { prisma } from '@/lib/prisma';
 import TaskCheckbox from '@/components/TaskCheckbox';
 import { createTaskForm, deleteTask } from '@/app/actions/tasks';
+import PageFrame from '@/components/PageFrame';
 
 export const dynamic = 'force-dynamic';
 
@@ -22,8 +23,8 @@ export default async function TarefasPage() {
   const donePct = totalCount ? Math.round((doneCount / totalCount) * 100) : 0;
 
   return (
-    <div className="space-y-6 page-enter h-full flex flex-col">
-      <header className="flex items-center justify-between pt-2">
+    <PageFrame>
+      <header className="flex-shrink-0 flex items-center justify-between pt-2">
         <div className="flex items-center gap-3">
           <span className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl"
             style={{ background: 'var(--mod-tarefas-bg)' }}>✅</span>
@@ -39,7 +40,8 @@ export default async function TarefasPage() {
         </div>
       </header>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-1">
+      <div className="flex-1 min-h-0 overflow-y-auto no-scrollbar">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column: Task List */}
         <div className="lg:col-span-2 clay-card p-5 h-[680px] flex flex-col">
           <h2 className="text-base font-extrabold mb-4" style={{ color: 'var(--text-strong)' }}>
@@ -121,6 +123,7 @@ export default async function TarefasPage() {
           </form>
         </div>
       </div>
-    </div>
+      </div>
+    </PageFrame>
   );
 }

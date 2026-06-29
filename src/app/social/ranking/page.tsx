@@ -2,6 +2,7 @@ import { getCurrentUser } from '@/lib/user';
 import { prisma } from '@/lib/prisma';
 import { currentWeekKey } from '@/lib/social';
 import Link from 'next/link';
+import PageFrame from '@/components/PageFrame';
 
 export const dynamic = 'force-dynamic';
 
@@ -47,8 +48,8 @@ export default async function RankingPage() {
   const MEDAL = ['🥇', '🥈', '🥉'];
 
   return (
-    <div className="space-y-6 page-enter pb-8">
-      <header className="pt-2 flex items-center gap-3">
+    <PageFrame>
+      <header className="flex-shrink-0 pt-2 flex items-center gap-3">
         <Link href="/social" className="clay-btn px-3 py-2 text-sm font-bold"
           style={{ background: 'var(--mod-social-bg)', color: 'var(--mod-social-strong)' }}>← Social</Link>
         <div>
@@ -57,6 +58,7 @@ export default async function RankingPage() {
         </div>
       </header>
 
+      <div className="flex-1 min-h-0 overflow-y-auto no-scrollbar">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
         {/* Semana */}
         <div className="lg:col-span-2 clay-card p-5" style={{ borderTop: '3px solid var(--mod-social)' }}>
@@ -151,6 +153,7 @@ export default async function RankingPage() {
           </div>
         </div>
       </div>
-    </div>
+      </div>
+    </PageFrame>
   );
 }

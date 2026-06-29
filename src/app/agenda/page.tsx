@@ -4,6 +4,7 @@ import { getCurrentUser } from '@/lib/user';
 import AgendaView from '@/components/AgendaView';
 import SyncButton from '@/components/SyncButton';
 import { startOfDay, addDays } from 'date-fns';
+import PageFrame from '@/components/PageFrame';
 
 export const dynamic = 'force-dynamic';
 
@@ -29,8 +30,8 @@ export default async function AgendaPage() {
   }));
 
   return (
-    <div className="space-y-6 page-enter pb-8">
-      <header className="flex justify-between items-center pt-2">
+    <PageFrame>
+      <header className="flex-shrink-0 flex justify-between items-center pt-2">
         <div className="flex items-center gap-3">
           <span className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl"
             style={{ background: 'var(--mod-agenda-bg)' }}>📅</span>
@@ -43,7 +44,9 @@ export default async function AgendaPage() {
         </div>
         <SyncButton />
       </header>
-      <AgendaView events={serialized} />
-    </div>
+      <div className="flex-1 min-h-0 overflow-y-auto no-scrollbar">
+        <AgendaView events={serialized} />
+      </div>
+    </PageFrame>
   );
 }

@@ -4,6 +4,7 @@ import { addTransaction, addVault, depositToVault, addBudget, deleteBudget } fro
 import BalanceDisplay from '@/components/BalanceDisplay';
 import { startOfMonth } from 'date-fns';
 import BarChartSimple from '@/components/charts/BarChartSimple';
+import PageFrame from '@/components/PageFrame';
 
 export const dynamic = 'force-dynamic';
 
@@ -58,8 +59,8 @@ export default async function FinancasPage() {
   }));
 
   return (
-    <div className="space-y-6 page-enter h-full flex flex-col">
-      <header className="flex items-center gap-3 pt-2">
+    <PageFrame>
+      <header className="flex-shrink-0 flex items-center gap-3 pt-2">
         <span className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl"
           style={{ background: 'var(--mod-financas-bg)' }}>💰</span>
         <div>
@@ -68,7 +69,8 @@ export default async function FinancasPage() {
         </div>
       </header>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-1">
+      <div className="flex-1 min-h-0 overflow-y-auto no-scrollbar">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
         {/* Left Column: Form and Summary */}
         <div className="lg:col-span-1 space-y-5">
@@ -237,6 +239,7 @@ export default async function FinancasPage() {
         </div>
 
       </div>
-    </div>
+      </div>
+    </PageFrame>
   );
 }

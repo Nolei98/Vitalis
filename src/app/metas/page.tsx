@@ -5,6 +5,7 @@ import { createGoal, updateGoalProgress, deleteGoal } from '@/app/actions/goals'
 import { createHabit, deleteHabit, toggleHabitToday } from '@/app/actions/habits';
 import { startOfDay } from 'date-fns';
 import DonutRing from '@/components/charts/DonutRing';
+import PageFrame from '@/components/PageFrame';
 
 export const dynamic = 'force-dynamic';
 
@@ -20,8 +21,8 @@ export default async function MetasPage() {
   const doneToday = new Set(todayLogs.map((l) => l.habitId));
 
   return (
-    <div className="space-y-6 page-enter pb-8">
-      <header className="flex items-center gap-3 pt-2">
+    <PageFrame>
+      <header className="flex-shrink-0 flex items-center gap-3 pt-2">
         <span className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl"
           style={{ background: 'var(--mod-metas-bg)' }}>🎯</span>
         <div>
@@ -30,6 +31,7 @@ export default async function MetasPage() {
         </div>
       </header>
 
+      <div className="flex-1 min-h-0 overflow-y-auto no-scrollbar">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Metas */}
         <div className="lg:col-span-2 space-y-4">
@@ -150,6 +152,7 @@ export default async function MetasPage() {
           </form>
         </div>
       </div>
-    </div>
+      </div>
+    </PageFrame>
   );
 }
