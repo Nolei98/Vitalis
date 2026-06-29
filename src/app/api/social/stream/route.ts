@@ -5,36 +5,40 @@ import { getSessionUserId } from '@/lib/session';
 
 export const dynamic = 'force-dynamic';
 
-// SSE endpoint: GET /api/social/stream?key=squad-<id>|dm-<key>&since=<iso>
 export async function GET(req: NextRequest) {
   const uid = await getSessionUserId();
   if (!uid) return new Response('Unauthorized', { status: 401 });
 
   const { searchParams } = new URL(req.url);
   const key = searchParams.get('key') ?? '';
-  const since = searchParams.get('since') ? new Date(searchParams.get('since')!) : new Date(0);
+  let since = searchParams.get('since') ? new Date(searchParams.get('since')!) : new Date(Date.now() - 120_000);
 
   const encoder = new TextEncoder();
 
   const stream = new ReadableStream({
     async start(controller) {
+      let closed = false;
+
       const send = (data: unknown) => {
-        controller.enqueue(encoder.encode(`data: ${JSON.stringify(data)}\n\n`));
+        if (closed) return;
+        try {
+          controller.enqueue(encoder.encode(`data: ${JSON.stringify(data)}\n\n`));
+        } catch { closed = true; }
       };
 
-      // Send initial ping
       send({ type: 'ping' });
 
       const poll = async () => {
+        if (closed) return;
         try {
-          const where: Prisma.MessageWhereInput = {
-            createdAt: { gt: since },
-          };
+          const where: Prisma.MessageWhereInput = { createdAt: { gt: since } };
 
           if (key.startsWith('squad-')) {
             where.squadId = key.slice(6);
           } else if (key.startsWith('dm-')) {
             where.dmKey = key.slice(3);
+          } else {
+            return;
           }
 
           const msgs = await prisma.message.findMany({
@@ -50,18 +54,17 @@ export async function GET(req: NextRequest) {
           });
 
           if (msgs.length > 0) {
+            // Advance since so next poll only fetches newer messages
+            since = msgs.at(-1)!.createdAt;
             send({ type: 'messages', data: msgs });
           }
-        } catch {
-          // DB error during streaming — skip
-        }
+        } catch { /* DB error during streaming — skip tick */ }
       };
 
-      // Poll every 3 seconds
-      const interval = setInterval(poll, 3000);
+      const interval = setInterval(poll, 2000);
 
-      // Clean up when client disconnects
       req.signal.addEventListener('abort', () => {
+        closed = true;
         clearInterval(interval);
         try { controller.close(); } catch { /* already closed */ }
       });
@@ -71,8 +74,9 @@ export async function GET(req: NextRequest) {
   return new Response(stream, {
     headers: {
       'Content-Type': 'text/event-stream',
-      'Cache-Control': 'no-cache',
-      Connection: 'keep-alive',
+      'Cache-Control': 'no-cache, no-transform',
+      'Connection': 'keep-alive',
+      'X-Accel-Buffering': 'no',
     },
   });
 }

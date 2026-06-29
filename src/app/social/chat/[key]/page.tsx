@@ -79,6 +79,7 @@ export default async function ChatPage({ params }: { params: Promise<{ key: stri
           squadId={squadId}
           toUserId={toUserId}
           currentUserId={user.id}
+          currentUserName={user.name ?? user.email ?? 'Você'}
           initialMessages={serialized as Parameters<typeof ChatWindow>[0]['initialMessages']}
           title={title}
         />

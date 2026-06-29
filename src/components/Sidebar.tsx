@@ -2,6 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import { logoutUser } from '@/app/actions/auth';
+import UnreadBadge from '@/components/social/UnreadBadge';
 
 interface NavLink {
   href: string;
@@ -21,6 +22,7 @@ const LINKS: NavLink[] = [
   { href: '/metas',         label: 'Metas',       icon: '🎯', accent: '#FF6FB5', accentBg: '#FFE9F4' },
   { href: '/alarmes',       label: 'Alarmes',     icon: '⏰', accent: '#FFB020', accentBg: '#FFF6DC' },
   { href: '/relatorios',    label: 'Relatórios',  icon: '📊', accent: '#14B8A6', accentBg: '#E0F7F5' },
+  { href: '/social',        label: 'Social',      icon: '🤝', accent: '#D946EF', accentBg: '#FDE7FF' },
   { href: '/usuarios',      label: 'Usuários',    icon: '👥', accent: '#A78BFA', accentBg: '#EDE8FF' },
   { href: '/notificacoes',  label: 'Notificações',icon: '🔔', accent: '#FB7185', accentBg: '#FFE5E9' },
   { href: '/configuracoes', label: 'Ajustes',     icon: '⚙️', accent: '#94A3B8', accentBg: '#F8FAFC' },
@@ -78,10 +80,11 @@ export default function Sidebar({ userName }: { userName: string }) {
               }}
             >
               <span
-                className="w-7 h-7 rounded-xl flex items-center justify-center text-base flex-shrink-0 transition-all"
+                className="w-7 h-7 rounded-xl flex items-center justify-center text-base flex-shrink-0 transition-all relative"
                 style={active ? { background: l.accentBg } : {}}
               >
                 {l.icon}
+                {l.href === '/social' && <UnreadBadge />}
               </span>
               {l.label}
             </a>
