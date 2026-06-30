@@ -58,9 +58,9 @@ export default async function DietaPage() {
       : null;
 
   return (
-    <>
+    <div className="h-full flex flex-col gap-2 page-enter">
     {sheetsConfigured() && (
-      <div className="flex justify-end mb-3 px-2">
+      <div className="flex justify-end flex-shrink-0">
         <SaveToSheetsButton />
       </div>
     )}
@@ -83,6 +83,6 @@ export default async function DietaPage() {
       customFoods={customFoods}
       aiEnabled={!!process.env.GEMINI_API_KEY}
     />
-    </>
+    </div>
   );
 }

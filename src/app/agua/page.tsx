@@ -3,6 +3,8 @@ import { prisma } from '@/lib/prisma';
 import WaterButtons from '@/components/WaterButtons';
 import DonutRing from '@/components/charts/DonutRing';
 import PageFrame from '@/components/PageFrame';
+import ModIcon from '@/components/ModIcon';
+import { Droplet, Droplets } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
@@ -29,8 +31,7 @@ export default async function AguaPage() {
   return (
     <PageFrame>
       <header className="flex-shrink-0 flex items-center gap-3 pt-2">
-        <span className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl"
-          style={{ background: 'var(--mod-agua-bg)' }}>💧</span>
+        <ModIcon mod="agua" size="lg" />
         <div>
           <h1 className="text-2xl font-black" style={{ color: 'var(--text-strong)' }}>Vitalis Hidro</h1>
           <p className="text-sm font-bold" style={{ color: 'var(--mod-agua)' }}>Acompanhe sua ingestão de água</p>
@@ -64,7 +65,13 @@ export default async function AguaPage() {
             {user.waterLogs.map((log) => (
               <div key={log.id} className="flex items-center gap-4 px-4 py-3 rounded-2xl"
                 style={{ background: 'var(--mod-agua-bg)' }}>
-                <span className="text-xl">{log.amount >= 500 ? '🌊' : '💧'}</span>
+                <span className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0"
+                  style={{ background: log.amount >= 500 ? 'linear-gradient(135deg,#0E7EA8,#1AA3CC)' : 'linear-gradient(135deg,#1AA3CC,#36C5F0)', boxShadow: '0 1px 6px rgba(0,0,0,0.12)' }}>
+                  {log.amount >= 500
+                    ? <Droplets size={14} color="white" strokeWidth={2.2} />
+                    : <Droplet size={14} color="white" strokeWidth={2.2} />
+                  }
+                </span>
                 <div className="flex-1">
                   <p className="font-extrabold text-sm" style={{ color: 'var(--mod-agua-strong)' }}>+{log.amount}ml</p>
                   <p className="text-xs font-bold" style={{ color: 'var(--text-soft)' }}>

@@ -6,6 +6,7 @@ import { SQUAD_TYPE_META } from '@/lib/social';
 import CreateSquadForm from '@/components/social/CreateSquadForm';
 import JoinSquadForm from '@/components/social/JoinSquadForm';
 import PageFrame from '@/components/PageFrame';
+import ModIcon from '@/components/ModIcon';
 
 export const dynamic = 'force-dynamic';
 
@@ -33,8 +34,7 @@ export default async function SocialHub() {
       {/* Header */}
       <header className="flex-shrink-0 flex items-center justify-between pt-2">
         <div className="flex items-center gap-3">
-          <span className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl"
-            style={{ background: 'var(--mod-social-bg)' }}>🤝</span>
+          <ModIcon mod="social" size="lg" />
           <div>
             <h1 className="text-2xl font-black" style={{ color: 'var(--text-strong)' }}>Vitalis Social</h1>
             <p className="text-sm font-bold" style={{ color: 'var(--mod-social)' }}>Squads, chat e competição</p>

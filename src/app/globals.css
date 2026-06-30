@@ -49,25 +49,25 @@
 }
 
 :root {
-  /* shadcn tokens */
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+  /* shadcn tokens — mapeados para clay */
+  --background: #ECE9E2;        /* greige — fundo do app */
+  --foreground: #5B554C;        /* marrom-acinzentado — texto principal */
+  --card: #F4F1EA;              /* surface clay */
+  --card-foreground: #5B554C;
+  --popover: #FBF9F4;           /* surface-2 */
+  --popover-foreground: #5B554C;
+  --primary: #C9A98C;           /* caramelo clay */
+  --primary-foreground: #ffffff;
+  --secondary: #F4F1EA;
+  --secondary-foreground: #5B554C;
+  --muted: #E4E0D7;             /* sunken */
+  --muted-foreground: #B3ACA0;
+  --accent: #F4F1EA;
+  --accent-foreground: #5B554C;
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  --border: rgba(91,85,76,0.10);
+  --input: #E4E0D7;
+  --ring: #C9A98C;
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
@@ -83,34 +83,79 @@
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
 
-  /* === Soft Vitalis — Brand tokens === */
+  /* ═══════════════════════════════════════════════════════
+     SOFT CLAY — Design System Tokens
+     Paleta monocromática areia/marfim (greige), sombra dupla
+     Hierarquia por profundidade, não por cor saturada
+  ═══════════════════════════════════════════════════════ */
+
+  /* Superfícies */
+  --clay-bg:       #ECE9E2;   /* fundo do app — greige claro */
+  --clay-surface:  #F4F1EA;   /* card padrão */
+  --clay-surface-2:#FBF9F4;   /* card elevado / destaque */
+  --clay-sunken:   #E4E0D7;   /* áreas afundadas / trilhos de progresso */
+
+  /* Texto (marrom-acinzentado suave — nunca preto puro) */
+  --clay-text:      #5B554C;
+  --clay-text-soft: #8A8377;
+  --clay-text-mute: #B3ACA0;
+
+  /* Acento caramelo (usar só em progresso/estado ativo) */
+  --clay-accent:   #C9A98C;
+  --clay-accent-2: #A9B5A0;   /* sage discreto para sucesso */
+  --clay-accent-bg:#F5EDE3;   /* fundo translúcido do acento */
+
+  /* Sombras — elevação limpa, sem neumorphism */
+  --clay-shadow: 0 2px 8px rgba(100, 90, 72, 0.10), 0 1px 2px rgba(100, 90, 72, 0.06);
+  --clay-shadow-hover: 0 4px 16px rgba(100, 90, 72, 0.14), 0 2px 4px rgba(100, 90, 72, 0.08);
+  --clay-shadow-inset:
+    inset 2px 2px 6px rgba(100, 90, 72, 0.12),
+    inset -1px -1px 3px rgba(255, 255, 255, 0.70);
+  --clay-shadow-btn: 0 2px 8px rgba(100, 90, 72, 0.14);
+  --clay-shadow-btn-press: inset 2px 2px 5px rgba(100, 90, 72, 0.14);
+
+  /* Raios */
+  --clay-radius-card: 24px;
+  --clay-radius-inner: 16px;
+  --clay-radius-pill: 999px;
+
+  /* === Mapeamento para tokens globais existentes === */
+  --app-bg:     var(--clay-bg);
+  --text-strong: var(--clay-text);
+  --text-soft:   var(--clay-text-soft);
+
+  /* Sombra de card unificada */
+  --shadow-card: var(--clay-shadow);
+  --shadow-soft: 0 8px 24px -4px rgba(100, 90, 72, 0.16);
+
+  /* === Brand tokens (sidebar gradient — temável via ThemePicker) === */
   --brand-600: #6D49E8;
   --brand-500: #7C5CFC;
   --brand-400: #9871F5;
   --brand-300: #B7A6FF;
   --brand-100: #EDE8FF;
   --pink-500: #FF6FB5;
-  --app-bg: #F4F2FE;
-  --text-strong: #1E1B2E;
-  --text-soft: #6B6880;
-  --shadow-soft: 0 18px 40px -16px rgba(108, 76, 252, 0.28);
-  --shadow-card: 8px 8px 20px rgba(210, 205, 230, 0.55), -6px -6px 14px rgba(255,255,255,0.85), inset 1px 1px 3px rgba(255,255,255,1), inset -1px -1px 3px rgba(0,0,0,0.04);
 
-  /* === Module accent tokens === */
-  /* Dashboard  */ --mod-dash:       #7C5CFC; --mod-dash-bg:       #EDE8FF; --mod-dash-strong:   #5A3ED6;
-  /* Agenda     */ --mod-agenda:     #5B8DEF; --mod-agenda-bg:     #E5EFFD; --mod-agenda-strong: #3A6BCF;
-  /* Tarefas    */ --mod-tarefas:    #2BC48A; --mod-tarefas-bg:    #E0F7EE; --mod-tarefas-strong:#1A9E6E;
-  /* Dieta      */ --mod-dieta:      #FF8A5B; --mod-dieta-bg:      #FFF0E9; --mod-dieta-strong:  #D96030;
-  /* Hidratação */ --mod-agua:       #36C5F0; --mod-agua-bg:       #E2F7FC; --mod-agua-strong:   #1AA3CC;
-  /* Finanças   */ --mod-financas:   #8B5CF6; --mod-financas-bg:   #EDE9FE; --mod-financas-strong:#6A3DD6;
-  /* Metas      */ --mod-metas:      #FF6FB5; --mod-metas-bg:      #FFE9F4; --mod-metas-strong:  #D94C91;
-  /* Alarmes    */ --mod-alarmes:    #FFB020; --mod-alarmes-bg:    #FFF6DC; --mod-alarmes-strong:#CC8800;
-  /* Relatórios */ --mod-relatorios: #14B8A6; --mod-relatorios-bg: #E0F7F5; --mod-relatorios-strong:#0D9488;
-  /* Notif.     */ --mod-notif:      #FB7185; --mod-notif-bg:      #FFE5E9; --mod-notif-strong:  #D94060;
-  /* Usuários   */ --mod-usuarios:   #A78BFA; --mod-usuarios-bg:   #EDE8FF; --mod-usuarios-strong:#7C5CFC;
-  /* Conexões   */ --mod-conexoes:   #64748B; --mod-conexoes-bg:   #F1F5F9; --mod-conexoes-strong:#475569;
-  /* Config     */ --mod-config:     #94A3B8; --mod-config-bg:     #F8FAFC; --mod-config-strong: #64748B;
-  /* Social     */ --mod-social:     #D946EF; --mod-social-bg:     #FDE7FF; --mod-social-strong: #B020C8;
+  /* Sidebar gradient defaults */
+  --sidebar-from: #6D49E8;
+  --sidebar-mid:  #9871F5;
+  --sidebar-to:   #B794FF;
+
+  /* === Module accent tokens (mantidos para identidade por módulo) === */
+  --mod-dash:       #7C5CFC; --mod-dash-bg:       #EDE8FF; --mod-dash-strong:   #5A3ED6;
+  --mod-agenda:     #5B8DEF; --mod-agenda-bg:     #E5EFFD; --mod-agenda-strong: #3A6BCF;
+  --mod-tarefas:    #2BC48A; --mod-tarefas-bg:    #E0F7EE; --mod-tarefas-strong:#1A9E6E;
+  --mod-dieta:      #FF8A5B; --mod-dieta-bg:      #FFF0E9; --mod-dieta-strong:  #D96030;
+  --mod-agua:       #36C5F0; --mod-agua-bg:       #E2F7FC; --mod-agua-strong:   #1AA3CC;
+  --mod-financas:   #8B5CF6; --mod-financas-bg:   #EDE9FE; --mod-financas-strong:#6A3DD6;
+  --mod-metas:      #FF6FB5; --mod-metas-bg:      #FFE9F4; --mod-metas-strong:  #D94C91;
+  --mod-alarmes:    #FFB020; --mod-alarmes-bg:    #FFF6DC; --mod-alarmes-strong:#CC8800;
+  --mod-relatorios: #14B8A6; --mod-relatorios-bg: #E0F7F5; --mod-relatorios-strong:#0D9488;
+  --mod-notif:      #FB7185; --mod-notif-bg:      #FFE5E9; --mod-notif-strong:  #D94060;
+  --mod-usuarios:   #A78BFA; --mod-usuarios-bg:   #EDE8FF; --mod-usuarios-strong:#7C5CFC;
+  --mod-conexoes:   #64748B; --mod-conexoes-bg:   #F1F5F9; --mod-conexoes-strong:#475569;
+  --mod-config:     #94A3B8; --mod-config-bg:     #F8FAFC; --mod-config-strong: #64748B;
+  --mod-social:     #D946EF; --mod-social-bg:     #FDE7FF; --mod-social-strong: #B020C8;
 }
 
 .dark {
@@ -164,47 +209,113 @@
   .no-scrollbar::-webkit-scrollbar { display: none; }
   .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-  /* ── Clay morphism base ── */
+  /* ══════════════════════════════════════════════
+     CLAY MORPHISM — classes utilitárias
+  ══════════════════════════════════════════════ */
+
+  /* Card elevado — superfície bege + sombra dupla */
   .clay-card {
-    background-color: #ffffff;
-    border-radius: 24px;
-    box-shadow: var(--shadow-card);
+    background-color: var(--clay-surface);
+    border-radius: var(--clay-radius-card);
+    box-shadow: var(--clay-shadow);
+    border: none;
+    transition: box-shadow 0.2s ease;
+  }
+  .clay-card:hover {
+    box-shadow: var(--clay-shadow-hover);
   }
 
+  /* Card de destaque (elevação maior) */
+  .clay-card-hi {
+    background-color: var(--clay-surface-2);
+    border-radius: var(--clay-radius-card);
+    box-shadow: var(--clay-shadow-hover);
+  }
+
+  /* Área afundada — inputs, trilhos de progresso, sliders */
+  .clay-inset {
+    background-color: var(--clay-sunken);
+    border-radius: var(--clay-radius-inner);
+    box-shadow: var(--clay-shadow-inset);
+  }
+
+  /* Painel colorido (sidebar, hero) */
   .clay-panel {
     background-color: var(--brand-400);
     border-radius: 32px;
     box-shadow:
-      10px 10px 24px rgba(124, 92, 252, 0.28),
-      -8px -8px 18px rgba(255,255,255,0.12),
-      inset 2px 2px 6px rgba(255,255,255,0.28),
-      inset -2px -2px 6px rgba(0,0,0,0.10);
+      10px 10px 24px rgba(120, 110, 95, 0.20),
+      -8px -8px 18px rgba(255, 255, 255, 0.60),
+      inset 2px 2px 6px rgba(255, 255, 255, 0.28),
+      inset -2px -2px 6px rgba(0, 0, 0, 0.08);
   }
 
+  /* Botão — pill elevado */
   .clay-btn {
-    border-radius: 16px;
-    box-shadow:
-      4px 4px 10px rgba(0,0,0,0.09),
-      inset 2px 2px 4px rgba(255,255,255,0.55),
-      inset -2px -2px 4px rgba(0,0,0,0.08);
-    transition: all 0.2s ease;
+    border-radius: var(--clay-radius-pill);
+    box-shadow: var(--clay-shadow-btn);
+    transition: box-shadow 0.15s ease, transform 0.15s ease;
   }
-
+  .clay-btn:hover {
+    box-shadow: var(--clay-shadow-hover);
+  }
   .clay-btn:active {
-    box-shadow:
-      inset 4px 4px 8px rgba(0,0,0,0.10),
-      inset -2px -2px 4px rgba(255,255,255,0.5);
+    box-shadow: var(--clay-shadow-btn-press);
     transform: scale(0.97);
   }
 
-  /* ── Hero gradient card ── */
+  /* Pill de tag/badge */
+  .clay-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.875rem;
+    border-radius: var(--clay-radius-pill);
+    background-color: var(--clay-surface-2);
+    box-shadow: var(--clay-shadow-btn);
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--clay-text-soft);
+  }
+
+  /* Trilho de progresso (anel/barra) */
+  .clay-track {
+    background-color: var(--clay-sunken);
+    box-shadow: var(--clay-shadow-inset);
+    border-radius: var(--clay-radius-pill);
+    overflow: hidden;
+  }
+  .clay-track-fill {
+    background: linear-gradient(90deg, var(--clay-accent), color-mix(in srgb, var(--clay-accent) 80%, white 20%));
+    border-radius: var(--clay-radius-pill);
+    height: 100%;
+    transition: width 0.5s ease;
+  }
+
+  /* Input afundado */
+  .clay-input {
+    background-color: var(--clay-sunken);
+    border-radius: var(--clay-radius-inner);
+    box-shadow: var(--clay-shadow-inset);
+    border: none;
+    padding: 0.5rem 1rem;
+    color: var(--clay-text);
+    transition: box-shadow 0.15s ease;
+  }
+  .clay-input:focus {
+    outline: none;
+    box-shadow:
+      var(--clay-shadow-inset),
+      0 0 0 2px rgba(201, 169, 140, 0.35);
+  }
+
+  /* ── Hero gradient (mantém identidade de marca colorida) ── */
   .hero-gradient {
-    background: linear-gradient(135deg, var(--brand-500) 0%, var(--pink-500) 100%);
+    background: linear-gradient(135deg, var(--sidebar-from, #6D49E8) 0%, var(--sidebar-to, #B794FF) 100%);
     border-radius: 28px;
     box-shadow: var(--shadow-soft);
   }
 
-  /* ── Module-colored header strips ── */
+  /* ── Module icon containers ── */
   .mod-header {
     display: flex;
     align-items: center;
@@ -212,34 +323,49 @@
     margin-bottom: 0.5rem;
   }
   .mod-icon {
-    width: 2.75rem;
-    height: 2.75rem;
-    border-radius: 14px;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: var(--clay-radius-inner);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.25rem;
+    font-size: 1.125rem;
     flex-shrink: 0;
+    box-shadow: var(--clay-shadow-btn);
   }
 
   /* ── Page entrance ── */
   .page-enter {
-    animation: pageEnter 0.5s cubic-bezier(.16,1,.3,1) both;
+    animation: pageEnter 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
   }
   @keyframes pageEnter {
-    from { opacity:0; transform: translateY(16px); }
-    to   { opacity:1; transform: translateY(0); }
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .page-enter { animation: none; }
+    .clay-btn, .clay-card { transition: none; }
   }
 
   /* ── Recharts tooltip ── */
   .vt-tooltip {
-    background: white;
-    border-radius: 12px;
+    background: var(--clay-surface-2);
+    border-radius: 14px;
     padding: 8px 14px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+    box-shadow: var(--clay-shadow);
     font-size: 12px;
-    font-weight: 700;
-    color: var(--text-strong);
+    font-weight: 600;
+    color: var(--clay-text);
     border: none;
+  }
+
+  /* ── Select/input resets para tema clay ── */
+  select.clay-input,
+  input.clay-input,
+  textarea.clay-input {
+    appearance: none;
+    -webkit-appearance: none;
+    background-color: var(--clay-sunken);
   }
 }

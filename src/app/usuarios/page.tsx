@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation';
 import AdminUserCard from '@/components/users/AdminUserCard';
 import { sheetsConfigured } from '@/lib/integrations/sheets';
 import BackupAllButton from '@/components/users/BackupAllButton';
+import ModIcon from '@/components/ModIcon';
 
 export const dynamic = 'force-dynamic';
 
@@ -30,8 +31,7 @@ export default async function UsuariosPage() {
       {/* Header */}
       <header className="flex-shrink-0 flex items-center justify-between pt-1 px-1">
         <div className="flex items-center gap-3">
-          <span className="w-10 h-10 rounded-2xl flex items-center justify-center text-xl"
-            style={{ background: 'var(--brand-100)' }}>👥</span>
+          <ModIcon mod="usuarios" size="lg" />
           <div>
             <h1 className="text-xl font-black" style={{ color: 'var(--text-strong)' }}>Vitalis Usuários</h1>
             <p className="text-[11px] font-bold" style={{ color: 'var(--text-soft)' }}>
