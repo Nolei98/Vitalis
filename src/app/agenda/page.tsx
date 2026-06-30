@@ -5,6 +5,7 @@ import AgendaView from '@/components/AgendaView';
 import SyncButton from '@/components/SyncButton';
 import { startOfDay, addDays } from 'date-fns';
 import PageFrame from '@/components/PageFrame';
+import ModIcon from '@/components/ModIcon';
 
 export const dynamic = 'force-dynamic';
 
@@ -33,8 +34,7 @@ export default async function AgendaPage() {
     <PageFrame>
       <header className="flex-shrink-0 flex justify-between items-center pt-2">
         <div className="flex items-center gap-3">
-          <span className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl"
-            style={{ background: 'var(--mod-agenda-bg)' }}>📅</span>
+          <ModIcon mod="agenda" size="lg" />
           <div>
             <h1 className="text-2xl font-black" style={{ color: 'var(--text-strong)' }}>
               Vitalis Agenda

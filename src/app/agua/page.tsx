@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import WaterButtons from '@/components/WaterButtons';
 import DonutRing from '@/components/charts/DonutRing';
 import PageFrame from '@/components/PageFrame';
+import ModIcon from '@/components/ModIcon';
 
 export const dynamic = 'force-dynamic';
 
@@ -29,8 +30,7 @@ export default async function AguaPage() {
   return (
     <PageFrame>
       <header className="flex-shrink-0 flex items-center gap-3 pt-2">
-        <span className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl"
-          style={{ background: 'var(--mod-agua-bg)' }}>💧</span>
+        <ModIcon mod="agua" size="lg" />
         <div>
           <h1 className="text-2xl font-black" style={{ color: 'var(--text-strong)' }}>Vitalis Hidro</h1>
           <p className="text-sm font-bold" style={{ color: 'var(--mod-agua)' }}>Acompanhe sua ingestão de água</p>

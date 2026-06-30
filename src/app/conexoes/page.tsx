@@ -10,6 +10,7 @@ import {
 } from '@/app/actions/integrations';
 import SyncButton from '@/components/SyncButton';
 import PageFrame from '@/components/PageFrame';
+import ModIcon from '@/components/ModIcon';
 
 export const dynamic = 'force-dynamic';
 
@@ -48,8 +49,7 @@ export default async function ConexoesPage() {
   return (
     <PageFrame>
       <header className="flex-shrink-0 flex items-center gap-3 pt-2">
-        <span className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl"
-          style={{ background: 'var(--mod-conexoes-bg)' }}>🔌</span>
+        <ModIcon mod="conexoes" size="lg" />
         <div>
           <h1 className="text-2xl font-black" style={{ color: 'var(--text-strong)' }}>Vitalis Connect</h1>
           <p className="text-sm font-bold" style={{ color: 'var(--mod-conexoes)' }}>Integrações com serviços externos</p>

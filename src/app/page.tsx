@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { getCurrentUser } from '@/lib/user';
 import TaskCheckbox from '@/components/TaskCheckbox';
 import WaterButtons from '@/components/WaterButtons';
+import ModIcon from '@/components/ModIcon';
 import BalanceDisplay from '@/components/BalanceDisplay';
 import { fmtTime, sourceColor } from '@/lib/calendar';
 import { startOfDay, endOfDay, startOfMonth } from 'date-fns';
@@ -133,8 +134,7 @@ export default async function Dashboard() {
           <div className="clay-card p-3 flex flex-col justify-between overflow-hidden"
             style={{ borderTop: '3px solid var(--mod-financas)' }}>
             <div className="flex items-center justify-between">
-              <span className="w-7 h-7 rounded-xl flex items-center justify-center text-sm"
-                style={{ background: 'var(--mod-financas-bg)' }}>💰</span>
+              <ModIcon mod="financas" size="sm" />
               {overBudget.length > 0 && (
                 <span className="text-[9px] font-black px-1.5 py-0.5 rounded-full"
                   style={{ background: '#FFE5E9', color: 'var(--mod-notif-strong)' }}>⚠️</span>
@@ -152,8 +152,7 @@ export default async function Dashboard() {
 
           <div className="clay-card p-3 flex flex-col justify-between overflow-hidden"
             style={{ borderTop: '3px solid var(--mod-agenda)' }}>
-            <span className="w-7 h-7 rounded-xl flex items-center justify-center text-sm"
-              style={{ background: 'var(--mod-agenda-bg)' }}>📅</span>
+            <ModIcon mod="agenda" size="sm" />
             <div>
               <p className="text-[10px] font-bold" style={{ color: 'var(--text-soft)' }}>Eventos hoje</p>
               <p className="text-2xl font-black" style={{ color: 'var(--text-strong)' }}>{events.length}</p>
@@ -163,8 +162,7 @@ export default async function Dashboard() {
 
           <div className="clay-card p-3 flex flex-col justify-between overflow-hidden"
             style={{ borderTop: '3px solid var(--mod-tarefas)' }}>
-            <span className="w-7 h-7 rounded-xl flex items-center justify-center text-sm"
-              style={{ background: 'var(--mod-tarefas-bg)' }}>✅</span>
+            <ModIcon mod="tarefas" size="sm" />
             <div>
               <p className="text-[10px] font-bold" style={{ color: 'var(--text-soft)' }}>Pendentes</p>
               <p className="text-2xl font-black" style={{ color: 'var(--text-strong)' }}>{pendingTasks.length}</p>
@@ -174,8 +172,7 @@ export default async function Dashboard() {
 
           <div className="clay-card p-3 flex flex-col justify-between overflow-hidden"
             style={{ borderTop: '3px solid var(--mod-agua)' }}>
-            <span className="w-7 h-7 rounded-xl flex items-center justify-center text-sm"
-              style={{ background: 'var(--mod-agua-bg)' }}>💧</span>
+            <ModIcon mod="agua" size="sm" />
             <div>
               <p className="text-[10px] font-bold" style={{ color: 'var(--text-soft)' }}>Água hoje</p>
               <p className="text-2xl font-black" style={{ color: 'var(--text-strong)' }}>{totalWater}ml</p>
@@ -185,8 +182,7 @@ export default async function Dashboard() {
 
           <div className="clay-card p-3 flex flex-col justify-between overflow-hidden col-span-2 md:col-span-1"
             style={{ borderTop: '3px solid var(--mod-dieta)' }}>
-            <span className="w-7 h-7 rounded-xl flex items-center justify-center text-sm"
-              style={{ background: 'var(--mod-dieta-bg)' }}>🥗</span>
+            <ModIcon mod="dieta" size="sm" />
             <div>
               <p className="text-[10px] font-bold" style={{ color: 'var(--text-soft)' }}>Refeições</p>
               <p className="text-2xl font-black" style={{ color: 'var(--text-strong)' }}>{meals.length}</p>
@@ -208,8 +204,7 @@ export default async function Dashboard() {
           style={{ minHeight: 240 }}>
           <div className="flex justify-between items-center mb-2 flex-shrink-0">
             <div className="flex items-center gap-2">
-              <span className="w-7 h-7 rounded-xl flex items-center justify-center text-sm"
-                style={{ background: 'var(--mod-agenda-bg)' }}>📅</span>
+              <ModIcon mod="agenda" size="sm" />
               <h3 className="font-extrabold text-sm" style={{ color: 'var(--text-strong)' }}>Agenda de Hoje</h3>
             </div>
             <a href="/agenda" className="text-[10px] font-bold px-2 py-0.5 rounded-full"
@@ -240,8 +235,7 @@ export default async function Dashboard() {
         <div className="clay-card flex flex-col items-center p-4 overflow-hidden md:flex-shrink-0 md:w-[200px]">
           <div className="flex justify-between items-center w-full mb-2 flex-shrink-0">
             <div className="flex items-center gap-1.5">
-              <span className="w-7 h-7 rounded-xl flex items-center justify-center text-sm"
-                style={{ background: 'var(--mod-agua-bg)' }}>💧</span>
+              <ModIcon mod="agua" size="sm" />
               <h3 className="font-extrabold text-sm" style={{ color: 'var(--text-strong)' }}>Hidro</h3>
             </div>
             <span className="text-[10px] font-bold px-2 py-0.5 rounded-full"
@@ -261,8 +255,7 @@ export default async function Dashboard() {
           style={{ minHeight: 240 }}>
           <div className="flex justify-between items-center mb-2 flex-shrink-0">
             <div className="flex items-center gap-2">
-              <span className="w-7 h-7 rounded-xl flex items-center justify-center text-sm"
-                style={{ background: 'var(--mod-tarefas-bg)' }}>✅</span>
+              <ModIcon mod="tarefas" size="sm" />
               <h3 className="font-extrabold text-sm" style={{ color: 'var(--text-strong)' }}>Foco do Dia</h3>
             </div>
             <a href="/tarefas" className="text-[10px] font-bold px-2 py-0.5 rounded-full"
@@ -278,8 +271,7 @@ export default async function Dashboard() {
             {goals.length > 0 && (
               <>
                 <div className="flex items-center gap-1.5 pt-2 pb-1 flex-shrink-0">
-                  <span className="w-5 h-5 flex items-center justify-center text-xs"
-                    style={{ background: 'var(--mod-metas-bg)', borderRadius: 8 }}>🎯</span>
+                  <ModIcon mod="metas" size="sm" />
                   <span className="text-[10px] font-black" style={{ color: 'var(--text-soft)' }}>METAS</span>
                 </div>
                 {goals.slice(0, 3).map((g) => {

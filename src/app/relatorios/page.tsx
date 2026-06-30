@@ -5,6 +5,7 @@ import { subDays, startOfDay, format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import BarChartSimple from '@/components/charts/BarChartSimple';
 import PageFrame from '@/components/PageFrame';
+import ModIcon from '@/components/ModIcon';
 
 export const dynamic = 'force-dynamic';
 
@@ -44,8 +45,7 @@ export default async function RelatoriosPage() {
   return (
     <PageFrame>
       <header className="flex-shrink-0 flex items-center gap-3 pt-2">
-        <span className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl"
-          style={{ background: 'var(--mod-relatorios-bg)' }}>📊</span>
+        <ModIcon mod="relatorios" size="lg" />
         <div>
           <h1 className="text-2xl font-black" style={{ color: 'var(--text-strong)' }}>Vitalis Insights</h1>
           <p className="text-sm font-bold" style={{ color: 'var(--mod-relatorios)' }}>

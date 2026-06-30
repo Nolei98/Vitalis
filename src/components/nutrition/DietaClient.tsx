@@ -9,6 +9,7 @@ import Recommendations from './Recommendations';
 import ProfileForm from './ProfileForm';
 import { deleteMeal } from '@/app/actions/meals';
 import type { FoodItem, Goal, MacroTargets, NutritionProfile } from '@/lib/nutrition/types';
+import ModIcon from '@/components/ModIcon';
 
 interface MealRow {
   id: string; type: string; food: string; grams: number | null;
@@ -55,8 +56,7 @@ export default function DietaClient({ profile, targets, todayTotals, meals, cust
       {/* Header + tabs fixos */}
       <header className="flex-shrink-0 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <span className="w-10 h-10 rounded-2xl flex items-center justify-center text-xl"
-            style={{ background: 'var(--mod-dieta-bg)' }}>🥗</span>
+          <ModIcon mod="dieta" size="lg" />
           <div>
             <h1 className="text-2xl font-black" style={{ color: 'var(--clay-text)' }}>
               Vitalis <span style={{ color: 'var(--mod-dieta)' }}>Nutri</span>

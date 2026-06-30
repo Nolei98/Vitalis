@@ -6,6 +6,7 @@ import { createHabit, deleteHabit, toggleHabitToday } from '@/app/actions/habits
 import { startOfDay } from 'date-fns';
 import DonutRing from '@/components/charts/DonutRing';
 import PageFrame from '@/components/PageFrame';
+import ModIcon from '@/components/ModIcon';
 
 export const dynamic = 'force-dynamic';
 
@@ -23,8 +24,7 @@ export default async function MetasPage() {
   return (
     <PageFrame>
       <header className="flex-shrink-0 flex items-center gap-3 pt-2">
-        <span className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl"
-          style={{ background: 'var(--mod-metas-bg)' }}>🎯</span>
+        <ModIcon mod="metas" size="lg" />
         <div>
           <h1 className="text-2xl font-black" style={{ color: 'var(--text-strong)' }}>Vitalis Metas</h1>
           <p className="text-sm font-bold" style={{ color: 'var(--mod-metas)' }}>Acompanhe seu progresso</p>
