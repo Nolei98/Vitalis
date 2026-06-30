@@ -7,7 +7,7 @@ import UnreadBadge from '@/components/social/UnreadBadge';
 import {
   LayoutDashboard, CalendarDays, CheckSquare, Salad, Droplets,
   Wallet, Target, AlarmClock, BarChart2, Users, ShieldCheck,
-  Bell, Settings, Plug, LogOut, Menu, X, MessageCircle,
+  Bell, Settings, Plug, LogOut, Menu, X, MessageCircle, Sparkles,
 } from 'lucide-react';
 
 interface NavLink {
@@ -167,7 +167,7 @@ export default function Sidebar({ userName }: { userName: string }) {
                   <img src="https://i.imgur.com/5MU9NOg.png" alt="Vitalis" width={28} height={28} />
                 </div>
                 <div>
-                  <p className="text-white font-bold text-sm">Olá, {userName}! 👋</p>
+                  <p className="text-white font-bold text-sm">Olá, {userName}! <Sparkles size={13} className="inline-block text-yellow-200 ml-0.5" strokeWidth={2} /></p>
                   <p className="text-white/60 text-xs font-semibold">Vitalis</p>
                 </div>
               </div>
@@ -195,7 +195,7 @@ export default function Sidebar({ userName }: { userName: string }) {
             style={{ background: 'rgba(255,255,255,0.18)' }}>
             <img src="https://i.imgur.com/5MU9NOg.png" alt="Vitalis" width={40} height={40} />
           </div>
-          <p className="text-white font-bold text-sm opacity-90">Olá, {userName}! 👋</p>
+          <p className="text-white font-bold text-sm opacity-90">Olá, {userName}! <Sparkles size={13} className="inline-block text-yellow-200 ml-0.5" strokeWidth={2} /></p>
         </div>
 
         <NavItems pathname={pathname} />

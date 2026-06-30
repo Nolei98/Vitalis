@@ -1,10 +1,10 @@
 'use client'
 import { useState, useEffect } from 'react'
+import { Eye, EyeOff } from 'lucide-react'
 
 interface Props {
   balance: number
   size?: 'large' | 'small'
-  /** 'dark' = fundo escuro (texto branco). 'light' = fundo claro (texto colorido). */
   variant?: 'dark' | 'light'
 }
 
@@ -38,10 +38,10 @@ export default function BalanceDisplay({ balance, size = 'large', variant = 'dar
         </p>
         <button
           onClick={toggle}
-          className="text-lg mt-1 transition-opacity hover:opacity-80"
-          style={{ color: subColor }}
+          className="w-6 h-6 mt-1 rounded-lg flex items-center justify-center transition-opacity hover:opacity-80"
+          style={{ background: btnBg, color: subColor }}
         >
-          {isVisible ? '🙈' : '👁️'}
+          {isVisible ? <EyeOff size={13} strokeWidth={2} /> : <Eye size={13} strokeWidth={2} />}
         </button>
       </div>
     )
@@ -54,10 +54,10 @@ export default function BalanceDisplay({ balance, size = 'large', variant = 'dar
       </span>
       <button
         onClick={toggle}
-        className="text-xl w-10 h-10 rounded-full flex items-center justify-center transition-opacity hover:opacity-80"
+        className="w-10 h-10 rounded-full flex items-center justify-center transition-opacity hover:opacity-80"
         style={{ background: btnBg, color: subColor }}
       >
-        {isVisible ? '🙈' : '👁️'}
+        {isVisible ? <EyeOff size={18} strokeWidth={2} /> : <Eye size={18} strokeWidth={2} />}
       </button>
     </div>
   )

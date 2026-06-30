@@ -11,6 +11,7 @@ import { kcalTrend, waterTrend, taskTrend, eventTrend } from '@/lib/weekTrend';
 import TrendArea from '@/components/charts/TrendArea';
 import SparkLine from '@/components/charts/SparkLine';
 import DonutRing from '@/components/charts/DonutRing';
+import { MessageCircle, Bell, Plug, Sun } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
@@ -84,17 +85,24 @@ export default async function Dashboard() {
           <p className="text-[11px] font-bold" style={{ color: 'var(--text-soft)' }}>Seu painel de vida</p>
         </div>
         <div className="flex gap-2">
-          <a href="/social" className="clay-card w-8 h-8 flex items-center justify-center relative text-sm">💬</a>
-          <a href="/notificacoes" className="clay-card w-8 h-8 flex items-center justify-center relative text-sm">
-            🔔
+          <a href="/social" className="w-8 h-8 rounded-xl flex items-center justify-center relative transition-all hover:scale-105"
+            style={{ background: 'linear-gradient(135deg,#B020C8,#D946EF)', boxShadow: '0 2px 8px rgba(0,0,0,0.13)' }}>
+            <MessageCircle size={15} color="white" strokeWidth={2.2} />
+          </a>
+          <a href="/notificacoes" className="w-8 h-8 rounded-xl flex items-center justify-center relative transition-all hover:scale-105"
+            style={{ background: 'linear-gradient(135deg,#D94060,#FB7185)', boxShadow: '0 2px 8px rgba(0,0,0,0.13)' }}>
+            <Bell size={15} color="white" strokeWidth={2.2} />
             {alertCount > 0 && (
               <span className="absolute -top-1 -right-1 text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center"
-                style={{ background: 'var(--mod-notif)' }}>
+                style={{ background: '#D94060', border: '1.5px solid white' }}>
                 {alertCount}
               </span>
             )}
           </a>
-          <a href="/conexoes" className="clay-card w-8 h-8 flex items-center justify-center text-sm">🔌</a>
+          <a href="/conexoes" className="w-8 h-8 rounded-xl flex items-center justify-center transition-all hover:scale-105"
+            style={{ background: 'linear-gradient(135deg,#475569,#64748B)', boxShadow: '0 2px 8px rgba(0,0,0,0.13)' }}>
+            <Plug size={15} color="white" strokeWidth={2.2} />
+          </a>
         </div>
       </header>
 
@@ -109,7 +117,9 @@ export default async function Dashboard() {
           <div className="flex justify-between items-start z-10 relative">
             <div className="flex-1 min-w-0 pr-2">
               <p className="text-white/70 text-[11px] font-bold">Bom dia,</p>
-              <h2 className="text-lg font-black text-white truncate">{user.name} ☀️</h2>
+              <h2 className="text-lg font-black text-white truncate flex items-center gap-1.5">
+                {user.name} <Sun size={16} strokeWidth={2} className="text-yellow-200 flex-shrink-0" />
+              </h2>
               <p className="text-white/80 text-xs font-medium mt-0.5 truncate">{nextAction}</p>
             </div>
             <div className="text-right flex-shrink-0">
