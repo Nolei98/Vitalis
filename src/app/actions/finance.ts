@@ -31,9 +31,7 @@ export async function addTransaction(formData: FormData) {
 
   if (!accountId || amount <= 0) return
 
-  const user = await prisma.user.findFirst()
-  if (!user) return
-
+  const userId = await getCurrentUserId()
   const account = await prisma.finAccount.findUnique({ where: { id: accountId } })
   if (!account) return
 
@@ -42,7 +40,7 @@ export async function addTransaction(formData: FormData) {
   await prisma.$transaction([
     prisma.transaction.create({
       data: {
-        userId: user.id,
+        userId,
         accountId,
         kind,
         amount,
@@ -66,12 +64,10 @@ export async function addVault(formData: FormData) {
 
   if (!title || target <= 0) return
 
-  const user = await prisma.user.findFirst()
-  if (!user) return
-
+  const userId = await getCurrentUserId()
   await prisma.goal.create({
     data: {
-      userId: user.id,
+      userId,
       title,
       type: 'vault',
       target,

@@ -51,9 +51,13 @@ export default async function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   // try/catch: durante o build do Vercel não há DB disponível
   let firstName = 'você';
+  let isAdmin = false;
   try {
     const user = await getCurrentUser();
     firstName = (user.name || 'você').split(' ')[0];
+    isAdmin =
+      user.role === 'admin' ||
+      !!(process.env.ADMIN_EMAIL && user.email === process.env.ADMIN_EMAIL);
   } catch {
     // sem banco no build-time — usa fallback
   }
@@ -75,7 +79,7 @@ export default async function RootLayout({
 
             {/* Sidebar: altura total, não rola */}
             <div className="flex-shrink-0 h-full">
-              <Sidebar userName={firstName} />
+              <Sidebar userName={firstName} isAdmin={isAdmin} />
             </div>
 
             {/* Área de conteúdo: coluna flex, preenche o restante */}
@@ -93,7 +97,7 @@ export default async function RootLayout({
 
         {/* ── Mobile: topbar fixa + scroll normal ──────────────────── */}
         <div className="md:hidden flex flex-col h-full overflow-hidden">
-          <Sidebar userName={firstName} />
+          <Sidebar userName={firstName} isAdmin={isAdmin} />
           <main className="flex-1 flex flex-col overflow-hidden pt-14">
             <div className="flex-1 overflow-y-auto no-scrollbar px-4 py-4">
               {children}

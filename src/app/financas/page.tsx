@@ -1,5 +1,6 @@
 ﻿import React from 'react';
 import { prisma } from '@/lib/prisma';
+import { getCurrentUser } from '@/lib/user';
 import { addTransaction, addVault, depositToVault, addBudget, deleteBudget } from '@/app/actions/finance';
 import BalanceDisplay from '@/components/BalanceDisplay';
 import { startOfMonth } from 'date-fns';
@@ -10,23 +11,24 @@ import ModIcon from '@/components/ModIcon';
 export const dynamic = 'force-dynamic';
 
 export default async function FinancasPage() {
-  const user = await prisma.user.findFirst({
-    include: {
-      finAccounts: {
-        include: {
-          transactions: {
-            orderBy: { date: 'desc' },
-            take: 20
-          }
-        }
-      },
-      goals: {
-        where: { type: 'vault' }
-      }
-    }
-  });
+  const user = await getCurrentUser();
 
-  if (!user) return <div>Carregando...</div>;
+  // Auto-cria conta padrão se usuário não tiver nenhuma
+  let accounts = await prisma.finAccount.findMany({
+    where: { userId: user.id },
+    include: { transactions: { orderBy: { date: 'desc' }, take: 20 } },
+  });
+  if (accounts.length === 0) {
+    await prisma.finAccount.create({
+      data: { userId: user.id, name: 'Conta Principal', type: 'checking', balance: 0 },
+    });
+    accounts = await prisma.finAccount.findMany({
+      where: { userId: user.id },
+      include: { transactions: { orderBy: { date: 'desc' }, take: 20 } },
+    });
+  }
+
+  const goals = await prisma.goal.findMany({ where: { userId: user.id, type: 'vault' } });
 
   // Orçamentos + gasto do mês por categoria
   const budgets = await prisma.budget.findMany({ where: { userId: user.id } });
@@ -39,17 +41,7 @@ export default async function FinancasPage() {
     spentByCategory.set(k, (spentByCategory.get(k) ?? 0) + t.amount);
   }
 
-  const accounts = user.finAccounts;
   const totalBalance = accounts.reduce((acc, account) => acc + account.balance, 0);
-
-  if (accounts.length === 0) {
-    return (
-      <div className="flex flex-col items-center justify-center h-full" style={{ color: 'var(--text-strong)' }}>
-        <h1 className="text-2xl font-bold mb-4">Vitalis Finanças</h1>
-        <p>Por favor, recarregue a página ou aguarde o seed ser finalizado.</p>
-      </div>
-    )
-  }
 
   const mainAccount = accounts[0];
 
@@ -212,11 +204,11 @@ export default async function FinancasPage() {
             )}
           </div>
           
-          {user.goals.length > 0 && (
+          {goals.length > 0 && (
             <div className="mt-8 pt-8" style={{ borderTop: '1px solid rgba(91,85,76,0.08)' }}>
               <h2 className="text-xl font-bold mb-6" style={{ color: 'var(--text-strong)' }}>Meus Cofres</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {user.goals.map((vault) => (
+                {goals.map((vault) => (
                   <div key={vault.id} className="clay-card p-4 bg-[#fce38a]">
                     <div className="flex justify-between items-center mb-2">
                        <span className="font-bold text-amber-900">{vault.title}</span>

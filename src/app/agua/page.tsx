@@ -1,5 +1,6 @@
 ﻿import React from 'react';
 import { prisma } from '@/lib/prisma';
+import { getCurrentUser } from '@/lib/user';
 import WaterButtons from '@/components/WaterButtons';
 import DonutRing from '@/components/charts/DonutRing';
 import PageFrame from '@/components/PageFrame';
@@ -9,22 +10,16 @@ import { Droplet, Droplets } from 'lucide-react';
 export const dynamic = 'force-dynamic';
 
 export default async function AguaPage() {
-  const user = await prisma.user.findFirst({
-    include: {
-      waterLogs: {
-        where: {
-          createdAt: {
-            gte: new Date(new Date().setHours(0, 0, 0, 0))
-          }
-        },
-        orderBy: { createdAt: 'desc' }
-      }
-    }
+  const user = await getCurrentUser();
+  const waterLogs = await prisma.waterLog.findMany({
+    where: {
+      userId: user.id,
+      createdAt: { gte: new Date(new Date().setHours(0, 0, 0, 0)) },
+    },
+    orderBy: { createdAt: 'desc' },
   });
 
-  if (!user) return <div>Carregando...</div>;
-
-  const totalWater = user.waterLogs.reduce((acc, log) => acc + log.amount, 0);
+  const totalWater = waterLogs.reduce((acc, log) => acc + log.amount, 0);
   const goal = 2000;
   const percent = Math.min(Math.round((totalWater / goal) * 100), 100);
 
@@ -62,7 +57,7 @@ export default async function AguaPage() {
         <div className="clay-card p-6 flex flex-col" style={{ maxHeight: 520 }}>
           <h2 className="text-lg font-extrabold mb-4" style={{ color: 'var(--text-strong)' }}>Histórico de Hoje</h2>
           <div className="space-y-3 overflow-y-auto flex-1 no-scrollbar">
-            {user.waterLogs.map((log) => (
+            {waterLogs.map((log) => (
               <div key={log.id} className="flex items-center gap-4 px-4 py-3 rounded-2xl"
                 style={{ background: 'var(--mod-agua-bg)' }}>
                 <span className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0"
@@ -83,7 +78,7 @@ export default async function AguaPage() {
                 </div>
               </div>
             ))}
-            {user.waterLogs.length === 0 && (
+            {waterLogs.length === 0 && (
               <div className="flex flex-col items-center justify-center h-40" style={{ color: 'var(--text-soft)' }}>
                 <span className="text-4xl mb-3">🌵</span>
                 <p className="font-bold">Nenhum registro ainda.</p>
