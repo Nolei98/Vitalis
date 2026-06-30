@@ -121,8 +121,10 @@ export default function Sidebar({ userName }: { userName: string }) {
         </button>
 
         <div className="flex-1 flex items-center gap-2">
-          <img src="https://i.imgur.com/5MU9NOg.png" alt="Vitalis" width={28} height={28}
-            style={{ filter: 'brightness(0) invert(1)' }} />
+          <div className="w-7 h-7 rounded-lg flex items-center justify-center"
+            style={{ background: 'rgba(255,255,255,0.20)' }}>
+            <img src="https://i.imgur.com/5MU9NOg.png" alt="Vitalis" width={20} height={20} />
+          </div>
           {activeLink && (
             <span className="text-xs font-bold px-2 py-0.5 rounded-full"
               style={{ background: 'rgba(255,255,255,0.18)', color: 'rgba(255,255,255,0.9)' }}>
@@ -160,9 +162,10 @@ export default function Sidebar({ userName }: { userName: string }) {
             {/* Close + logo + user */}
             <div className="flex items-center justify-between px-4 mb-4 flex-shrink-0">
               <div className="flex items-center gap-3">
-                <img src="https://i.imgur.com/5MU9NOg.png" alt="Vitalis" width={40} height={40}
-                  className="rounded-2xl"
-                  style={{ background: 'rgba(255,255,255,0.18)', padding: 4, filter: 'brightness(0) invert(1)' }} />
+                <div className="w-10 h-10 rounded-2xl flex items-center justify-center"
+                  style={{ background: 'rgba(255,255,255,0.18)' }}>
+                  <img src="https://i.imgur.com/5MU9NOg.png" alt="Vitalis" width={28} height={28} />
+                </div>
                 <div>
                   <p className="text-white font-bold text-sm">Olá, {userName}! 👋</p>
                   <p className="text-white/60 text-xs font-semibold">Vitalis</p>
@@ -189,14 +192,15 @@ export default function Sidebar({ userName }: { userName: string }) {
       >
         {/* Logo */}
         <div className="flex flex-col items-center mb-4 flex-shrink-0">
-          <img
-            src="https://i.imgur.com/5MU9NOg.png"
-            alt="Vitalis"
-            width={52}
-            height={52}
-            className="mb-1"
-            style={{ filter: 'brightness(0) invert(1)', opacity: 0.95 }}
-          />
+          <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-1"
+            style={{ background: 'rgba(255,255,255,0.18)' }}>
+            <img
+              src="https://i.imgur.com/5MU9NOg.png"
+              alt="Vitalis"
+              width={40}
+              height={40}
+            />
+          </div>
           <p className="text-white font-bold text-sm opacity-90">Olá, {userName}! 👋</p>
         </div>
 

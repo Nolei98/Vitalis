@@ -105,26 +105,14 @@
   --clay-accent-2: #A9B5A0;   /* sage discreto para sucesso */
   --clay-accent-bg:#F5EDE3;   /* fundo translúcido do acento */
 
-  /* Sombras — alma do claymorphism */
-  --clay-shadow:
-    -5px -5px 12px rgba(255, 255, 255, 0.90),
-    6px 6px 16px rgba(100, 90, 72, 0.28);
-
-  --clay-shadow-hover:
-    -7px -7px 16px rgba(255, 255, 255, 0.95),
-    10px 10px 22px rgba(100, 90, 72, 0.34);
-
+  /* Sombras — elevação limpa, sem neumorphism */
+  --clay-shadow: 0 2px 8px rgba(100, 90, 72, 0.10), 0 1px 2px rgba(100, 90, 72, 0.06);
+  --clay-shadow-hover: 0 4px 16px rgba(100, 90, 72, 0.14), 0 2px 4px rgba(100, 90, 72, 0.08);
   --clay-shadow-inset:
-    inset 4px 4px 9px rgba(100, 90, 72, 0.20),
-    inset -3px -3px 7px rgba(255, 255, 255, 0.85);
-
-  --clay-shadow-btn:
-    -3px -3px 7px rgba(255, 255, 255, 0.90),
-    4px 4px 10px rgba(100, 90, 72, 0.22);
-
-  --clay-shadow-btn-press:
-    inset 3px 3px 7px rgba(100, 90, 72, 0.20),
-    inset -2px -2px 5px rgba(255, 255, 255, 0.82);
+    inset 2px 2px 6px rgba(100, 90, 72, 0.12),
+    inset -1px -1px 3px rgba(255, 255, 255, 0.70);
+  --clay-shadow-btn: 0 2px 8px rgba(100, 90, 72, 0.14);
+  --clay-shadow-btn-press: inset 2px 2px 5px rgba(100, 90, 72, 0.14);
 
   /* Raios */
   --clay-radius-card: 24px;
@@ -138,7 +126,7 @@
 
   /* Sombra de card unificada */
   --shadow-card: var(--clay-shadow);
-  --shadow-soft: 0 12px 32px -8px rgba(120, 110, 95, 0.22);
+  --shadow-soft: 0 8px 24px -4px rgba(100, 90, 72, 0.16);
 
   /* === Brand tokens (sidebar gradient — temável via ThemePicker) === */
   --brand-600: #6D49E8;
