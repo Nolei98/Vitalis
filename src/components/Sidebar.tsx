@@ -4,38 +4,78 @@ import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { logoutUser } from '@/app/actions/auth';
 import UnreadBadge from '@/components/social/UnreadBadge';
+import {
+  LayoutDashboard, CalendarDays, CheckSquare, Salad, Droplets,
+  Wallet, Target, AlarmClock, BarChart2, Users, ShieldCheck,
+  Bell, Settings, Plug, LogOut, Menu, X, MessageCircle,
+} from 'lucide-react';
 
 interface NavLink {
   href: string;
   label: string;
-  icon: string;
+  Icon: React.ComponentType<{ size?: number; strokeWidth?: number; className?: string }>;
+  iconBg: string;
   accent: string;
   accentBg: string;
 }
 
 const LINKS: NavLink[] = [
-  { href: '/',              label: 'Dashboard',    icon: '🏠', accent: '#7C5CFC', accentBg: '#EDE8FF' },
-  { href: '/agenda',        label: 'Agenda',       icon: '📅', accent: '#5B8DEF', accentBg: '#E5EFFD' },
-  { href: '/tarefas',       label: 'Tarefas',      icon: '✅', accent: '#2BC48A', accentBg: '#E0F7EE' },
-  { href: '/dieta',         label: 'Nutri',        icon: '🥗', accent: '#FF8A5B', accentBg: '#FFF0E9' },
-  { href: '/agua',          label: 'Hidro',        icon: '💧', accent: '#36C5F0', accentBg: '#E2F7FC' },
-  { href: '/financas',      label: 'Finanças',     icon: '💰', accent: '#8B5CF6', accentBg: '#EDE9FE' },
-  { href: '/metas',         label: 'Metas',        icon: '🎯', accent: '#FF6FB5', accentBg: '#FFE9F4' },
-  { href: '/alarmes',       label: 'Alarmes',      icon: '⏰', accent: '#FFB020', accentBg: '#FFF6DC' },
-  { href: '/relatorios',    label: 'Insights',     icon: '📊', accent: '#14B8A6', accentBg: '#E0F7F5' },
-  { href: '/social',        label: 'Social',       icon: '🤝', accent: '#D946EF', accentBg: '#FDE7FF' },
-  { href: '/usuarios',      label: 'Usuários',     icon: '👥', accent: '#A78BFA', accentBg: '#EDE8FF' },
-  { href: '/notificacoes',  label: 'Notificações', icon: '🔔', accent: '#FB7185', accentBg: '#FFE5E9' },
-  { href: '/configuracoes', label: 'Config',       icon: '⚙️', accent: '#94A3B8', accentBg: '#F8FAFC' },
-  { href: '/conexoes',      label: 'Connect',      icon: '🔌', accent: '#64748B', accentBg: '#F1F5F9' },
+  { href: '/',              label: 'Dashboard',    Icon: LayoutDashboard, iconBg: 'linear-gradient(135deg,#6D49E8,#9871F5)', accent: '#7C5CFC', accentBg: '#EDE8FF' },
+  { href: '/agenda',        label: 'Agenda',       Icon: CalendarDays,    iconBg: 'linear-gradient(135deg,#3A6BCF,#5B8DEF)', accent: '#5B8DEF', accentBg: '#E5EFFD' },
+  { href: '/tarefas',       label: 'Tarefas',      Icon: CheckSquare,     iconBg: 'linear-gradient(135deg,#1A9E6E,#2BC48A)', accent: '#2BC48A', accentBg: '#E0F7EE' },
+  { href: '/dieta',         label: 'Nutri',        Icon: Salad,           iconBg: 'linear-gradient(135deg,#D96030,#FF8A5B)', accent: '#FF8A5B', accentBg: '#FFF0E9' },
+  { href: '/agua',          label: 'Hidro',        Icon: Droplets,        iconBg: 'linear-gradient(135deg,#1AA3CC,#36C5F0)', accent: '#36C5F0', accentBg: '#E2F7FC' },
+  { href: '/financas',      label: 'Finanças',     Icon: Wallet,          iconBg: 'linear-gradient(135deg,#6A3DD6,#8B5CF6)', accent: '#8B5CF6', accentBg: '#EDE9FE' },
+  { href: '/metas',         label: 'Metas',        Icon: Target,          iconBg: 'linear-gradient(135deg,#D94C91,#FF6FB5)', accent: '#FF6FB5', accentBg: '#FFE9F4' },
+  { href: '/alarmes',       label: 'Alarmes',      Icon: AlarmClock,      iconBg: 'linear-gradient(135deg,#CC8800,#FFB020)', accent: '#FFB020', accentBg: '#FFF6DC' },
+  { href: '/relatorios',    label: 'Insights',     Icon: BarChart2,       iconBg: 'linear-gradient(135deg,#0D9488,#14B8A6)', accent: '#14B8A6', accentBg: '#E0F7F5' },
+  { href: '/social',        label: 'Social',       Icon: MessageCircle,   iconBg: 'linear-gradient(135deg,#B020C8,#D946EF)', accent: '#D946EF', accentBg: '#FDE7FF' },
+  { href: '/usuarios',      label: 'Usuários',     Icon: ShieldCheck,     iconBg: 'linear-gradient(135deg,#7C5CFC,#A78BFA)', accent: '#A78BFA', accentBg: '#EDE8FF' },
+  { href: '/notificacoes',  label: 'Notificações', Icon: Bell,            iconBg: 'linear-gradient(135deg,#D94060,#FB7185)', accent: '#FB7185', accentBg: '#FFE5E9' },
+  { href: '/configuracoes', label: 'Config',       Icon: Settings,        iconBg: 'linear-gradient(135deg,#64748B,#94A3B8)', accent: '#94A3B8', accentBg: '#F8FAFC' },
+  { href: '/conexoes',      label: 'Conexões',     Icon: Plug,            iconBg: 'linear-gradient(135deg,#475569,#64748B)', accent: '#64748B', accentBg: '#F1F5F9' },
 ];
 
 const HIDE_ON = ['/login', '/register'];
 
 const SIDEBAR_STYLE = {
   background: 'linear-gradient(160deg, var(--sidebar-from, #6D49E8) 0%, var(--sidebar-mid, #9871F5) 60%, var(--sidebar-to, #B794FF) 100%)',
-  boxShadow: '0 18px 40px -10px rgba(108,76,252,0.40), inset 2px 2px 6px rgba(255,255,255,0.25)',
+  boxShadow: '0 18px 40px -10px rgba(108,76,252,0.40), inset 2px 2px 6px rgba(255,255,255,0.20)',
 };
+
+function NavItem({ l, active, onNavigate }: { l: NavLink; active: boolean; onNavigate?: () => void }) {
+  return (
+    <a
+      href={l.href}
+      onClick={onNavigate}
+      className="flex items-center gap-3 px-3 py-2 rounded-2xl transition-all duration-150 font-semibold text-[13px] relative group"
+      style={
+        active
+          ? { background: 'rgba(255,255,255,0.18)', color: '#fff', fontWeight: 800, backdropFilter: 'blur(8px)' }
+          : { color: 'rgba(255,255,255,0.75)' }
+      }
+      onMouseEnter={(e) => { if (!active) (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.10)'; }}
+      onMouseLeave={(e) => { if (!active) (e.currentTarget as HTMLElement).style.background = 'transparent'; }}
+    >
+      {/* Icon com gradiente temático */}
+      <span
+        className="w-7 h-7 rounded-xl flex items-center justify-center flex-shrink-0 relative transition-all duration-150"
+        style={{
+          background: active ? l.iconBg : 'rgba(255,255,255,0.12)',
+          boxShadow: active ? '0 2px 8px rgba(0,0,0,0.20)' : 'none',
+        }}
+      >
+        <l.Icon size={14} strokeWidth={2.2} className="text-white" />
+        {l.href === '/social' && <UnreadBadge />}
+      </span>
+      <span className="truncate">{l.label}</span>
+      {/* Pill de ativo */}
+      {active && (
+        <span className="ml-auto w-1.5 h-1.5 rounded-full bg-white opacity-80 flex-shrink-0" />
+      )}
+    </a>
+  );
+}
 
 function NavItems({ pathname, onNavigate }: { pathname: string; onNavigate?: () => void }) {
   return (
@@ -43,42 +83,22 @@ function NavItems({ pathname, onNavigate }: { pathname: string; onNavigate?: () 
       <nav className="w-full px-3 space-y-0.5 flex-1 overflow-y-auto no-scrollbar">
         {LINKS.map((l) => {
           const active = l.href === '/' ? pathname === '/' : pathname.startsWith(l.href);
-          return (
-            <a
-              key={l.href}
-              href={l.href}
-              onClick={onNavigate}
-              className="flex items-center gap-3 px-3 py-2.5 rounded-2xl transition-all duration-200 font-semibold text-[13px]"
-              style={
-                active
-                  ? { background: 'var(--clay-surface-2)', color: l.accent, boxShadow: 'var(--clay-shadow-btn)', fontWeight: 800 }
-                  : { color: 'rgba(255,255,255,0.82)' }
-              }
-              onMouseEnter={(e) => { if (!active) (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.12)'; }}
-              onMouseLeave={(e) => { if (!active) (e.currentTarget as HTMLElement).style.background = 'transparent'; }}
-            >
-              <span
-                className="w-7 h-7 rounded-xl flex items-center justify-center text-base flex-shrink-0 relative"
-                style={active ? { background: l.accentBg } : {}}
-              >
-                {l.icon}
-                {l.href === '/social' && <UnreadBadge />}
-              </span>
-              {l.label}
-            </a>
-          );
+          return <NavItem key={l.href} l={l} active={active} onNavigate={onNavigate} />;
         })}
       </nav>
 
       <form action={logoutUser} className="w-full px-3 mt-2 flex-shrink-0">
         <button
           type="submit"
-          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-2xl transition-all duration-200 font-semibold text-[13px]"
-          style={{ color: 'rgba(255,255,255,0.7)' }}
-          onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.12)'; }}
+          className="w-full flex items-center gap-3 px-3 py-2 rounded-2xl transition-all duration-150 font-semibold text-[13px]"
+          style={{ color: 'rgba(255,255,255,0.60)' }}
+          onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.10)'; }}
           onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = 'transparent'; }}
         >
-          <span className="w-7 h-7 rounded-xl flex items-center justify-center text-base">🚪</span>
+          <span className="w-7 h-7 rounded-xl flex items-center justify-center"
+            style={{ background: 'rgba(255,255,255,0.10)' }}>
+            <LogOut size={14} strokeWidth={2.2} className="text-white/70" />
+          </span>
           Sair
         </button>
       </form>
@@ -90,10 +110,7 @@ export default function Sidebar({ userName }: { userName: string }) {
   const pathname = usePathname();
   const [drawerOpen, setDrawerOpen] = useState(false);
 
-  // close drawer on route change
   useEffect(() => { setDrawerOpen(false); }, [pathname]);
-
-  // close drawer on Escape
   useEffect(() => {
     const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') setDrawerOpen(false); };
     window.addEventListener('keydown', handler);
@@ -101,8 +118,6 @@ export default function Sidebar({ userName }: { userName: string }) {
   }, []);
 
   if (HIDE_ON.some((p) => pathname === p || pathname.startsWith(p + '/'))) return null;
-
-  const activeLink = LINKS.find((l) => l.href === '/' ? pathname === '/' : pathname.startsWith(l.href));
 
   return (
     <>
@@ -113,54 +128,39 @@ export default function Sidebar({ userName }: { userName: string }) {
       >
         <button
           onClick={() => setDrawerOpen(true)}
-          className="w-9 h-9 rounded-2xl flex items-center justify-center text-white text-xl font-black flex-shrink-0"
+          className="w-9 h-9 rounded-2xl flex items-center justify-center flex-shrink-0"
           style={{ background: 'rgba(255,255,255,0.15)' }}
           aria-label="Menu"
         >
-          ☰
+          <Menu size={18} className="text-white" />
         </button>
 
+        {/* Logo centralizada na topbar */}
         <div className="flex-1 flex items-center gap-2">
           <div className="w-7 h-7 rounded-lg flex items-center justify-center"
             style={{ background: 'rgba(255,255,255,0.20)' }}>
             <img src="https://i.imgur.com/5MU9NOg.png" alt="Vitalis" width={20} height={20} />
           </div>
-          {activeLink && (
-            <span className="text-xs font-bold px-2 py-0.5 rounded-full"
-              style={{ background: 'rgba(255,255,255,0.18)', color: 'rgba(255,255,255,0.9)' }}>
-              {activeLink.icon} {activeLink.label}
-            </span>
-          )}
+          <span className="text-white font-black text-sm">Vitalis</span>
         </div>
 
-        <a href="/social" className="w-9 h-9 rounded-2xl flex items-center justify-center relative"
-          style={{ background: 'rgba(255,255,255,0.15)' }}>
-          <span className="text-base">💬</span>
-          <UnreadBadge />
-        </a>
-        <a href="/notificacoes" className="w-9 h-9 rounded-2xl flex items-center justify-center"
-          style={{ background: 'rgba(255,255,255,0.15)' }}>
-          <span className="text-base">🔔</span>
-        </a>
+        {/* Sem ícones duplicados — notif e social ficam só no menu drawer */}
       </header>
 
-      {/* ── Mobile drawer overlay ───────────────────────────────────────── */}
+      {/* ── Mobile drawer ───────────────────────────────────────────────── */}
       {drawerOpen && (
         <div className="md:hidden fixed inset-0 z-50 flex">
-          {/* Backdrop */}
           <div
             className="absolute inset-0"
             style={{ background: 'rgba(0,0,0,0.45)', backdropFilter: 'blur(4px)' }}
             onClick={() => setDrawerOpen(false)}
           />
-
-          {/* Drawer panel */}
           <aside
             className="relative w-72 max-w-[85vw] h-full flex flex-col py-6 overflow-hidden"
             style={{ ...SIDEBAR_STYLE, borderRadius: '0 28px 28px 0' }}
           >
-            {/* Close + logo + user */}
-            <div className="flex items-center justify-between px-4 mb-4 flex-shrink-0">
+            {/* Logo + user + fechar */}
+            <div className="flex items-center justify-between px-4 mb-5 flex-shrink-0">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-2xl flex items-center justify-center"
                   style={{ background: 'rgba(255,255,255,0.18)' }}>
@@ -173,13 +173,12 @@ export default function Sidebar({ userName }: { userName: string }) {
               </div>
               <button
                 onClick={() => setDrawerOpen(false)}
-                className="w-8 h-8 rounded-xl flex items-center justify-center text-white/80 text-lg"
+                className="w-8 h-8 rounded-xl flex items-center justify-center"
                 style={{ background: 'rgba(255,255,255,0.12)' }}
               >
-                ✕
+                <X size={16} className="text-white/80" />
               </button>
             </div>
-
             <NavItems pathname={pathname} onNavigate={() => setDrawerOpen(false)} />
           </aside>
         </div>
@@ -191,15 +190,10 @@ export default function Sidebar({ userName }: { userName: string }) {
         style={{ ...SIDEBAR_STYLE, borderRadius: 32 }}
       >
         {/* Logo */}
-        <div className="flex flex-col items-center mb-4 flex-shrink-0">
-          <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-1"
+        <div className="flex flex-col items-center mb-5 flex-shrink-0">
+          <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-1.5"
             style={{ background: 'rgba(255,255,255,0.18)' }}>
-            <img
-              src="https://i.imgur.com/5MU9NOg.png"
-              alt="Vitalis"
-              width={40}
-              height={40}
-            />
+            <img src="https://i.imgur.com/5MU9NOg.png" alt="Vitalis" width={40} height={40} />
           </div>
           <p className="text-white font-bold text-sm opacity-90">Olá, {userName}! 👋</p>
         </div>
