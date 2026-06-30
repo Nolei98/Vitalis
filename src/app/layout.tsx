@@ -7,8 +7,39 @@ import { getCurrentUser } from "@/lib/user";
 const font = Nunito({ subsets: ["latin"], weight: ["400", "500", "600", "700", "800", "900"] });
 
 export const metadata: Metadata = {
-  title: "Vitalis",
-  description: "Vitalis — Seu sistema pessoal de bem-estar · Nolei Creative",
+  title: {
+    default: "Vitalis — Seu sistema pessoal de bem-estar",
+    template: "%s · Vitalis",
+  },
+  description: "Vitalis é o seu sistema pessoal de bem-estar. Gerencie nutrição, hidratação, finanças, agenda, tarefas e metas em um só lugar.",
+  keywords: ["bem-estar", "saúde", "nutrição", "finanças pessoais", "produtividade", "vitalis", "nolei creative"],
+  authors: [{ name: "Nolei Creative" }],
+  creator: "Nolei Creative",
+  openGraph: {
+    title: "Vitalis — Seu sistema pessoal de bem-estar",
+    description: "Gerencie nutrição, hidratação, finanças, agenda, tarefas e metas em um só lugar.",
+    url: "https://vitalis.vercel.app",
+    siteName: "Vitalis",
+    images: [
+      {
+        url: "https://i.imgur.com/5MU9NOg.png",
+        width: 512,
+        height: 512,
+        alt: "Vitalis — logo",
+      },
+    ],
+    locale: "pt_BR",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "Vitalis — Seu sistema pessoal de bem-estar",
+    description: "Gerencie nutrição, hidratação, finanças, agenda, tarefas e metas em um só lugar.",
+    images: ["https://i.imgur.com/5MU9NOg.png"],
+  },
+  icons: {
+    icon: "https://i.imgur.com/5MU9NOg.png",
+  },
 };
 
 // Inline script aplica tema do localStorage ANTES do primeiro paint (zero flash)
