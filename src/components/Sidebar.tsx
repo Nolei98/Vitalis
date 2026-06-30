@@ -51,7 +51,7 @@ function NavItems({ pathname, onNavigate }: { pathname: string; onNavigate?: () 
               className="flex items-center gap-3 px-3 py-2.5 rounded-2xl transition-all duration-200 font-semibold text-[13px]"
               style={
                 active
-                  ? { background: 'rgba(255,255,255,0.95)', color: l.accent, boxShadow: `0 4px 12px rgba(0,0,0,0.12)`, fontWeight: 800 }
+                  ? { background: 'var(--clay-surface-2)', color: l.accent, boxShadow: 'var(--clay-shadow-btn)', fontWeight: 800 }
                   : { color: 'rgba(255,255,255,0.82)' }
               }
               onMouseEnter={(e) => { if (!active) (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.12)'; }}

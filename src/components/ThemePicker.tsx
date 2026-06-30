@@ -42,7 +42,7 @@ export default function ThemePicker() {
               onClick={() => apply(t.id)}
               className="flex flex-col items-center gap-1.5 p-3 rounded-2xl transition-all"
               style={{
-                background: isActive ? `${t.preview}18` : '#F9F8FF',
+                background: isActive ? `${t.preview}18` : 'var(--clay-surface)',
                 outline: isActive ? `2.5px solid ${t.preview}` : '2px solid transparent',
                 boxShadow: isActive ? `0 4px 16px ${t.preview}30` : 'none',
               }}

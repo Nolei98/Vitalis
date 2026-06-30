@@ -37,17 +37,17 @@ export default async function SettingsPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-6">
         
         <div className="clay-card p-6 border-2 border-emerald-400 h-fit">
-          <h2 className="text-xl font-bold text-[#4a3f72] mb-2">Credenciais do Google (OAuth)</h2>
-          <p className="text-sm font-medium text-gray-500 mb-6">Configure o Client ID e Secret do Google Cloud Console para ativar o Login e as APIs (Calendar/Drive).</p>
+          <h2 className="text-xl font-bold mb-2" style={{ color: 'var(--text-strong)' }}>Credenciais do Google (OAuth)</h2>
+          <p className="text-sm font-medium mb-6" style={{ color: 'var(--text-soft)' }}>Configure o Client ID e Secret do Google Cloud Console para ativar o Login e as APIs (Calendar/Drive).</p>
           
           <form action={saveGoogleKeys} className="space-y-4">
             <div>
-              <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Google Client ID</label>
-              <input name="clientId" type="text" defaultValue={clientId} required className="w-full clay-card px-4 py-2 outline-none font-mono text-sm" placeholder="Ex: 12345678-xxx.apps.googleusercontent.com" />
+              <label className="block text-xs font-bold uppercase mb-1" style={{ color: 'var(--text-soft)' }}>Google Client ID</label>
+              <input name="clientId" type="text" defaultValue={clientId} required className="w-full clay-inset px-4 py-2 outline-none font-mono text-sm" style={{ color: 'var(--clay-text)' }} placeholder="Ex: 12345678-xxx.apps.googleusercontent.com" />
             </div>
             <div>
-              <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Google Client Secret</label>
-              <input name="clientSecret" type="password" defaultValue={clientSecret} required className="w-full clay-card px-4 py-2 outline-none font-mono text-sm" placeholder="Ex: GOCSPX-xxxx" />
+              <label className="block text-xs font-bold uppercase mb-1" style={{ color: 'var(--text-soft)' }}>Google Client Secret</label>
+              <input name="clientSecret" type="password" defaultValue={clientSecret} required className="w-full clay-inset px-4 py-2 outline-none font-mono text-sm" style={{ color: 'var(--clay-text)' }} placeholder="Ex: GOCSPX-xxxx" />
             </div>
             
             <div className="bg-blue-50 text-blue-800 p-4 rounded-xl text-sm font-bold border border-blue-200">

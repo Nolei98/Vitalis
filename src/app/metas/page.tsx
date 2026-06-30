@@ -75,7 +75,7 @@ export default async function MetasPage() {
                       <form action={updateGoalProgress} className="flex gap-1">
                         <input type="hidden" name="id" value={g.id} />
                         <input name="current" type="number" step="any" defaultValue={g.current}
-                          className="clay-card w-16 px-2 py-1 text-xs outline-none text-center" />
+                          className="clay-inset w-16 px-2 py-1 text-xs outline-none text-center" />
                         <button className="clay-btn text-white text-xs font-bold px-2 py-1"
                           style={{ background: 'var(--mod-metas)' }}>ok</button>
                       </form>
@@ -92,15 +92,15 @@ export default async function MetasPage() {
 
           <form action={createGoal} className="clay-card p-5 grid grid-cols-2 gap-3">
             <h2 className="col-span-2 text-base font-extrabold" style={{ color: 'var(--text-strong)' }}>Nova Meta</h2>
-            <input name="title" placeholder="Título" required className="col-span-2 clay-card px-4 py-2 text-sm outline-none" />
-            <input name="metric" placeholder="Métrica (ex: kg, R$, páginas)" className="clay-card px-4 py-2 text-sm outline-none" />
-            <input name="target" type="number" step="any" placeholder="Alvo" className="clay-card px-4 py-2 text-sm outline-none" />
-            <select name="type" className="clay-card px-4 py-2 text-sm outline-none">
+            <input name="title" placeholder="Título" required className="col-span-2 clay-inset px-4 py-2 text-sm outline-none" style={{ color: 'var(--clay-text)' }} />
+            <input name="metric" placeholder="Métrica (ex: kg, R$, páginas)" className="clay-inset px-4 py-2 text-sm outline-none" style={{ color: 'var(--clay-text)' }} />
+            <input name="target" type="number" step="any" placeholder="Alvo" className="clay-inset px-4 py-2 text-sm outline-none" style={{ color: 'var(--clay-text)' }} />
+            <select name="type" className="clay-inset px-4 py-2 text-sm outline-none" style={{ color: 'var(--clay-text)' }}>
               <option value="short">Curto prazo</option>
               <option value="medium">Médio prazo</option>
               <option value="long">Longo prazo</option>
             </select>
-            <input name="deadline" type="date" className="clay-card px-4 py-2 text-sm outline-none" />
+            <input name="deadline" type="date" className="clay-inset px-4 py-2 text-sm outline-none" style={{ color: 'var(--clay-text)' }} />
             <button className="col-span-2 clay-btn text-white font-bold py-2"
               style={{ background: 'var(--mod-metas)' }}>Adicionar Meta +</button>
           </form>
@@ -142,8 +142,8 @@ export default async function MetasPage() {
 
           <form action={createHabit} className="clay-card p-5 space-y-3">
             <h2 className="text-base font-extrabold" style={{ color: 'var(--text-strong)' }}>Novo Hábito</h2>
-            <input name="title" placeholder="Ex: Ler 20 min" required className="clay-card w-full px-4 py-2 text-sm outline-none" />
-            <select name="frequency" className="clay-card w-full px-4 py-2 text-sm outline-none">
+            <input name="title" placeholder="Ex: Ler 20 min" required className="clay-inset w-full px-4 py-2 text-sm outline-none" style={{ color: 'var(--clay-text)' }} />
+            <select name="frequency" className="clay-inset w-full px-4 py-2 text-sm outline-none" style={{ color: 'var(--clay-text)' }}>
               <option value="daily">Diário</option>
               <option value="weekly">Semanal</option>
             </select>
