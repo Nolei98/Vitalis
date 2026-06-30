@@ -51,82 +51,115 @@ export default function DietaClient({ profile, targets, todayTotals, meals, cust
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <h1 className="text-4xl font-extrabold text-[#4a3f72]">Vitalis <span className="text-[#9871F5]">Nutri</span></h1>
+    <div className="flex-1 min-h-0 flex flex-col gap-3">
+      {/* Header + tabs fixos */}
+      <header className="flex-shrink-0 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="flex items-center gap-3">
+          <span className="w-10 h-10 rounded-2xl flex items-center justify-center text-xl"
+            style={{ background: 'var(--mod-dieta-bg)' }}>🥗</span>
+          <div>
+            <h1 className="text-2xl font-black" style={{ color: 'var(--clay-text)' }}>
+              Vitalis <span style={{ color: 'var(--mod-dieta)' }}>Nutri</span>
+            </h1>
+          </div>
+        </div>
         <div className="flex gap-2 overflow-x-auto no-scrollbar">
           {TABS.map(t => (
-            <button key={t.id} onClick={() => setTab(t.id)} className={`px-4 py-2 rounded-xl text-sm font-bold whitespace-nowrap transition ${tab === t.id ? 'bg-[#9871F5] text-white shadow' : 'bg-white text-gray-500 clay-card'}`}>{t.label}</button>
+            <button
+              key={t.id}
+              onClick={() => setTab(t.id)}
+              className="px-4 py-2 rounded-xl text-sm font-bold whitespace-nowrap transition-all"
+              style={tab === t.id
+                ? { background: 'var(--mod-dieta)', color: 'white' }
+                : { background: 'var(--clay-surface)', color: 'var(--clay-text-soft)', boxShadow: 'var(--clay-shadow)' }
+              }
+            >{t.label}</button>
           ))}
         </div>
       </header>
 
-      {tab === 'hoje' && (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-1 space-y-6">
-            {/* Resumo */}
-            <div className="clay-card p-6 bg-white flex flex-col items-center">
-              <ProgressRing value={kcalPct} size={170}>
-                <span className="text-3xl font-extrabold text-[#4a3f72]">{todayTotals.kcal}</span>
-                <span className="text-[10px] uppercase text-gray-400">de {goalKcal} kcal</span>
-              </ProgressRing>
-              {!targets && <p className="text-[11px] text-gray-400 mt-2 text-center">Preencha o Perfil para metas automáticas.</p>}
-              <div className="w-full space-y-3 mt-5">
-                {MACROS.map(m => {
-                  const cur = (todayTotals as any)[m.key] as number;
-                  const tgt = targets ? (targets as any)[m.key] as number : 0;
-                  const pct = tgt ? Math.min(100, (cur / tgt) * 100) : 0;
-                  return (
-                    <div key={m.key}>
-                      <div className="flex justify-between text-xs font-bold mb-1">
-                        <span className={m.tcolor}>{m.label}</span>
-                        <span className="text-gray-500">{cur}{tgt ? ` / ${tgt}` : ''}g</span>
+      {/* Conteúdo rola internamente */}
+      <div className="flex-1 min-h-0 overflow-y-auto no-scrollbar">
+
+        {tab === 'hoje' && (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 h-full">
+            {/* Esquerda: resumo + add refeição */}
+            <div className="lg:col-span-1 flex flex-col gap-4">
+              <div className="clay-card p-5 flex flex-col items-center">
+                <ProgressRing value={kcalPct} size={160}>
+                  <span className="text-3xl font-extrabold" style={{ color: 'var(--clay-text)' }}>{todayTotals.kcal}</span>
+                  <span className="text-[10px] uppercase" style={{ color: 'var(--clay-text-mute)' }}>de {goalKcal} kcal</span>
+                </ProgressRing>
+                {!targets && (
+                  <p className="text-[11px] mt-2 text-center" style={{ color: 'var(--clay-text-mute)' }}>
+                    Preencha o Perfil para metas automáticas.
+                  </p>
+                )}
+                <div className="w-full space-y-3 mt-4">
+                  {MACROS.map(m => {
+                    const cur = (todayTotals as any)[m.key] as number;
+                    const tgt = targets ? (targets as any)[m.key] as number : 0;
+                    const pct = tgt ? Math.min(100, (cur / tgt) * 100) : 0;
+                    return (
+                      <div key={m.key}>
+                        <div className="flex justify-between text-xs font-bold mb-1">
+                          <span className={m.tcolor}>{m.label}</span>
+                          <span style={{ color: 'var(--clay-text-soft)' }}>{cur}{tgt ? ` / ${tgt}` : ''}g</span>
+                        </div>
+                        <div className="h-2 rounded-full overflow-hidden" style={{ background: 'var(--clay-sunken)' }}>
+                          <div className="h-full rounded-full transition-all duration-700" style={{ width: `${pct}%`, backgroundColor: m.color }} />
+                        </div>
                       </div>
-                      <div className="h-2.5 bg-gray-100 rounded-full overflow-hidden">
-                        <div className="h-full rounded-full transition-all duration-700" style={{ width: `${pct}%`, backgroundColor: m.color }} />
+                    );
+                  })}
+                </div>
+              </div>
+              <MealBuilder customFoods={customFoods} aiEnabled={aiEnabled} />
+            </div>
+
+            {/* Direita: lista de refeições com scroll interno */}
+            <div className="lg:col-span-2 clay-card p-5 flex flex-col min-h-[300px] lg:min-h-0">
+              <h2 className="text-base font-extrabold mb-4 flex-shrink-0" style={{ color: 'var(--clay-text)' }}>
+                Refeições de hoje
+              </h2>
+              <div className="flex-1 overflow-y-auto no-scrollbar space-y-2">
+                {meals.length === 0 && (
+                  <div className="flex flex-col items-center justify-center py-12" style={{ color: 'var(--clay-text-mute)' }}>
+                    <span className="text-4xl mb-3">🍽️</span>
+                    <p className="font-bold">Nada registrado ainda.</p>
+                  </div>
+                )}
+                {meals.map(m => (
+                  <div key={m.id} className="clay-card p-3 flex justify-between items-center group"
+                    style={{ background: 'var(--clay-surface-2)' }}>
+                    <div>
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider"
+                        style={{ background: 'var(--mod-dieta-bg)', color: 'var(--mod-dieta-strong)' }}>{m.type}</span>
+                      <p className="font-extrabold mt-1.5 text-sm" style={{ color: 'var(--clay-text)' }}>
+                        {m.food}{m.grams ? <span className="font-semibold text-xs" style={{ color: 'var(--clay-text-mute)' }}> · {m.grams}g</span> : null}
+                      </p>
+                      <div className="flex gap-3 mt-1 text-xs font-bold" style={{ color: 'var(--clay-text-soft)' }}>
+                        {m.calories ? <span>🔥 {m.calories} kcal</span> : null}
+                        {m.protein ? <span>🥩 {m.protein}g</span> : null}
+                        {m.carbs ? <span>🍚 {m.carbs}g</span> : null}
+                        {m.fat ? <span>🥑 {m.fat}g</span> : null}
                       </div>
                     </div>
-                  );
-                })}
+                    <button onClick={() => removeMeal(m.id)}
+                      className="w-8 h-8 rounded-full font-bold opacity-0 group-hover:opacity-100 transition-opacity"
+                      style={{ background: '#FFE5E9', color: '#D94060' }}>×</button>
+                  </div>
+                ))}
               </div>
             </div>
-
-            <MealBuilder customFoods={customFoods} aiEnabled={aiEnabled} />
           </div>
+        )}
 
-          {/* Refeições de hoje */}
-          <div className="lg:col-span-2 clay-card p-6 bg-white">
-            <h2 className="text-xl font-bold text-[#4a3f72] mb-5">Refeições de hoje</h2>
-            <div className="space-y-3">
-              {meals.length === 0 && (
-                <div className="flex flex-col items-center justify-center py-16 text-purple-900/40">
-                  <span className="text-4xl mb-3">🍽️</span>
-                  <p className="font-bold">Nada registrado ainda.</p>
-                </div>
-              )}
-              {meals.map(m => (
-                <div key={m.id} className="clay-card p-4 flex justify-between items-center bg-gray-50/50 group">
-                  <div>
-                    <span className="text-[10px] font-bold text-gray-400 bg-white px-2 py-1 rounded-md uppercase tracking-wider">{m.type}</span>
-                    <p className="font-extrabold text-[#4a3f72] mt-2">{m.food}{m.grams ? <span className="text-gray-400 font-semibold text-sm"> · {m.grams}g</span> : null}</p>
-                    <div className="flex gap-3 mt-1 text-xs font-bold text-gray-500">
-                      {m.calories ? <span>🔥 {m.calories} kcal</span> : null}
-                      {m.protein ? <span>🥩 {m.protein}g</span> : null}
-                      {m.carbs ? <span>🍚 {m.carbs}g</span> : null}
-                      {m.fat ? <span>🥑 {m.fat}g</span> : null}
-                    </div>
-                  </div>
-                  <button onClick={() => removeMeal(m.id)} className="w-8 h-8 rounded-full bg-red-100 text-red-500 font-bold opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-200">×</button>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
+        {tab === 'alimentos' && <div className="clay-card p-5"><FoodLibrary customFoods={customFoods} /></div>}
+        {tab === 'recomendacoes' && <div className="clay-card p-5"><Recommendations defaultGoal={(profile.goal as Goal) || undefined} /></div>}
+        {tab === 'perfil' && <ProfileForm profile={profile} />}
 
-      {tab === 'alimentos' && <div className="clay-card p-6 bg-white"><FoodLibrary customFoods={customFoods} /></div>}
-      {tab === 'recomendacoes' && <div className="clay-card p-6 bg-white"><Recommendations defaultGoal={(profile.goal as Goal) || undefined} /></div>}
-      {tab === 'perfil' && <ProfileForm profile={profile} />}
+      </div>
     </div>
   );
 }
