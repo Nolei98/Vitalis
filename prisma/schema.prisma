@@ -1,0 +1,444 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ===== Auth.js =====
+model User {
+  id            String   @id @default(cuid())
+  name          String?
+  email         String?  @unique
+  emailVerified DateTime?
+  image         String?
+  timezone      String   @default("America/Sao_Paulo")
+  createdAt     DateTime @default(now())
+
+  // Auth local
+  passwordHash  String?
+  lastBackupAt  DateTime?
+  role          String   @default("user") // user | admin
+
+  // Perfil físico para nutrição
+  sex           String?
+  age           Int?
+  heightCm      Int?
+  weightKg      Float?
+  activityLevel String?
+  goal          String?
+  targetKcal    Int?
+  targetProtein Int?
+  targetCarbs   Int?
+  targetFat     Int?
+
+  // Social
+  handle        String?  @unique
+  bio           String?
+  avatarUrl     String?
+
+  accounts      Account[]
+  sessions      Session[]
+  tasks         Task[]
+  waterLogs     WaterLog[]
+  meals         Meal[]
+  foods         Food[]
+  events        CalendarEvent[]
+  integrations  Integration[]
+  goals         Goal[]
+  habits        Habit[]
+  finAccounts   FinAccount[]
+  transactions  Transaction[]
+  budgets       Budget[]
+  alarms        Alarm[]
+  notifRules    NotificationRule[]
+
+  // Social relations
+  friendsSent       Friendship[]      @relation("sent")
+  friendsReceived   Friendship[]      @relation("received")
+  squadMemberships  SquadMember[]
+  sentMessages      Message[]
+  reactions         Reaction[]
+  activitySessions  ActivitySession[]
+  scores            UserScore[]
+  badges            Badge[]
+}
+
+model Account { 
+  id String @id @default(cuid()) 
+  userId String 
+  provider String 
+  providerAccountId String 
+  type String 
+  refresh_token String? 
+  access_token String? 
+  expires_at Int? 
+  token_type String? 
+  scope String?
+  id_token String?
+  session_state String?
+  user User @relation(fields:[userId], references:[id], onDelete: Cascade)
+  @@unique([provider, providerAccountId])
+}
+
+model Session { 
+  id String @id @default(cuid()) 
+  sessionToken String @unique 
+  userId String 
+  expires DateTime 
+  user User @relation(fields:[userId], references:[id], onDelete: Cascade) 
+}
+
+model VerificationToken { 
+  identifier String 
+  token String @unique 
+  expires DateTime 
+  @@unique([identifier, token]) 
+}
+
+// ===== Integrações =====
+model Integration {
+  id            String   @id @default(cuid())
+  userId        String
+  provider      String   // google | outlook | canvas | discord
+  label         String?  // ex.: "Google Pessoal", "Outlook Trabalho"
+  accessToken   String?  // CRIPTOGRAFADO
+  refreshToken  String?  // CRIPTOGRAFADO
+  expiresAt     DateTime?
+  scopes        String?
+  icalUrl       String?  // Canvas (feed .ics)
+  webhookUrl    String?  // Discord webhook (CRIPTOGRAFADO)
+  status        String   @default("connected") // connected | error | revoked
+  lastSyncAt    DateTime?
+  syncCursor    String?  // syncToken/deltaLink p/ sync incremental
+  user          User     @relation(fields:[userId], references:[id], onDelete: Cascade)
+  events        CalendarEvent[]
+  @@index([userId, provider])
+}
+
+// ===== Módulos =====
+model Task { 
+  id String @id @default(cuid()) 
+  userId String 
+  title String 
+  project String? 
+  status String @default("pending") 
+  priority Int @default(0) 
+  due DateTime? 
+  createdAt DateTime @default(now()) 
+  source String? @default("internal")
+  externalId String?
+  user User @relation(fields:[userId], references:[id], onDelete: Cascade) 
+}
+
+model WaterLog { 
+  id String @id @default(cuid()) 
+  userId String 
+  amount Int 
+  createdAt DateTime @default(now()) 
+  user User @relation(fields:[userId], references:[id], onDelete: Cascade) 
+  @@index([userId, createdAt]) 
+}
+
+model Meal {
+  id String @id @default(cuid())
+  userId String
+  type String
+  food String
+  grams Int?
+  foodId String?
+  calories Int?
+  protein Int?
+  carbs Int?
+  fat Int?
+  createdAt DateTime @default(now())
+  user User @relation(fields:[userId], references:[id], onDelete: Cascade)
+}
+
+model Food {
+  id         String   @id @default(cuid())
+  userId     String
+  name       String
+  brand      String?
+  category   String?
+  energyKcal Int
+  proteinG   Float
+  carbsG     Float
+  fatG       Float
+  goals      String?  // CSV: "hipertrofia,emagrecimento"
+  createdAt  DateTime @default(now())
+  user       User     @relation(fields:[userId], references:[id], onDelete: Cascade)
+  @@index([userId])
+}
+
+model CalendarEvent {
+  id String @id @default(cuid()) 
+  userId String 
+  integrationId String?
+  source String 
+  externalId String? 
+  title String
+  start DateTime 
+  end DateTime 
+  allDay Boolean @default(false)
+  timezone String?
+  location String? 
+  url String? 
+  category String?
+  user User @relation(fields:[userId], references:[id], onDelete: Cascade)
+  integration Integration? @relation(fields:[integrationId], references:[id], onDelete: SetNull)
+  @@unique([integrationId, externalId]) 
+  @@index([userId, start])
+}
+
+model Goal { 
+  id String @id @default(cuid()) 
+  userId String 
+  title String 
+  type String 
+  metric String? 
+  target Float? 
+  current Float @default(0) 
+  deadline DateTime? 
+  status String @default("active") 
+  user User @relation(fields:[userId], references:[id], onDelete: Cascade) 
+}
+
+model Habit {
+  id String @id @default(cuid())
+  userId String
+  title String
+  frequency String
+  streak Int @default(0)
+  createdAt DateTime @default(now())
+  user User @relation(fields:[userId], references:[id], onDelete: Cascade)
+  logs HabitLog[]
+}
+
+model HabitLog {
+  id String @id @default(cuid())
+  habitId String
+  userId String
+  date DateTime @default(now())
+  habit Habit @relation(fields:[habitId], references:[id], onDelete: Cascade)
+  @@index([habitId, date])
+  @@index([userId, date])
+}
+
+model FinAccount { 
+  id String @id @default(cuid()) 
+  userId String 
+  name String 
+  type String 
+  balance Float @default(0) 
+  user User @relation(fields:[userId], references:[id], onDelete: Cascade) 
+  transactions Transaction[] 
+}
+
+model Transaction { 
+  id String @id @default(cuid()) 
+  userId String 
+  accountId String 
+  amount Float 
+  kind String 
+  category String? 
+  note String? 
+  date DateTime @default(now()) 
+  recurring Boolean @default(false) 
+  user User @relation(fields:[userId], references:[id], onDelete: Cascade) 
+  account FinAccount @relation(fields:[accountId], references:[id], onDelete: Cascade) 
+  @@index([userId, date]) 
+}
+
+model Budget { 
+  id String @id @default(cuid()) 
+  userId String 
+  category String 
+  limit Float 
+  period String 
+  user User @relation(fields:[userId], references:[id], onDelete: Cascade) 
+}
+
+model Alarm {
+  id String @id @default(cuid())
+  userId String
+  label String
+  time String
+  recurrence String?
+  type String
+  channels String
+  lastFiredAt DateTime?
+  user User @relation(fields:[userId], references:[id], onDelete: Cascade)
+}
+
+model NotificationRule {
+  id String @id @default(cuid())
+  userId String
+  event String
+  channel String
+  window String?
+  enabled Boolean @default(true)
+  user User @relation(fields:[userId], references:[id], onDelete: Cascade)
+}
+
+// ===== Social =====
+
+model Friendship {
+  id          String   @id @default(cuid())
+  requesterId String
+  addresseeId String
+  status      String   @default("pending") // pending | accepted | blocked
+  createdAt   DateTime @default(now())
+  requester   User     @relation("sent",     fields: [requesterId], references: [id], onDelete: Cascade)
+  addressee   User     @relation("received", fields: [addresseeId], references: [id], onDelete: Cascade)
+  @@unique([requesterId, addresseeId])
+  @@index([addresseeId, status])
+}
+
+model Squad {
+  id          String   @id @default(cuid())
+  name        String
+  type        String   // estudos | academia | compras | metas
+  description String?
+  coverEmoji  String   @default("🏆")
+  inviteCode  String   @unique @default(cuid())
+  ownerId     String
+  createdAt   DateTime @default(now())
+  members     SquadMember[]
+  messages    Message[]
+  squadGoals  SquadGoal[]
+  sessions    ActivitySession[]
+  challenges  Challenge[]
+  shoppingItems ShoppingItem[]
+  scores      UserScore[]
+}
+
+model SquadMember {
+  id       String   @id @default(cuid())
+  squadId  String
+  userId   String
+  role     String   @default("member") // admin | member
+  joinedAt DateTime @default(now())
+  squad    Squad    @relation(fields: [squadId], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [userId],  references: [id], onDelete: Cascade)
+  @@unique([squadId, userId])
+  @@index([userId])
+}
+
+model Message {
+  id          String       @id @default(cuid())
+  squadId     String?
+  dmKey       String?      // "uid1<uid2" sorted lexicographically
+  senderId    String
+  text        String?
+  replyToId   String?
+  createdAt   DateTime     @default(now())
+  sender      User         @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  squad       Squad?       @relation(fields: [squadId],  references: [id], onDelete: Cascade)
+  replyTo     Message?     @relation("replies", fields: [replyToId], references: [id])
+  replies     Message[]    @relation("replies")
+  attachments Attachment[]
+  reactions   Reaction[]
+  @@index([squadId, createdAt])
+  @@index([dmKey,   createdAt])
+}
+
+model Attachment {
+  id        String  @id @default(cuid())
+  messageId String
+  url       String
+  mime      String
+  size      Int
+  width     Int?
+  height    Int?
+  message   Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+}
+
+model Reaction {
+  id        String  @id @default(cuid())
+  messageId String
+  userId    String
+  emoji     String
+  createdAt DateTime @default(now())
+  message   Message  @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId],    references: [id], onDelete: Cascade)
+  @@unique([messageId, userId, emoji])
+}
+
+model SquadGoal {
+  id        String    @id @default(cuid())
+  squadId   String
+  title     String
+  metric    String?
+  target    Float?
+  deadline  DateTime?
+  createdAt DateTime  @default(now())
+  squad     Squad     @relation(fields: [squadId], references: [id], onDelete: Cascade)
+}
+
+model ActivitySession {
+  id            String    @id @default(cuid())
+  userId        String
+  squadId       String?
+  type          String    // estudos | treino | compras | meta
+  startedAt     DateTime
+  endedAt       DateTime?
+  durationMin   Int?
+  tags          String?
+  proofImageUrl String?
+  notes         String?
+  xpEarned      Int       @default(0)
+  createdAt     DateTime  @default(now())
+  user          User      @relation(fields: [userId],  references: [id], onDelete: Cascade)
+  squad         Squad?    @relation(fields: [squadId], references: [id], onDelete: SetNull)
+  @@index([userId, createdAt])
+  @@index([squadId, createdAt])
+}
+
+model ShoppingItem {
+  id         String   @id @default(cuid())
+  squadId    String
+  name       String
+  valor      Float?
+  bought     Boolean  @default(false)
+  boughtById String?
+  createdAt  DateTime @default(now())
+  squad      Squad    @relation(fields: [squadId], references: [id], onDelete: Cascade)
+  @@index([squadId])
+}
+
+model Challenge {
+  id           String   @id @default(cuid())
+  squadId      String
+  title        String
+  metricTarget Float?
+  startAt      DateTime
+  endAt        DateTime
+  createdAt    DateTime @default(now())
+  squad        Squad    @relation(fields: [squadId], references: [id], onDelete: Cascade)
+}
+
+model UserScore {
+  id        String   @id @default(cuid())
+  userId    String
+  squadId   String
+  period    String   // "2025-W26" | "2025-06"
+  points    Int      @default(0)
+  streak    Int      @default(0)
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId],  references: [id], onDelete: Cascade)
+  squad     Squad    @relation(fields: [squadId], references: [id], onDelete: Cascade)
+  @@unique([userId, squadId, period])
+  @@index([squadId, period, points])
+}
+
+model Badge {
+  id       String   @id @default(cuid())
+  userId   String
+  type     String   // streak_7d | streak_30d | hours_10 | hours_100 | checkin_10
+  earnedAt DateTime @default(now())
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@unique([userId, type])
+}
