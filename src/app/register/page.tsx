@@ -8,51 +8,85 @@ export default function RegisterPage() {
   const [state, action, pending] = useActionState<AuthState, FormData>(registerUser, {});
 
   return (
-    <div className="w-full max-w-sm mx-auto">
-      <div className="clay-panel p-8 text-white">
-        <div className="text-center mb-6">
-          <div className="text-4xl mb-2">🧬</div>
-          <h1 className="text-2xl font-extrabold">Criar perfil</h1>
-          <p className="text-purple-100 text-sm font-semibold">Novo usuário do LifeOS</p>
+    <div className="min-h-full flex flex-col items-center justify-center gap-8 py-12 px-4">
+
+      {/* Logo — fora do card */}
+      <div className="flex flex-col items-center gap-2">
+        <img
+          src="https://i.imgur.com/5MU9NOg.png"
+          alt="Vitalis"
+          width={80}
+          height={80}
+          style={{ filter: 'drop-shadow(0 4px 16px rgba(100,90,72,0.28))' }}
+        />
+        <p className="text-[13px] font-semibold tracking-wide" style={{ color: 'var(--clay-text-soft)' }}>
+          Crie sua conta gratuita
+        </p>
+      </div>
+
+      {/* Card clay */}
+      <div className="clay-card w-full max-w-sm p-8 flex flex-col gap-6">
+        <div className="text-center">
+          <h1 className="text-2xl font-black tracking-tight" style={{ color: 'var(--clay-text)' }}>
+            Criar perfil
+          </h1>
+          <p className="text-sm font-medium mt-1" style={{ color: 'var(--clay-text-mute)' }}>
+            Novo usuário Vitalis
+          </p>
         </div>
-        <form action={action} className="space-y-4">
+
+        <form action={action} className="flex flex-col gap-3">
           <input
             name="name"
             type="text"
             required
             placeholder="Nome"
-            className="w-full rounded-2xl px-4 py-3 text-gray-800 font-semibold outline-none"
+            className="clay-input w-full"
+            style={{ color: 'var(--clay-text)' }}
           />
           <input
             name="email"
             type="email"
             required
             placeholder="E-mail"
-            className="w-full rounded-2xl px-4 py-3 text-gray-800 font-semibold outline-none"
+            className="clay-input w-full"
+            style={{ color: 'var(--clay-text)' }}
           />
           <input
             name="password"
             type="password"
             required
             placeholder="Senha (mín. 4)"
-            className="w-full rounded-2xl px-4 py-3 text-gray-800 font-semibold outline-none"
+            className="clay-input w-full"
+            style={{ color: 'var(--clay-text)' }}
           />
-          {state.error && <p className="text-sm font-bold text-red-200">⚠️ {state.error}</p>}
+          {state.error && (
+            <p className="text-sm font-bold rounded-xl px-3 py-2"
+              style={{ background: '#FFE5E9', color: '#D94060' }}>
+              ⚠️ {state.error}
+            </p>
+          )}
           <button
             type="submit"
             disabled={pending}
-            className="clay-btn w-full bg-white text-[#9871F5] font-extrabold py-3 hover:scale-[0.98] transition-transform disabled:opacity-60"
+            className="clay-btn w-full py-3 text-white font-extrabold text-sm mt-1 disabled:opacity-60"
+            style={{ background: 'linear-gradient(135deg, var(--sidebar-from, #6D49E8), var(--sidebar-to, #B794FF))' }}
           >
-            {pending ? 'Criando...' : 'Criar e entrar'}
+            {pending ? 'Criando...' : 'Criar e entrar →'}
           </button>
         </form>
-        <p className="text-center text-purple-100 text-sm font-semibold mt-5">
+
+        <p className="text-center text-sm font-semibold" style={{ color: 'var(--clay-text-mute)' }}>
           Já tem conta?{' '}
-          <Link href="/login" className="underline font-bold">
+          <Link href="/login" className="font-bold" style={{ color: 'var(--sidebar-from, #7C5CFC)' }}>
             Entrar
           </Link>
         </p>
       </div>
+
+      <p className="text-[11px] font-medium" style={{ color: 'var(--clay-text-mute)' }}>
+        © {new Date().getFullYear()} Nolei Creative
+      </p>
     </div>
   );
 }

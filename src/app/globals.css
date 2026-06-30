@@ -49,25 +49,25 @@
 }
 
 :root {
-  /* shadcn tokens */
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+  /* shadcn tokens — mapeados para clay */
+  --background: #ECE9E2;        /* greige — fundo do app */
+  --foreground: #5B554C;        /* marrom-acinzentado — texto principal */
+  --card: #F4F1EA;              /* surface clay */
+  --card-foreground: #5B554C;
+  --popover: #FBF9F4;           /* surface-2 */
+  --popover-foreground: #5B554C;
+  --primary: #C9A98C;           /* caramelo clay */
+  --primary-foreground: #ffffff;
+  --secondary: #F4F1EA;
+  --secondary-foreground: #5B554C;
+  --muted: #E4E0D7;             /* sunken */
+  --muted-foreground: #B3ACA0;
+  --accent: #F4F1EA;
+  --accent-foreground: #5B554C;
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  --border: rgba(91,85,76,0.10);
+  --input: #E4E0D7;
+  --ring: #C9A98C;
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
@@ -105,27 +105,29 @@
   --clay-accent-2: #A9B5A0;   /* sage discreto para sucesso */
   --clay-accent-bg:#F5EDE3;   /* fundo translúcido do acento */
 
-  /* Sombras — alma do claymorphism */
+  /* Sombras — alma do claymorphism (intensidade visível) */
   --clay-shadow:
-    -6px -6px 14px rgba(255, 255, 255, 0.88),
-    8px 8px 18px rgba(120, 110, 95, 0.18);
+    -6px -6px 14px rgba(255, 255, 255, 0.92),
+    8px 8px 20px rgba(100, 90, 72, 0.32),
+    inset 1px 1px 3px rgba(255, 255, 255, 0.8),
+    inset -1px -1px 2px rgba(0, 0, 0, 0.04);
 
   --clay-shadow-hover:
-    -8px -8px 18px rgba(255, 255, 255, 0.92),
-    10px 10px 24px rgba(120, 110, 95, 0.24);
+    -8px -8px 18px rgba(255, 255, 255, 0.95),
+    12px 12px 26px rgba(100, 90, 72, 0.38);
 
   --clay-shadow-inset:
-    inset 4px 4px 8px rgba(120, 110, 95, 0.16),
-    inset -4px -4px 8px rgba(255, 255, 255, 0.82);
+    inset 5px 5px 10px rgba(100, 90, 72, 0.22),
+    inset -4px -4px 8px rgba(255, 255, 255, 0.88);
 
   --clay-shadow-btn:
-    -3px -3px 8px rgba(255, 255, 255, 0.9),
-    4px 4px 10px rgba(120, 110, 95, 0.18),
-    inset 1px 1px 2px rgba(255, 255, 255, 0.6);
+    -3px -3px 8px rgba(255, 255, 255, 0.92),
+    5px 5px 12px rgba(100, 90, 72, 0.24),
+    inset 1px 1px 2px rgba(255, 255, 255, 0.7);
 
   --clay-shadow-btn-press:
-    inset 3px 3px 7px rgba(120, 110, 95, 0.18),
-    inset -2px -2px 5px rgba(255, 255, 255, 0.75);
+    inset 4px 4px 8px rgba(100, 90, 72, 0.22),
+    inset -3px -3px 6px rgba(255, 255, 255, 0.8);
 
   /* Raios */
   --clay-radius-card: 24px;
