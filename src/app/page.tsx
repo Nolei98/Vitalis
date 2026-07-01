@@ -11,7 +11,8 @@ import { kcalTrend, waterTrend, taskTrend, eventTrend } from '@/lib/weekTrend';
 import TrendArea from '@/components/charts/TrendArea';
 import SparkLine from '@/components/charts/SparkLine';
 import DonutRing from '@/components/charts/DonutRing';
-import { MessageCircle, Bell, Plug, Sun } from 'lucide-react';
+import { todayFocusMinutes } from '@/app/actions/study';
+import { MessageCircle, Bell, Plug, Sun, BookOpen } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
@@ -40,11 +41,12 @@ export default async function Dashboard() {
     prisma.goal.findMany({ where: { userId: user.id, type: { not: 'vault' }, status: 'active' } }),
   ]);
 
-  const [kcalW, waterW, taskW, eventW] = await Promise.all([
+  const [kcalW, waterW, taskW, eventW, studyMinutesToday] = await Promise.all([
     kcalTrend(user.id),
     waterTrend(user.id),
     taskTrend(user.id),
     eventTrend(user.id),
+    todayFocusMinutes(),
   ]);
 
   const totalWater = waterLogs.reduce((a, l) => a + l.amount, 0);
@@ -272,6 +274,13 @@ export default async function Dashboard() {
             <a href="/tarefas" className="text-[10px] font-bold px-2 py-0.5 rounded-full"
               style={{ background: 'var(--mod-tarefas-bg)', color: 'var(--mod-tarefas-strong)' }}>Ver tudo</a>
           </div>
+          <a href="/estudos" className="flex items-center gap-1.5 mb-1.5 px-2 py-1 rounded-lg w-fit flex-shrink-0"
+            style={{ background: 'var(--mod-estudos-bg)' }}>
+            <BookOpen size={12} strokeWidth={2.2} style={{ color: 'var(--mod-estudos-strong)' }} />
+            <span className="text-[10px] font-bold" style={{ color: 'var(--mod-estudos-strong)' }}>
+              Estudo hoje: {studyMinutesToday}min
+            </span>
+          </a>
           <div className="flex-1 overflow-y-auto no-scrollbar space-y-1.5">
             {topTasks.map((task) => <TaskCheckbox key={task.id} task={task} />)}
             {topTasks.length === 0 && (

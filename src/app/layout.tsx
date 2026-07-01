@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Nunito } from "next/font/google";
 import "./globals.css";
 import Sidebar from "@/components/Sidebar";
+import RightDock from "@/components/RightDock";
 import { getCurrentUser } from "@/lib/user";
 
 const font = Nunito({ subsets: ["latin"], weight: ["400", "500", "600", "700", "800", "900"] });
@@ -73,6 +74,8 @@ export default async function RootLayout({
         style={{ background: 'var(--app-bg)', color: 'var(--text-strong)', height: '100dvh' }}
       >
 
+        <RightDock />
+
         {/* ── Desktop: viewport fixo, sem scroll no browser ────────── */}
         <div className="hidden md:flex h-full justify-center px-6 py-6">
           <div className="flex gap-6 w-full h-full" style={{ maxWidth: 1400 }}>
@@ -82,8 +85,8 @@ export default async function RootLayout({
               <Sidebar userName={firstName} isAdmin={isAdmin} />
             </div>
 
-            {/* Área de conteúdo: coluna flex, preenche o restante */}
-            <main className="flex-1 min-w-0 h-full flex flex-col overflow-hidden">
+            {/* Área de conteúdo: coluna flex, preenche o restante. pr extra reserva espaço pra RightDock não sobrepor. */}
+            <main className="flex-1 min-w-0 h-full flex flex-col overflow-hidden pr-16">
               {/* Conteúdo rola internamente (sem scrollbar visível) */}
               <div className="flex-1 overflow-y-auto no-scrollbar px-1 pb-2">
                 {children}

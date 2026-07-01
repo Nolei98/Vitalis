@@ -3,11 +3,12 @@ import { prisma } from '@/lib/prisma';
 import { getCurrentUser } from '@/lib/user';
 import { createGoal, updateGoalProgress, deleteGoal } from '@/app/actions/goals';
 import { createHabit, deleteHabit, toggleHabitToday } from '@/app/actions/habits';
+import { startSessionAction } from '@/app/actions/study';
 import { startOfDay } from 'date-fns';
 import DonutRing from '@/components/charts/DonutRing';
 import PageFrame from '@/components/PageFrame';
 import ModIcon from '@/components/ModIcon';
-import { Target, RefreshCw } from 'lucide-react';
+import { Target, RefreshCw, BookOpen } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
@@ -84,6 +85,14 @@ export default async function MetasPage() {
                           style={{ background: 'var(--mod-metas)' }}>ok</button>
                       </form>
                     )}
+                    <form action={startSessionAction}>
+                      <input type="hidden" name="sourceType" value="goal" />
+                      <input type="hidden" name="sourceId" value={g.id} />
+                      <input type="hidden" name="label" value={g.title} />
+                      <button type="submit" className="flex items-center gap-1 text-[10px] font-bold" style={{ color: 'var(--mod-estudos)' }}>
+                        <BookOpen size={11} strokeWidth={2.2} /> estudar
+                      </button>
+                    </form>
                     <form action={deleteGoal}>
                       <input type="hidden" name="id" value={g.id} />
                       <button className="text-[10px] font-bold" style={{ color: '#FB7185' }}>remover</button>

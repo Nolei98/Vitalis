@@ -3,9 +3,10 @@ import { prisma } from '@/lib/prisma';
 import { getCurrentUser } from '@/lib/user';
 import TaskCheckbox from '@/components/TaskCheckbox';
 import { createTaskForm, deleteTask } from '@/app/actions/tasks';
+import { startSessionAction } from '@/app/actions/study';
 import PageFrame from '@/components/PageFrame';
 import ModIcon from '@/components/ModIcon';
-import { CheckCircle2, Plus } from 'lucide-react';
+import { CheckCircle2, Plus, BookOpen } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
@@ -70,6 +71,19 @@ export default async function TarefasPage() {
                   {task.source !== 'internal' && (
                     <span className="text-[9px] font-bold bg-pink-100 text-pink-600 px-1.5 py-0.5 rounded">{task.source}</span>
                   )}
+                  <form action={startSessionAction}>
+                    <input type="hidden" name="sourceType" value="task" />
+                    <input type="hidden" name="sourceId" value={task.id} />
+                    <input type="hidden" name="label" value={task.title} />
+                    <button
+                      type="submit"
+                      title="Iniciar sessão de estudo"
+                      className="w-5 h-5 rounded-lg flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                      style={{ background: 'var(--mod-estudos)' }}
+                    >
+                      <BookOpen size={11} color="white" strokeWidth={2.2} />
+                    </button>
+                  </form>
                   <form action={deleteTask}>
                     <input type="hidden" name="id" value={task.id} />
                     <button className="text-xs text-red-300 hover:text-red-500 font-bold opacity-0 group-hover:opacity-100 transition-opacity">✕</button>

@@ -69,6 +69,11 @@ model User {
   activitySessions  ActivitySession[]
   scores            UserScore[]
   badges            Badge[]
+
+  // Estudos
+  studySubjects     StudySubject[]
+  studySessions     StudySession[]
+  studySettings     StudySettings?
 }
 
 model Account { 
@@ -446,4 +451,53 @@ model Badge {
   earnedAt DateTime @default(now())
   user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   @@unique([userId, type])
+}
+
+// ===== Estudos =====
+
+model StudySubject {
+  id        String   @id @default(cuid())
+  userId    String
+  name      String
+  color     String?
+  createdAt DateTime @default(now())
+  sessions  StudySession[]
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId])
+}
+
+model StudySession {
+  id              String    @id @default(cuid())
+  userId          String
+  subjectId       String?
+  sourceType      String    // manual | calendar | task | goal
+  sourceId        String?
+  label           String?
+  startedAt       DateTime  @default(now())
+  endedAt         DateTime?
+  focusSeconds    Int       @default(0)
+  breakSeconds    Int       @default(0)
+  status          String    @default("running") // running | paused | completed | canceled
+  workMin         Int       @default(25)
+  shortBreakMin   Int       @default(5)
+  longBreakMin    Int       @default(15)
+  cyclesPerLong   Int       @default(4)
+  completedCycles Int       @default(0)
+  createdAt       DateTime  @default(now())
+  subject         StudySubject? @relation(fields: [subjectId], references: [id], onDelete: SetNull)
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId, startedAt])
+}
+
+model StudySettings {
+  id             String  @id @default(cuid())
+  userId         String  @unique
+  workMin        Int     @default(25)
+  shortBreakMin  Int     @default(5)
+  longBreakMin   Int     @default(15)
+  cyclesPerLong  Int     @default(4)
+  autoStartBreak Boolean @default(true)
+  autoStartWork  Boolean @default(false)
+  soundOn        Boolean @default(true)
+  user           User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

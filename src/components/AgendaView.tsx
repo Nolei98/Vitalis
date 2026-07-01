@@ -1,7 +1,9 @@
 'use client';
 
 import { useState } from 'react';
+import { BookOpen } from 'lucide-react';
 import { groupByDay, fmtTime, fmtDay, sourceColor, type CalEvent } from '@/lib/calendar';
+import { startSessionAction } from '@/app/actions/study';
 
 interface RawEvent {
   id: string;
@@ -80,12 +82,25 @@ export default function AgendaView({ events }: { events: RawEvent[] }) {
 function EventRow({ e }: { e: CalEvent }) {
   const c = sourceColor(e.source);
   return (
-    <div className={`flex items-center gap-2 rounded-xl px-3 py-2 flex-1 ${c.bg}`}>
+    <div className={`group flex items-center gap-2 rounded-xl px-3 py-2 flex-1 ${c.bg}`}>
       <span className={`w-2 h-2 rounded-full ${c.dot} shrink-0`} />
       <span className="text-xs font-bold text-gray-400 w-12 shrink-0">
         {e.allDay ? 'dia' : fmtTime(e.start)}
       </span>
       <span className={`text-sm font-bold flex-1 ${c.text} truncate`}>{e.title}</span>
+      <form action={startSessionAction} className="shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+        <input type="hidden" name="sourceType" value="calendar" />
+        <input type="hidden" name="sourceId" value={e.id} />
+        <input type="hidden" name="label" value={e.title} />
+        <button
+          type="submit"
+          title="Estudar agora"
+          className="w-6 h-6 rounded-lg flex items-center justify-center"
+          style={{ background: 'var(--mod-estudos)' }}
+        >
+          <BookOpen size={12} color="white" strokeWidth={2.2} />
+        </button>
+      </form>
     </div>
   );
 }

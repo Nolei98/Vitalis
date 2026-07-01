@@ -1,13 +1,13 @@
 import {
   LayoutDashboard, CalendarDays, CheckSquare, Salad, Droplets,
   Wallet, Target, AlarmClock, BarChart2, MessageCircle, ShieldCheck,
-  Bell, Settings, Plug, Users, Home, type LucideIcon,
+  Bell, Settings, Plug, Users, Home, BookOpen, type LucideIcon,
 } from 'lucide-react';
 
 export type ModKey =
   | 'dash' | 'agenda' | 'tarefas' | 'dieta' | 'agua'
   | 'financas' | 'metas' | 'alarmes' | 'relatorios'
-  | 'social' | 'usuarios' | 'notif' | 'config' | 'conexoes';
+  | 'social' | 'usuarios' | 'notif' | 'config' | 'conexoes' | 'estudos';
 
 interface ModConfig {
   Icon: LucideIcon;
@@ -30,6 +30,7 @@ export const MOD: Record<ModKey, ModConfig> = {
   notif:      { Icon: Bell,            gradient: 'linear-gradient(135deg,#D94060,#FB7185)', accent: '#FB7185' },
   config:     { Icon: Settings,        gradient: 'linear-gradient(135deg,#64748B,#94A3B8)', accent: '#94A3B8' },
   conexoes:   { Icon: Plug,            gradient: 'linear-gradient(135deg,#475569,#64748B)', accent: '#64748B' },
+  estudos:    { Icon: BookOpen,        gradient: 'linear-gradient(135deg,#4338CA,#6366F1)', accent: '#6366F1' },
 };
 
 interface ModIconProps {

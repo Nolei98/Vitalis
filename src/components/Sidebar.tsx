@@ -5,8 +5,8 @@ import { useState, useEffect } from 'react';
 import { logoutUser } from '@/app/actions/auth';
 import UnreadBadge from '@/components/social/UnreadBadge';
 import {
-  LayoutDashboard, CalendarDays, CheckSquare, Salad, Droplets,
-  Wallet, Target, AlarmClock, BarChart2, Users, ShieldCheck,
+  LayoutDashboard, CalendarDays, CheckSquare,
+  Target, AlarmClock, BarChart2, Users, ShieldCheck,
   Bell, Settings, Plug, LogOut, Menu, X, MessageCircle, Sparkles,
 } from 'lucide-react';
 
@@ -23,9 +23,6 @@ const LINKS: NavLink[] = [
   { href: '/',              label: 'Dashboard',    Icon: LayoutDashboard, iconBg: 'linear-gradient(135deg,#6D49E8,#9871F5)', accent: '#7C5CFC', accentBg: '#EDE8FF' },
   { href: '/agenda',        label: 'Agenda',       Icon: CalendarDays,    iconBg: 'linear-gradient(135deg,#3A6BCF,#5B8DEF)', accent: '#5B8DEF', accentBg: '#E5EFFD' },
   { href: '/tarefas',       label: 'Tarefas',      Icon: CheckSquare,     iconBg: 'linear-gradient(135deg,#1A9E6E,#2BC48A)', accent: '#2BC48A', accentBg: '#E0F7EE' },
-  { href: '/dieta',         label: 'Nutri',        Icon: Salad,           iconBg: 'linear-gradient(135deg,#D96030,#FF8A5B)', accent: '#FF8A5B', accentBg: '#FFF0E9' },
-  { href: '/agua',          label: 'Hidro',        Icon: Droplets,        iconBg: 'linear-gradient(135deg,#1AA3CC,#36C5F0)', accent: '#36C5F0', accentBg: '#E2F7FC' },
-  { href: '/financas',      label: 'Finanças',     Icon: Wallet,          iconBg: 'linear-gradient(135deg,#6A3DD6,#8B5CF6)', accent: '#8B5CF6', accentBg: '#EDE9FE' },
   { href: '/metas',         label: 'Metas',        Icon: Target,          iconBg: 'linear-gradient(135deg,#D94C91,#FF6FB5)', accent: '#FF6FB5', accentBg: '#FFE9F4' },
   { href: '/alarmes',       label: 'Alarmes',      Icon: AlarmClock,      iconBg: 'linear-gradient(135deg,#CC8800,#FFB020)', accent: '#FFB020', accentBg: '#FFF6DC' },
   { href: '/relatorios',    label: 'Insights',     Icon: BarChart2,       iconBg: 'linear-gradient(135deg,#0D9488,#14B8A6)', accent: '#14B8A6', accentBg: '#E0F7F5' },
