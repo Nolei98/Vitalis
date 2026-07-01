@@ -65,20 +65,20 @@ export default function HeroActions({ hasSession, ctaUrl }: HeroActionsProps) {
   return (
     <>
       {/* CTAs */}
-      <div className="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4">
+      <div className="flex flex-row items-center justify-center md:justify-start gap-2 w-full md:w-auto">
         <Link
           href={ctaUrl}
-          className="w-full sm:w-auto px-8 py-4 rounded-full bg-[#14150F] text-[#F4F5F1] hover:bg-[#8A9A5B] active:scale-95 text-xs font-extrabold uppercase tracking-widest text-center transition-all duration-300 shadow-lg shadow-black/10"
+          className="flex-1 md:flex-none px-4 md:px-8 py-3 md:py-4 rounded-full bg-[#14150F] text-[#F4F5F1] hover:bg-[#8A9A5B] active:scale-95 text-[10px] md:text-xs font-extrabold uppercase tracking-wider md:tracking-widest text-center transition-all duration-300 shadow-lg shadow-black/10"
         >
-          {hasSession ? 'Entrar no Painel' : 'Começar Agora'}
+          {hasSession ? 'Painel' : 'Começar'}
         </Link>
         
         {!hasSession && (
           <Link
             href="/register"
-            className="w-full sm:w-auto px-8 py-4 rounded-full bg-white/60 text-[#14150F] border border-white/80 hover:bg-white/90 active:scale-95 text-xs font-extrabold uppercase tracking-widest text-center transition-all duration-300 shadow-sm"
+            className="flex-1 md:flex-none px-4 md:px-8 py-3 md:py-4 rounded-full bg-white/60 text-[#14150F] border border-white/80 hover:bg-white/90 active:scale-95 text-[10px] md:text-xs font-extrabold uppercase tracking-wider md:tracking-widest text-center transition-all duration-300 shadow-sm"
           >
-            Criar Perfil
+            Cadastrar
           </Link>
         )}
 

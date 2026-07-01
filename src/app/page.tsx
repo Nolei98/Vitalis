@@ -38,30 +38,30 @@ export default async function LandingPage() {
         <div className="absolute inset-0 z-0 bg-gradient-to-t from-[#F4F5F1] via-transparent to-transparent" />
         
         {/* Max-w-6xl Inner Content Area */}
-        <div className="relative pt-20 md:pt-32 pb-10 md:pb-20 px-6 md:px-12 max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 md:gap-12 min-h-[80vh] md:min-h-[85vh] z-10">
+        <div className="relative pt-16 md:pt-32 pb-4 md:pb-20 px-4 md:px-12 max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 md:gap-12 min-h-[80vh] md:min-h-[85vh] z-10">
           {/* Background glow decoration */}
           <div className="absolute left-[20%] top-[30%] w-96 h-96 bg-[#8A9A5B]/10 rounded-full blur-3xl pointer-events-none" />
 
           {/* Text Area */}
           <div className="flex-1 text-center md:text-left z-10 order-2 md:order-1">
             {/* Subtle Label */}
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#B7C48E]/40 border border-[#8A9A5B]/30 text-xs font-bold text-[#14150F] uppercase tracking-widest mb-6">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#B7C48E]/40 border border-[#8A9A5B]/30 text-xs font-bold text-[#14150F] uppercase tracking-widest mb-3 md:mb-6">
               <Sparkles size={12} className="text-[#8A9A5B] animate-pulse" />
               VITALIS APRESENTA
             </div>
 
             {/* Title */}
-            <h1 className="text-3xl sm:text-4xl md:text-6xl font-black tracking-tighter text-[#14150F] uppercase leading-none mb-6">
+            <h1 className="text-3xl sm:text-4xl md:text-6xl font-black tracking-tighter text-[#14150F] uppercase leading-none mb-4 md:mb-6">
               SEU SISTEMA PESSOAL DE <span className="text-[#8A9A5B] whitespace-nowrap">BEM-ESTAR</span>
             </h1>
 
-            {/* Subtitle */}
-            <p className="text-sm md:text-base text-[#6B6F63] font-semibold mb-6 max-w-lg leading-relaxed">
+            {/* Subtitle (Hidden on mobile to save space) */}
+            <p className="hidden md:block text-sm md:text-base text-[#6B6F63] font-semibold mb-6 max-w-lg leading-relaxed">
               Organize sua nutrição, monitore sua hidratação diária, controle suas finanças e mantenha suas tarefas e agenda alinhadas em um único painel minimalista e sofisticado.
             </p>
 
-            {/* Target Audience / Use Cases */}
-            <div className="flex flex-wrap gap-2.5 mb-8 justify-center md:justify-start">
+            {/* Target Audience / Use Cases (Hidden on mobile to save space) */}
+            <div className="hidden md:flex flex-wrap gap-2.5 mb-8 justify-center md:justify-start">
               <span className="inline-flex items-center gap-1.5 text-[10px] font-black tracking-wider uppercase bg-[#8A9A5B]/10 border border-[#8A9A5B]/25 text-[#14150F] px-3.5 py-1.5 rounded-full shadow-sm">
                 <User size={12} className="text-[#8A9A5B]" />
                 Uso Pessoal
@@ -84,7 +84,7 @@ export default async function LandingPage() {
           </div>
 
           {/* 3D Canvas Area */}
-          <div className="flex-1 w-full max-w-md h-[160px] sm:h-[240px] md:h-[400px] flex flex-col items-center justify-center relative z-10 order-1 md:order-2">
+          <div className="flex-1 w-full max-w-md h-[130px] sm:h-[220px] md:h-[400px] flex flex-col items-center justify-center relative z-10 order-1 md:order-2">
             <HeroWrapper />
             <MobilePlayButton />
           </div>
