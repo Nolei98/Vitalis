@@ -28,21 +28,20 @@ function suggestInterval(wakeTime: string, goal: number): number {
   return Math.round(raw / 15) * 15; // encaixa nas opções do select (múltiplos de 15)
 }
 
+/** Beep curto e leve — fecha o AudioContext ao final pra não acumular recursos. */
 function beep() {
   try {
     const Ctx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
     const ctx = new Ctx();
-    for (let i = 0; i < 2; i++) {
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = 'sine';
-      osc.frequency.value = 880;
-      gain.gain.value = 0.15;
-      osc.connect(gain).connect(ctx.destination);
-      const start = ctx.currentTime + i * 0.3;
-      osc.start(start);
-      osc.stop(start + 0.2);
-    }
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.value = 880;
+    gain.gain.value = 0.12;
+    osc.connect(gain).connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime + 0.18);
+    osc.onended = () => void ctx.close();
   } catch {
     // ambiente sem Web Audio (ex.: SSR) — ignora
   }
@@ -52,37 +51,51 @@ export default function WaterReminder({ initialWakeTime, initialInterval, initia
   const [wakeTime, setWakeTime] = useState(initialWakeTime ?? '07:00');
   const [intervalMin, setIntervalMin] = useState(initialInterval ?? suggestInterval(initialWakeTime ?? '07:00', goal));
   const [enabled, setEnabled] = useState(initialEnabled);
+  const [systemNotif, setSystemNotif] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [toast, setToast] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
   const lastSlotRef = useRef<number>(-1);
+  const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   function save() {
     setSaved(false);
     startTransition(async () => {
       await saveWaterReminder({ wakeTime, intervalMin, enabled });
       setSaved(true);
-      if (enabled && 'Notification' in window && Notification.permission === 'default') {
-        void Notification.requestPermission();
-      }
     });
+  }
+
+  function showToast(msg: string) {
+    setToast(msg);
+    if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+    toastTimerRef.current = setTimeout(() => setToast(null), 6000);
   }
 
   async function fireReminder() {
     beep();
     const { total, goal: g } = await getWaterStatus();
     if (total >= g) return;
-    if ('Notification' in window && Notification.permission === 'granted') {
+    const msg = `💧 Hora de se hidratar! Você está em ${total}/${g}ml hoje.`;
+    showToast(msg);
+    // Notificação do sistema é opcional (pode ser pesada/intrusiva) — só se o usuário pedir.
+    if (systemNotif && 'Notification' in window && Notification.permission === 'granted') {
       new Notification('💧 Hora de se hidratar!', {
         body: `Você está em ${total}/${g}ml hoje. Beba um copo d'água agora.`,
+        silent: true,
       });
+    }
+  }
+
+  function toggleSystemNotif(checked: boolean) {
+    setSystemNotif(checked);
+    if (checked && 'Notification' in window && Notification.permission === 'default') {
+      void Notification.requestPermission();
     }
   }
 
   useEffect(() => {
     if (!enabled || !wakeTime || !intervalMin) return;
-    if ('Notification' in window && Notification.permission === 'default') {
-      void Notification.requestPermission();
-    }
 
     const [h, m] = wakeTime.split(':').map(Number);
     const wakeMin = h * 60 + m;
@@ -101,19 +114,27 @@ export default function WaterReminder({ initialWakeTime, initialInterval, initia
       void fireReminder();
     };
 
-    const id = setInterval(tick, 20_000);
+    const id = setInterval(tick, 30_000);
     return () => clearInterval(id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [enabled, wakeTime, intervalMin]);
 
+  useEffect(() => () => { if (toastTimerRef.current) clearTimeout(toastTimerRef.current); }, []);
+
   const suggested = suggestInterval(wakeTime, goal);
 
   return (
-    <div className="clay-card p-6 space-y-4">
+    <div className="clay-card p-6 space-y-4 relative">
       <div className="flex items-center gap-2">
         <BellRing size={18} strokeWidth={2.2} style={{ color: 'var(--mod-agua)' }} />
         <h2 className="text-lg font-extrabold" style={{ color: 'var(--text-strong)' }}>Lembrete de hidratação</h2>
       </div>
+
+      {toast && (
+        <div className="rounded-xl px-4 py-2.5 text-sm font-bold text-white" style={{ background: 'var(--mod-agua)' }}>
+          {toast}
+        </div>
+      )}
 
       <div className="grid grid-cols-2 gap-3">
         <div>
@@ -139,10 +160,16 @@ export default function WaterReminder({ initialWakeTime, initialInterval, initia
         </div>
       </div>
 
-      <label className="flex items-center gap-2 text-sm font-bold cursor-pointer">
-        <input type="checkbox" checked={enabled} onChange={(e) => setEnabled(e.target.checked)} />
-        Ativar lembretes (com som) enquanto o app estiver aberto
-      </label>
+      <div className="space-y-2">
+        <label className="flex items-center gap-2 text-sm font-bold cursor-pointer">
+          <input type="checkbox" checked={enabled} onChange={(e) => setEnabled(e.target.checked)} />
+          Ativar lembretes (som + aviso na tela) enquanto o app estiver aberto
+        </label>
+        <label className="flex items-center gap-2 text-xs font-semibold cursor-pointer text-gray-500">
+          <input type="checkbox" checked={systemNotif} onChange={(e) => toggleSystemNotif(e.target.checked)} />
+          Também notificar pelo sistema (Windows/navegador) — pode ser mais pesado
+        </label>
+      </div>
 
       <div className="flex items-center gap-2">
         <button
