@@ -42,7 +42,7 @@ export default async function LandingPage() {
           <div className="absolute left-[20%] top-[30%] w-96 h-96 bg-[#8A9A5B]/10 rounded-full blur-3xl pointer-events-none" />
 
           {/* Text Area */}
-          <div className="flex-1 text-center md:text-left z-10">
+          <div className="flex-1 text-center md:text-left z-10 order-2 md:order-1">
             {/* Subtle Label */}
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#B7C48E]/40 border border-[#8A9A5B]/30 text-xs font-bold text-[#14150F] uppercase tracking-widest mb-6">
               <Sparkles size={12} className="text-[#8A9A5B] animate-pulse" />
@@ -83,7 +83,7 @@ export default async function LandingPage() {
           </div>
 
           {/* 3D Canvas Area */}
-          <div className="flex-1 w-full max-w-md h-[400px] flex items-center justify-center relative z-10">
+          <div className="flex-1 w-full max-w-md h-[400px] flex items-center justify-center relative z-10 order-1 md:order-2">
             <HeroWrapper />
           </div>
         </div>
