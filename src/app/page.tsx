@@ -38,7 +38,7 @@ export default async function LandingPage() {
         <div className="absolute inset-0 z-0 bg-gradient-to-t from-[#F4F5F1] via-transparent to-transparent" />
         
         {/* Max-w-6xl Inner Content Area */}
-        <div className="relative pt-32 pb-20 px-6 md:px-12 max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-12 min-h-[85vh] z-10">
+        <div className="relative pt-20 md:pt-32 pb-10 md:pb-20 px-6 md:px-12 max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 md:gap-12 min-h-[80vh] md:min-h-[85vh] z-10">
           {/* Background glow decoration */}
           <div className="absolute left-[20%] top-[30%] w-96 h-96 bg-[#8A9A5B]/10 rounded-full blur-3xl pointer-events-none" />
 
@@ -84,7 +84,7 @@ export default async function LandingPage() {
           </div>
 
           {/* 3D Canvas Area */}
-          <div className="flex-1 w-full max-w-md h-[220px] sm:h-[300px] md:h-[400px] flex flex-col items-center justify-center relative z-10 order-1 md:order-2">
+          <div className="flex-1 w-full max-w-md h-[160px] sm:h-[240px] md:h-[400px] flex flex-col items-center justify-center relative z-10 order-1 md:order-2">
             <HeroWrapper />
             <MobilePlayButton />
           </div>
