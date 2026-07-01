@@ -2,9 +2,9 @@
 
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
-import { RefreshCw, Repeat, CalendarCheck, ShoppingCart, Search, ShieldCheck } from 'lucide-react';
+import { RefreshCw, Repeat, CalendarCheck, ShoppingCart, Search, ShieldCheck, XCircle } from 'lucide-react';
 import {
-  regenerateDay, regenerateMeal, swapItem, recalibratePlan, savePlan,
+  regenerateDay, regenerateMeal, swapItem, recalibratePlan, savePlan, endPlan,
   applyPlanToDay, generateShoppingList, searchFoodCatalog,
 } from '@/app/actions/diet';
 import { WEEKDAY_LABEL, MEAL_TYPE_LABEL, type DietPlanRow, type PlannedItemRow } from './types';
@@ -119,6 +119,14 @@ export default function PlanView({ plan }: { plan: DietPlanRow }) {
     });
   }
 
+  function doEndPlan() {
+    if (!confirm('Encerrar este plano? Ele para de valer e os lembretes de refeição são removidos.')) return;
+    startTransition(async () => {
+      await endPlan(plan.id);
+      refresh();
+    });
+  }
+
   function loadShopping(range: 'day' | 'week') {
     setShoppingRange(range);
     startTransition(async () => {
@@ -138,7 +146,7 @@ export default function PlanView({ plan }: { plan: DietPlanRow }) {
         <div>
           <p className="font-extrabold text-sm" style={{ color: 'var(--clay-text)' }}>{plan.name}</p>
           <p className="text-xs font-bold text-gray-500">
-            {fmtDate(plan.startDate)} → {fmtDate(plan.endDate)} · {plan.kcalTarget}kcal · P{plan.proteinTarget} C{plan.carbTarget} G{plan.fatTarget}
+            Desde {fmtDate(plan.startDate)}{plan.endDate ? ` · meta até ${fmtDate(plan.endDate)}` : ' · sem data de término'} · {plan.kcalTarget}kcal · P{plan.proteinTarget} C{plan.carbTarget} G{plan.fatTarget}
           </p>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
@@ -164,6 +172,9 @@ export default function PlanView({ plan }: { plan: DietPlanRow }) {
               </button>
               <button onClick={doRecalibrate} disabled={isPending} className="clay-btn px-3 py-2 text-xs font-bold flex items-center gap-1" style={{ background: 'var(--clay-surface)', color: 'var(--clay-text-soft)' }}>
                 <Repeat size={13} /> Recalibrar
+              </button>
+              <button onClick={doEndPlan} disabled={isPending} className="clay-btn px-3 py-2 text-xs font-bold flex items-center gap-1" style={{ background: '#FFE5E9', color: '#D94060' }}>
+                <XCircle size={13} /> Encerrar plano
               </button>
             </>
           )}

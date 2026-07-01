@@ -113,7 +113,7 @@ export async function getDietProfile(): Promise<DietProfile | null> {
 
 // ===== Geração / edição do plano =====
 
-export async function generateDietPlan(opts: { endDate: Date; goalId?: string; name?: string }) {
+export async function generateDietPlan(opts: { endDate?: Date; goalId?: string; name?: string }) {
   const user = await getCurrentUser();
   const profile = await prisma.dietProfile.findUnique({ where: { userId: user.id } });
   if (!profile) throw new Error('Crie seu perfil de dieta antes de gerar um plano.');
@@ -126,6 +126,15 @@ export async function generateDietPlan(opts: { endDate: Date; goalId?: string; n
 
   const validated = validateAndRescale(raw, targets, prefs.restrictions);
 
+  // Sem data de término: o plano gira em torno da meta (cut/maintain/bulk) e só muda
+  // quando o usuário pede (regenerar/recalibrar) ou encerra manualmente. Se vinculado
+  // a uma Goal com prazo, usa esse prazo como referência; senão fica indefinido.
+  let endDate = opts.endDate ?? null;
+  if (!endDate && opts.goalId) {
+    const goal = await prisma.goal.findUnique({ where: { id: opts.goalId } });
+    endDate = goal?.deadline ?? null;
+  }
+
   const plan = await prisma.dietPlan.create({
     data: {
       userId: user.id,
@@ -134,7 +143,7 @@ export async function generateDietPlan(opts: { endDate: Date; goalId?: string; n
       generatedBy: 'ai',
       goalId: opts.goalId ?? null,
       startDate: new Date(),
-      endDate: opts.endDate,
+      endDate,
       kcalTarget: targets.kcal,
       proteinTarget: targets.proteinG,
       carbTarget: targets.carbG,
@@ -338,6 +347,15 @@ export async function savePlan(planId: string, createReminders = false) {
     }
   }
 
+  revalidateDiet();
+}
+
+/** Encerra o plano manualmente — o plano não expira sozinho, só quando o usuário pede. */
+export async function endPlan(planId: string) {
+  const userId = await getCurrentUserId();
+  await requireOwnPlan(planId, userId);
+  await prisma.dietPlan.update({ where: { id: planId }, data: { status: 'archived' } });
+  await prisma.alarm.deleteMany({ where: { userId, type: 'meal', label: { startsWith: 'Plano: ' } } });
   revalidateDiet();
 }
 

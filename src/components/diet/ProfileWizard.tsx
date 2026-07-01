@@ -35,11 +35,6 @@ export default function ProfileWizard({ nutritionGoals }: { nutritionGoals: Nutr
   const [availableText, setAvailableText] = useState('');
   const [mealsPerDay, setMealsPerDay] = useState(4);
   const [budget, setBudget] = useState<'economico' | 'moderado' | 'sem_restricao'>('moderado');
-  const [endDate, setEndDate] = useState(() => {
-    const d = new Date();
-    d.setMonth(d.getMonth() + 2);
-    return d.toISOString().slice(0, 10);
-  });
   const [goalId, setGoalId] = useState('');
 
   const steps = ['Meta', 'Corpo', 'Estilo & restrições', 'Alimentos', 'Refeições/dia'];
@@ -58,7 +53,7 @@ export default function ProfileWizard({ nutritionGoals }: { nutritionGoals: Nutr
           preferred: textToArr(preferredText), disliked: textToArr(dislikedText), available: textToArr(availableText),
         };
         await saveDietProfile(input);
-        await generateDietPlan({ endDate: new Date(endDate), goalId: goalId || undefined });
+        await generateDietPlan({ goalId: goalId || undefined });
         router.refresh();
       } catch (e) {
         setError(e instanceof Error ? e.message : 'Erro ao gerar o plano.');
@@ -91,11 +86,10 @@ export default function ProfileWizard({ nutritionGoals }: { nutritionGoals: Nutr
               </button>
             ))}
           </div>
-          <label className="block text-xs font-bold text-gray-500">
-            Prazo (data-alvo do plano)
-            <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)}
-              className="clay-card w-full px-3 py-2 text-sm outline-none border-none mt-1" />
-          </label>
+          <p className="text-[11px] font-medium text-gray-400">
+            O plano não tem data de término — ele gira em torno dessa meta e só muda quando você pede
+            (regenerar, recalibrar) ou encerra manualmente.
+          </p>
           {nutritionGoals.length > 0 && (
             <label className="block text-xs font-bold text-gray-500">
               Vincular a uma meta existente (opcional)
