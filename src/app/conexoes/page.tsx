@@ -1,7 +1,7 @@
 ﻿import React from 'react';
-import { signIn } from '@/auth';
 import { listIntegrations, type Provider } from '@/lib/integrations/vault';
 import {
+  saveGoogleIcalUrl,
   saveCanvasUrl,
   saveDiscordWebhook,
   saveClickUpToken,
@@ -11,7 +11,6 @@ import {
 import SyncButton from '@/components/SyncButton';
 import PageFrame from '@/components/PageFrame';
 import ModIcon from '@/components/ModIcon';
-import { ShieldCheck } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
@@ -65,28 +64,24 @@ export default async function ConexoesPage() {
               <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-2xl shadow-sm border border-gray-100 font-black text-blue-600">G</div>
               <div>
                 <h2 className="text-xl font-bold text-[#4a3f72]">Google Calendar</h2>
-                <p className="text-sm font-bold text-gray-500">Login + eventos da agenda</p>
+                <p className="text-sm font-bold text-gray-500">Leitura via link iCal</p>
               </div>
             </div>
             <StatusBadge status={google?.status} />
           </div>
           <p className="text-gray-600 text-sm mb-6 font-medium">
-            Conta principal do Vitalis. O login libera Calendar e Drive (conforme permissões).
+            Cole o link público iCal (Configurações da agenda → Integrar agenda → &quot;Endereço público em formato iCal&quot;).
           </p>
-          {google?.connected ? (
-            <div className="flex items-center justify-between">
-              <span className="text-emerald-600 font-bold text-sm flex items-center gap-1.5">
-                <ShieldCheck size={16} strokeWidth={2} /> Tokens no cofre
-              </span>
-              <Disconnect provider="google" />
-            </div>
-          ) : (
-            <form action={async () => { 'use server'; await signIn('google', { redirectTo: '/conexoes' }); }}>
-              <button type="submit" className="clay-btn w-full bg-blue-600 text-white font-bold py-3 hover:scale-[0.98] transition-transform">
-                Conectar com Google
-              </button>
-            </form>
-          )}
+          <form action={saveGoogleIcalUrl} className="space-y-3">
+            <input
+              name="icalUrl"
+              defaultValue={google?.hasIcal ? '•••••• (salvo)' : ''}
+              placeholder="https://calendar.google.com/calendar/ical/....ics"
+              className="clay-card w-full px-4 py-2 text-sm outline-none border-none"
+            />
+            <button className="clay-btn bg-blue-600 text-white font-bold py-2 px-5 text-sm">Salvar</button>
+          </form>
+          {google && <div className="mt-3 text-right"><Disconnect provider="google" /></div>}
         </div>
 
         {/* Canvas */}

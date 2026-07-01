@@ -7,6 +7,15 @@ import { notifyDiscord, COLORS } from '@/lib/integrations/connectors/discord';
 
 const urlSchema = z.string().url();
 
+export async function saveGoogleIcalUrl(formData: FormData) {
+  const url = String(formData.get('icalUrl') ?? '').trim();
+  if (url.startsWith('••')) return;
+  const parsed = urlSchema.safeParse(url);
+  if (!parsed.success) return;
+  await saveIntegration('google', { icalUrl: parsed.data, label: 'Google Calendar' });
+  revalidatePath('/conexoes');
+}
+
 export async function saveCanvasUrl(formData: FormData) {
   const url = String(formData.get('icalUrl') ?? '').trim();
   if (url.startsWith('••')) return; // valor mascarado, sem alteração
