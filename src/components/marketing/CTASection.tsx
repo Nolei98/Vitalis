@@ -49,6 +49,32 @@ export default function CTASection({ hasSession }: CTASectionProps) {
           </div>
         </div>
       </div>
+
+      {/* Subtle botanical watermarks */}
+      <LeafBranch className="absolute top-[10%] right-[-8%] w-80 h-80 text-[#8A9A5B] opacity-[0.025] pointer-events-none select-none z-0 rotate-[120deg]" />
+      <LeafMonstera className="absolute bottom-[-10%] left-[-5%] w-72 h-72 text-[#8A9A5B] opacity-[0.02] pointer-events-none select-none z-0 rotate-[45deg]" />
+
     </section>
+  );
+}
+
+// Decorative leaf helpers
+function LeafMonstera({ className }: { className: string }) {
+  return (
+    <svg viewBox="0 0 200 200" fill="currentColor" className={className}>
+      <path d="M100,20 C140,20 170,50 170,90 C170,120 150,150 100,180 C50,150 30,120 30,90 C30,50 60,20 100,20 M100,40 C95,55 85,70 70,80 C85,85 95,95 100,110 C105,95 115,85 130,80 C115,70 105,55 100,40 M60,60 C70,75 80,85 95,90 C80,95 70,105 60,120 C65,105 65,95 60,60 M140,60 C135,95 135,105 140,120 C130,105 120,95 105,90 C120,85 130,75 140,60 Z" />
+    </svg>
+  );
+}
+
+function LeafBranch({ className }: { className: string }) {
+  return (
+    <svg viewBox="0 0 200 200" fill="currentColor" className={className}>
+      <path d="M100,180 C100,120 120,60 170,30 C130,50 110,80 100,110 C90,80 70,50 30,30 C80,60 100,120 100,180 Z" />
+      <path d="M100,150 C115,135 135,125 155,120 C135,120 118,125 107,135 Z" />
+      <path d="M100,150 C85,135 65,125 45,120 C65,120 82,125 93,135 Z" />
+      <path d="M100,110 C115,95 135,85 155,80 C135,80 118,85 107,95 Z" />
+      <path d="M100,110 C85,95 65,85 45,80 C65,80 82,85 93,95 Z" />
+    </svg>
   );
 }
