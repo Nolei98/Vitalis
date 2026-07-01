@@ -97,8 +97,8 @@ export default function ProcessCards() {
       </div>
 
       {/* Subtle botanical watermarks */}
-      <LeafBranch className="absolute top-[5%] left-[-8%] w-80 h-80 text-[#8A9A5B] opacity-[0.025] pointer-events-none select-none z-0 rotate-[45deg]" />
-      <LeafMonstera className="absolute bottom-[5%] right-[-8%] w-72 h-72 text-[#8A9A5B] opacity-[0.025] pointer-events-none select-none z-0 rotate-[-15deg]" />
+      <LeafBranch className="absolute top-[5%] left-[-8%] w-80 h-80 text-[#8A9A5B] opacity-[0.05] pointer-events-none select-none z-0 rotate-[45deg]" />
+      <LeafMonstera className="absolute bottom-[5%] right-[-8%] w-72 h-72 text-[#8A9A5B] opacity-[0.05] pointer-events-none select-none z-0 rotate-[-15deg]" />
 
     </section>
   );

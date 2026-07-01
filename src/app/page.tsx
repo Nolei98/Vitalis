@@ -46,7 +46,7 @@ export default async function LandingPage() {
           <div className="flex-1 text-center md:text-left z-10 order-2 md:order-1">
             {/* Subtle Label */}
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#B7C48E]/40 border border-[#8A9A5B]/30 text-xs font-bold text-[#14150F] uppercase tracking-widest mb-3 md:mb-6">
-              <Sparkles size={12} className="text-[#8A9A5B] animate-pulse" />
+              <Sparkles size={14} strokeWidth={2.5} className="text-[#8A9A5B] animate-pulse" />
               VITALIS APRESENTA
             </div>
 
@@ -63,19 +63,19 @@ export default async function LandingPage() {
             {/* Target Audience / Use Cases (Hidden on mobile to save space) */}
             <div className="hidden md:flex flex-wrap gap-2.5 mb-8 justify-center md:justify-start">
               <span className="inline-flex items-center gap-1.5 text-[10px] font-black tracking-wider uppercase bg-[#8A9A5B]/10 border border-[#8A9A5B]/25 text-[#14150F] px-3.5 py-1.5 rounded-full shadow-sm">
-                <User size={12} className="text-[#8A9A5B]" />
+                <User size={14} strokeWidth={2.5} className="text-[#8A9A5B]" />
                 Uso Pessoal
               </span>
               <span className="inline-flex items-center gap-1.5 text-[10px] font-black tracking-wider uppercase bg-[#8A9A5B]/10 border border-[#8A9A5B]/25 text-[#14150F] px-3.5 py-1.5 rounded-full shadow-sm">
-                <Users size={12} className="text-[#8A9A5B]" />
+                <Users size={14} strokeWidth={2.5} className="text-[#8A9A5B]" />
                 Círculo de Amizades
               </span>
               <span className="inline-flex items-center gap-1.5 text-[10px] font-black tracking-wider uppercase bg-[#8A9A5B]/10 border border-[#8A9A5B]/25 text-[#14150F] px-3.5 py-1.5 rounded-full shadow-sm">
-                <Briefcase size={12} className="text-[#8A9A5B]" />
+                <Briefcase size={14} strokeWidth={2.5} className="text-[#8A9A5B]" />
                 Empresarial
               </span>
               <span className="inline-flex items-center gap-1.5 text-[10px] font-black tracking-wider uppercase bg-[#8A9A5B]/10 border border-[#8A9A5B]/25 text-[#14150F] px-3.5 py-1.5 rounded-full shadow-sm">
-                <Handshake size={12} className="text-[#8A9A5B]" />
+                <Handshake size={14} strokeWidth={2.5} className="text-[#8A9A5B]" />
                 Para Seus Clientes
               </span>
             </div>
@@ -89,15 +89,15 @@ export default async function LandingPage() {
             <MobilePlayButton />
           </div>
           {/* Subtle botanical watermarks */}
-          <LeafMonstera className="absolute top-[10%] left-[-5%] w-72 h-72 text-[#8A9A5B] opacity-[0.025] pointer-events-none select-none z-0 rotate-45 hidden md:block" />
-          <LeafBranch className="absolute bottom-[8%] right-[-5%] w-80 h-80 text-[#8A9A5B] opacity-[0.025] pointer-events-none select-none z-0 rotate-[-30deg]" />
+          <LeafMonstera className="absolute top-[10%] left-[-5%] w-72 h-72 text-[#8A9A5B] opacity-[0.05] pointer-events-none select-none z-0 rotate-45 hidden md:block" />
+          <LeafBranch className="absolute bottom-[8%] right-[-5%] w-80 h-80 text-[#8A9A5B] opacity-[0.05] pointer-events-none select-none z-0 rotate-[-30deg]" />
         </div>
       </section>
 
       {/* 3. Resumo em 1 frase + selo */}
       <section className="py-16 px-6 md:px-12 bg-[#EAECE5] text-[#14150F] border-y border-[#D0D4C5] relative overflow-hidden">
         {/* Subtle botanical watermarks */}
-        <LeafBranch className="absolute top-[10%] left-[5%] w-60 h-60 text-[#8A9A5B] opacity-[0.015] pointer-events-none select-none z-0 rotate-[120deg]" />
+        <LeafBranch className="absolute top-[10%] left-[5%] w-60 h-60 text-[#8A9A5B] opacity-[0.04] pointer-events-none select-none z-0 rotate-[120deg]" />
 
         <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8 relative z-10">
           <div className="flex items-center gap-4 flex-shrink-0">

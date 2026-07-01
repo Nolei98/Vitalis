@@ -101,8 +101,8 @@ export default function FeatureGrid() {
       </div>
 
       {/* Subtle botanical watermarks */}
-      <LeafMonstera className="absolute top-[30%] right-[-5%] w-80 h-80 text-[#8A9A5B] opacity-[0.02] pointer-events-none select-none z-0 rotate-[60deg]" />
-      <LeafBranch className="absolute bottom-[10%] left-[-5%] w-72 h-72 text-[#8A9A5B] opacity-[0.02] pointer-events-none select-none z-0 rotate-[-45deg]" />
+      <LeafMonstera className="absolute top-[30%] right-[-5%] w-80 h-80 text-[#8A9A5B] opacity-[0.04] pointer-events-none select-none z-0 rotate-[60deg]" />
+      <LeafBranch className="absolute bottom-[10%] left-[-5%] w-72 h-72 text-[#8A9A5B] opacity-[0.04] pointer-events-none select-none z-0 rotate-[-45deg]" />
 
     </section>
   );

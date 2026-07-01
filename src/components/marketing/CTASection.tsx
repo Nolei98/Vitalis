@@ -51,8 +51,8 @@ export default function CTASection({ hasSession }: CTASectionProps) {
       </div>
 
       {/* Subtle botanical watermarks */}
-      <LeafBranch className="absolute top-[10%] right-[-8%] w-80 h-80 text-[#8A9A5B] opacity-[0.025] pointer-events-none select-none z-0 rotate-[120deg]" />
-      <LeafMonstera className="absolute bottom-[-10%] left-[-5%] w-72 h-72 text-[#8A9A5B] opacity-[0.02] pointer-events-none select-none z-0 rotate-[45deg]" />
+      <LeafBranch className="absolute top-[10%] right-[-8%] w-80 h-80 text-[#8A9A5B] opacity-[0.05] pointer-events-none select-none z-0 rotate-[120deg]" />
+      <LeafMonstera className="absolute bottom-[-10%] left-[-5%] w-72 h-72 text-[#8A9A5B] opacity-[0.04] pointer-events-none select-none z-0 rotate-[45deg]" />
 
     </section>
   );
