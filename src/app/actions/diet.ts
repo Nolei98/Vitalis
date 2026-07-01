@@ -8,7 +8,7 @@ import {
   computeTargets, mealSplit,
   type DietSex, type DietGoal, type DietActivity, type DietStyle, type MacroTargets,
 } from '@/lib/diet/targets';
-import { generateWeek, generateOneDay, generateOneMeal, type DietPrefs } from '@/lib/diet/generate';
+import { generateOneDay, generateOneMeal, type DietPrefs } from '@/lib/diet/generate';
 import { validateAndRescale } from '@/lib/diet/validate';
 import { weekdayForDate } from '@/lib/diet/period';
 import { buildShoppingList } from '@/lib/diet/shopping';
@@ -113,18 +113,17 @@ export async function getDietProfile(): Promise<DietProfile | null> {
 
 // ===== Geração / edição do plano =====
 
-export async function generateDietPlan(opts: { endDate?: Date; goalId?: string; name?: string }) {
+/**
+ * Cria o plano (rápido, sem chamar IA) com os 7 dias ainda vazios. O cliente
+ * preenche cada dia chamando regenerateDay() em sequência — 7 chamadas curtas em
+ * vez de 1 chamada longa, pra não estourar o timeout de Server Action da hospedagem.
+ */
+export async function startDietPlan(opts: { endDate?: Date; goalId?: string; name?: string }) {
   const user = await getCurrentUser();
   const profile = await prisma.dietProfile.findUnique({ where: { userId: user.id } });
   if (!profile) throw new Error('Crie seu perfil de dieta antes de gerar um plano.');
 
   const targets = profileTargets(profile);
-  const prefs = profileToPrefs(profile);
-
-  const raw = await generateWeek(targets, prefs);
-  if (!raw?.days?.length) throw new Error('Não foi possível gerar o plano agora. Tente novamente em instantes.');
-
-  const validated = validateAndRescale(raw, targets, prefs.restrictions);
 
   // Sem data de término: o plano gira em torno da meta (cut/maintain/bulk) e só muda
   // quando o usuário pede (regenerar/recalibrar) ou encerra manualmente. Se vinculado
@@ -148,21 +147,7 @@ export async function generateDietPlan(opts: { endDate?: Date; goalId?: string; 
       proteinTarget: targets.proteinG,
       carbTarget: targets.carbG,
       fatTarget: targets.fatG,
-      days: {
-        create: validated.days.map((day) => ({
-          weekday: day.weekday,
-          meals: {
-            create: day.meals.map((meal, idx) => ({
-              type: meal.type,
-              name: meal.name,
-              order: idx,
-              items: { create: meal.items.map((item) => ({ ...item })) },
-            })),
-          },
-        })),
-      },
     },
-    include: { days: { include: { meals: { include: { items: true } } } } },
   });
 
   revalidateDiet();
@@ -240,6 +225,57 @@ export async function regenerateMeal(planId: string, mealId: string) {
   return updated;
 }
 
+/**
+ * Gera 1 refeição de 1 dia (cria o PlannedDay se ainda não existir). Usado pela
+ * geração inicial e pela recalibração — 1 dia inteiro numa chamada só ao Gemini
+ * leva ~50s (perto demais do timeout de Server Action); por refeição fica em
+ * ~10-20s, com margem de sobra mesmo em hospedagens com limite curto.
+ */
+export async function generatePlanMeal(planId: string, weekday: number, mealType: string, order: number) {
+  const userId = await getCurrentUserId();
+  const plan = await requireOwnPlan(planId, userId);
+  const profile = await prisma.dietProfile.findUnique({ where: { userId } });
+  if (!profile) throw new Error('Perfil de dieta não encontrado.');
+
+  const prefs = profileToPrefs(profile);
+  const split = mealSplit(profile.mealsPerDay);
+  const slice = split.find((s) => s.type === mealType)?.pct ?? 1 / split.length;
+  const mealTargets: MacroTargets = {
+    kcal: Math.round(plan.kcalTarget * slice),
+    proteinG: Math.round(plan.proteinTarget * slice),
+    carbG: Math.round(plan.carbTarget * slice),
+    fatG: Math.round(plan.fatTarget * slice),
+  };
+
+  const generated = await generateOneMeal(mealType, mealTargets, prefs);
+  if (!generated) throw new Error(`Não foi possível gerar a refeição (${mealType}).`);
+  const validated = validateAndRescale(
+    { days: [{ weekday, meals: [generated] }] },
+    mealTargets,
+    prefs.restrictions,
+  ).days[0].meals[0];
+
+  const day = await prisma.plannedDay.upsert({
+    where: { planId_weekday: { planId, weekday } },
+    create: { planId, weekday },
+    update: {},
+  });
+
+  const meal = await prisma.plannedMeal.create({
+    data: {
+      dayId: day.id,
+      type: mealType,
+      name: validated.name,
+      order,
+      items: { create: validated.items.map((item) => ({ ...item })) },
+    },
+    include: { items: true },
+  });
+
+  revalidateDiet();
+  return meal;
+}
+
 export async function swapItem(itemId: string, newFoodId: string) {
   const item = await prisma.plannedItem.findUnique({
     where: { id: itemId },
@@ -269,6 +305,11 @@ export async function swapItem(itemId: string, newFoodId: string) {
   return updated;
 }
 
+/**
+ * Recalcula as metas (rápido, sem IA) e apaga os dias antigos. O cliente repopula
+ * cada dia chamando regenerateDay() em sequência, mesma lógica de startDietPlan —
+ * uma chamada longa só ao Gemini estouraria o timeout de Server Action.
+ */
 export async function recalibratePlan(planId: string) {
   const userId = await getCurrentUserId();
   await requireOwnPlan(planId, userId);
@@ -276,13 +317,7 @@ export async function recalibratePlan(planId: string) {
   if (!profile) throw new Error('Perfil de dieta não encontrado.');
 
   const targets = profileTargets(profile);
-  const prefs = profileToPrefs(profile);
 
-  const raw = await generateWeek(targets, prefs);
-  if (!raw) throw new Error('Não foi possível recalibrar agora.');
-  const validated = validateAndRescale(raw, targets, prefs.restrictions);
-
-  await prisma.plannedDay.deleteMany({ where: { planId } });
   const updated = await prisma.dietPlan.update({
     where: { id: planId },
     data: {
@@ -290,22 +325,9 @@ export async function recalibratePlan(planId: string) {
       proteinTarget: targets.proteinG,
       carbTarget: targets.carbG,
       fatTarget: targets.fatG,
-      days: {
-        create: validated.days.map((day) => ({
-          weekday: day.weekday,
-          meals: {
-            create: day.meals.map((meal, idx) => ({
-              type: meal.type,
-              name: meal.name,
-              order: idx,
-              items: { create: meal.items.map((item) => ({ ...item })) },
-            })),
-          },
-        })),
-      },
     },
-    include: { days: { include: { meals: { include: { items: true } } } } },
   });
+  await prisma.plannedDay.deleteMany({ where: { planId } });
 
   await prisma.dietProfile.update({
     where: { userId },

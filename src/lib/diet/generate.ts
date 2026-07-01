@@ -1,6 +1,6 @@
 import 'server-only';
 import type { MacroTargets } from './targets';
-import type { RawWeekPlan, RawDay, RawMeal } from './validate';
+import type { RawDay, RawMeal } from './validate';
 
 export interface DietPrefs {
   style: string;
@@ -29,14 +29,6 @@ const BASE_RULES = `- kcal-alvo e macros (proteína/carbo/gordura) de \`targets\
 
 function withBudget(rules: string, budget: string): string {
   return rules.replace('{{BUDGET}}', BUDGET_RULE[budget] ?? BUDGET_RULE.moderado);
-}
-
-function systemWeek(budget: string): string {
-  return `Você é um planejador de dieta. Monte uma SEMANA COMPLETA (7 dias) respeitando EXATAMENTE:
-${withBudget(BASE_RULES, budget)}
-- Varie os alimentos entre os dias (não repita o mesmo cardápio todos os dias).
-- Nº de refeições = prefs.mealsPerDay, com os tipos indicados.
-- weekday vai de 0 (segunda) a 6 (domingo), um objeto por dia, sem pular nenhum.`;
 }
 
 function systemDay(budget: string): string {
@@ -112,14 +104,12 @@ async function callGemini<T>(system: string, contents: unknown, schema: object):
   }
 }
 
-/** Gera a semana-molde (7 dias) inteira numa única chamada. */
-export async function generateWeek(targets: MacroTargets, prefs: DietPrefs): Promise<RawWeekPlan | null> {
-  const { Type } = await import('@google/genai');
-  const schema = { type: Type.OBJECT, properties: { days: { type: Type.ARRAY, items: daySchema(Type) } }, required: ['days'] };
-  return callGemini<RawWeekPlan>(systemWeek(prefs.budget), { targets, prefs, days: 7 }, schema);
-}
-
-/** Regenera só 1 dia-molde — usado por "Regenerar dia". */
+/**
+ * Gera 1 dia-molde por vez (nunca a semana inteira numa chamada só — 7 dias de uma
+ * vez leva 3-6min e estoura o timeout de Server Action de hospedagens como Vercel
+ * Hobby). Usado tanto por "Regenerar dia" quanto pelo fluxo de criação/recalibração
+ * do plano, que chama isso 7x em sequência a partir do cliente.
+ */
 export async function generateOneDay(weekday: number, targets: MacroTargets, prefs: DietPrefs): Promise<RawDay | null> {
   const { Type } = await import('@google/genai');
   const result = await callGemini<RawDay>(systemDay(prefs.budget), { targets, prefs, weekday }, daySchema(Type));

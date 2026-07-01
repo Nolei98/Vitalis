@@ -5,8 +5,9 @@ import { useRouter } from 'next/navigation';
 import { RefreshCw, Repeat, CalendarCheck, ShoppingCart, Search, ShieldCheck, XCircle } from 'lucide-react';
 import {
   regenerateDay, regenerateMeal, swapItem, recalibratePlan, savePlan, endPlan,
-  applyPlanToDay, generateShoppingList, searchFoodCatalog,
+  applyPlanToDay, generateShoppingList, searchFoodCatalog, generatePlanMeal,
 } from '@/app/actions/diet';
+import { mealSplit } from '@/lib/diet/targets';
 import { WEEKDAY_LABEL, MEAL_TYPE_LABEL, type DietPlanRow, type PlannedItemRow } from './types';
 
 function fmtDate(d: Date | null) {
@@ -66,7 +67,7 @@ function ItemSwap({ item, onDone }: { item: PlannedItemRow; onDone: () => void }
   );
 }
 
-export default function PlanView({ plan }: { plan: DietPlanRow }) {
+export default function PlanView({ plan, mealsPerDay }: { plan: DietPlanRow; mealsPerDay: number }) {
   const router = useRouter();
   const [weekday, setWeekday] = useState(0);
   const [isPending, startTransition] = useTransition();
@@ -98,6 +99,16 @@ export default function PlanView({ plan }: { plan: DietPlanRow }) {
   function doRecalibrate() {
     startTransition(async () => {
       await recalibratePlan(plan.id);
+      // Repopula refeição a refeição (chamadas curtas de ~10-20s) em vez de 1
+      // chamada longa — mesmo motivo do startDietPlan: evita estourar o timeout
+      // de Server Action da hospedagem.
+      const split = mealSplit(mealsPerDay);
+      for (let d = 0; d < 7; d++) {
+        for (let i = 0; i < split.length; i++) {
+          setMsg(`Recalibrando dia ${d + 1}/7 — refeição ${i + 1}/${split.length}…`);
+          await generatePlanMeal(plan.id, d, split[i].type, i);
+        }
+      }
       setMsg('Plano recalibrado com as metas atuais.');
       refresh();
     });

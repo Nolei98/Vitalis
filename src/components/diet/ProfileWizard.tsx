@@ -3,7 +3,8 @@
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
-import { saveDietProfile, generateDietPlan, type DietProfileInput } from '@/app/actions/diet';
+import { saveDietProfile, startDietPlan, generatePlanMeal, type DietProfileInput } from '@/app/actions/diet';
+import { mealSplit } from '@/lib/diet/targets';
 import type { NutritionGoalOption } from './types';
 
 const RESTRICTION_OPTIONS = ['gluten', 'lactose', 'amendoim', 'ovo', 'frutos_do_mar', 'peixe', 'soja'];
@@ -36,6 +37,7 @@ export default function ProfileWizard({ nutritionGoals }: { nutritionGoals: Nutr
   const [mealsPerDay, setMealsPerDay] = useState(4);
   const [budget, setBudget] = useState<'economico' | 'moderado' | 'sem_restricao'>('moderado');
   const [goalId, setGoalId] = useState('');
+  const [progress, setProgress] = useState<string | null>(null);
 
   const steps = ['Meta', 'Corpo', 'Estilo & restrições', 'Alimentos', 'Refeições/dia'];
 
@@ -53,9 +55,21 @@ export default function ProfileWizard({ nutritionGoals }: { nutritionGoals: Nutr
           preferred: textToArr(preferredText), disliked: textToArr(dislikedText), available: textToArr(availableText),
         };
         await saveDietProfile(input);
-        await generateDietPlan({ goalId: goalId || undefined });
+        const plan = await startDietPlan({ goalId: goalId || undefined });
+        // Gera refeição a refeição (chamadas curtas de ~10-20s) em vez de 1 dia ou
+        // a semana inteira numa chamada só — isso evita estourar o timeout de
+        // Server Action da hospedagem (Vercel Hobby mata em ~10-60s).
+        const split = mealSplit(mealsPerDay);
+        for (let weekday = 0; weekday < 7; weekday++) {
+          for (let i = 0; i < split.length; i++) {
+            setProgress(`Gerando dia ${weekday + 1}/7 — refeição ${i + 1}/${split.length}…`);
+            await generatePlanMeal(plan.id, weekday, split[i].type, i);
+          }
+        }
+        setProgress(null);
         router.refresh();
       } catch (e) {
+        setProgress(null);
         setError(e instanceof Error ? e.message : 'Erro ao gerar o plano.');
       }
     });
@@ -217,7 +231,7 @@ export default function ProfileWizard({ nutritionGoals }: { nutritionGoals: Nutr
         ) : (
           <button onClick={submit} disabled={isPending}
             className="clay-btn px-5 py-2 text-sm font-bold text-white disabled:opacity-60" style={{ background: 'var(--mod-dieta)' }}>
-            {isPending ? 'Gerando plano…' : 'Gerar plano com IA'}
+            {isPending ? (progress ?? 'Gerando plano…') : 'Gerar plano com IA'}
           </button>
         )}
       </div>

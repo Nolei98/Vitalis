@@ -9,6 +9,10 @@ import { getDietProfile, getLatestPlan } from '@/app/actions/diet';
 import type { FoodItem, Goal } from '@/lib/nutrition/types';
 
 export const dynamic = 'force-dynamic';
+// Server Actions de geração/regeneração do plano de dieta (Gemini) chamadas a
+// partir desta rota ganham até 60s (teto do plano Hobby da Vercel) em vez do
+// padrão de ~10s — mesmo assim a geração é feita dia a dia pra nunca chegar perto disso.
+export const maxDuration = 60;
 
 export default async function DietaPage() {
   const user = await getCurrentUser();

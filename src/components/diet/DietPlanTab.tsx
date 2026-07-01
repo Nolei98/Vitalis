@@ -16,5 +16,5 @@ export default function DietPlanTab({
   if (!dietPlan) {
     return <ProfileWizard nutritionGoals={nutritionGoals} />;
   }
-  return <PlanView plan={dietPlan} />;
+  return <PlanView plan={dietPlan} mealsPerDay={dietProfile?.mealsPerDay ?? 4} />;
 }
