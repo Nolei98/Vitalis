@@ -111,8 +111,14 @@ export default async function EstudosPage({
                   placeholder="Ou digite a atividade (ex: Cálculo II)"
                   className="clay-card w-full px-4 py-2 text-sm outline-none border-none"
                 />
-                <button className="clay-btn w-full font-extrabold py-2.5 text-white" style={{ background: 'var(--mod-estudos)' }}>
-                  Começar Pomodoro ({settings.workMin}min foco / {settings.shortBreakMin}min pausa)
+                <button
+                  className="clay-btn w-full flex flex-col items-center gap-0.5 py-3 text-white leading-tight"
+                  style={{ background: 'var(--mod-estudos)' }}
+                >
+                  <span className="font-extrabold text-sm">Começar Pomodoro</span>
+                  <span className="font-semibold text-xs opacity-85">
+                    {settings.workMin}min foco / {settings.shortBreakMin}min pausa
+                  </span>
                 </button>
               </form>
             )}

@@ -1,6 +1,7 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
+import Link from 'next/link';
 import { Droplets, Salad, BookOpen, Wallet, type LucideIcon } from 'lucide-react';
 
 interface DockItem {
@@ -21,7 +22,7 @@ const HIDE_ON = ['/login', '/register'];
 
 function DockButton({ item, active }: { item: DockItem; active: boolean }) {
   return (
-    <a
+    <Link
       href={item.href}
       aria-label={item.label}
       title={item.label}
@@ -42,7 +43,7 @@ function DockButton({ item, active }: { item: DockItem; active: boolean }) {
       >
         {item.label}
       </span>
-    </a>
+    </Link>
   );
 }
 

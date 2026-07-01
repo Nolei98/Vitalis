@@ -203,6 +203,14 @@
   html {
     @apply font-sans;
   }
+  /* Navegadores não dão cursor:pointer em <button> por padrão — sem isso,
+     cliques em qualquer botão do app parecem "sem resposta". */
+  button:not(:disabled), [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+  button:disabled, [role="button"][aria-disabled="true"] {
+    cursor: not-allowed;
+  }
 }
 
 @layer utilities {

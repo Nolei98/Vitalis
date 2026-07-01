@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
 import { getCurrentUser } from '@/lib/user';
 import TaskCheckbox from '@/components/TaskCheckbox';
@@ -87,11 +88,11 @@ export default async function Dashboard() {
           <p className="text-[11px] font-bold" style={{ color: 'var(--text-soft)' }}>Seu painel de vida</p>
         </div>
         <div className="flex gap-2">
-          <a href="/social" className="w-8 h-8 rounded-xl flex items-center justify-center relative transition-all hover:scale-105"
+          <Link href="/social" className="w-8 h-8 rounded-xl flex items-center justify-center relative transition-all hover:scale-105"
             style={{ background: 'linear-gradient(135deg,#B020C8,#D946EF)', boxShadow: '0 2px 8px rgba(0,0,0,0.13)' }}>
             <MessageCircle size={15} color="white" strokeWidth={2.2} />
-          </a>
-          <a href="/notificacoes" className="w-8 h-8 rounded-xl flex items-center justify-center relative transition-all hover:scale-105"
+          </Link>
+          <Link href="/notificacoes" className="w-8 h-8 rounded-xl flex items-center justify-center relative transition-all hover:scale-105"
             style={{ background: 'linear-gradient(135deg,#D94060,#FB7185)', boxShadow: '0 2px 8px rgba(0,0,0,0.13)' }}>
             <Bell size={15} color="white" strokeWidth={2.2} />
             {alertCount > 0 && (
@@ -100,11 +101,11 @@ export default async function Dashboard() {
                 {alertCount}
               </span>
             )}
-          </a>
-          <a href="/conexoes" className="w-8 h-8 rounded-xl flex items-center justify-center transition-all hover:scale-105"
+          </Link>
+          <Link href="/conexoes" className="w-8 h-8 rounded-xl flex items-center justify-center transition-all hover:scale-105"
             style={{ background: 'linear-gradient(135deg,#475569,#64748B)', boxShadow: '0 2px 8px rgba(0,0,0,0.13)' }}>
             <Plug size={15} color="white" strokeWidth={2.2} />
-          </a>
+          </Link>
         </div>
       </header>
 
@@ -220,8 +221,8 @@ export default async function Dashboard() {
               <ModIcon mod="agenda" size="sm" />
               <h3 className="font-extrabold text-sm" style={{ color: 'var(--text-strong)' }}>Agenda de Hoje</h3>
             </div>
-            <a href="/agenda" className="text-[10px] font-bold px-2 py-0.5 rounded-full"
-              style={{ background: 'var(--mod-agenda-bg)', color: 'var(--mod-agenda-strong)' }}>Ver mais</a>
+            <Link href="/agenda" className="text-[10px] font-bold px-2 py-0.5 rounded-full"
+              style={{ background: 'var(--mod-agenda-bg)', color: 'var(--mod-agenda-strong)' }}>Ver mais</Link>
           </div>
           <div className="flex-1 overflow-y-auto no-scrollbar space-y-1.5">
             {events.length === 0 && (
@@ -271,16 +272,16 @@ export default async function Dashboard() {
               <ModIcon mod="tarefas" size="sm" />
               <h3 className="font-extrabold text-sm" style={{ color: 'var(--text-strong)' }}>Foco do Dia</h3>
             </div>
-            <a href="/tarefas" className="text-[10px] font-bold px-2 py-0.5 rounded-full"
-              style={{ background: 'var(--mod-tarefas-bg)', color: 'var(--mod-tarefas-strong)' }}>Ver tudo</a>
+            <Link href="/tarefas" className="text-[10px] font-bold px-2 py-0.5 rounded-full"
+              style={{ background: 'var(--mod-tarefas-bg)', color: 'var(--mod-tarefas-strong)' }}>Ver tudo</Link>
           </div>
-          <a href="/estudos" className="flex items-center gap-1.5 mb-1.5 px-2 py-1 rounded-lg w-fit flex-shrink-0"
+          <Link href="/estudos" className="flex items-center gap-1.5 mb-1.5 px-2 py-1 rounded-lg w-fit flex-shrink-0"
             style={{ background: 'var(--mod-estudos-bg)' }}>
             <BookOpen size={12} strokeWidth={2.2} style={{ color: 'var(--mod-estudos-strong)' }} />
             <span className="text-[10px] font-bold" style={{ color: 'var(--mod-estudos-strong)' }}>
               Estudo hoje: {studyMinutesToday}min
             </span>
-          </a>
+          </Link>
           <div className="flex-1 overflow-y-auto no-scrollbar space-y-1.5">
             {topTasks.map((task) => <TaskCheckbox key={task.id} task={task} />)}
             {topTasks.length === 0 && (

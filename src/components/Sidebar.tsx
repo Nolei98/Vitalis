@@ -1,6 +1,7 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
+import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { logoutUser } from '@/app/actions/auth';
 import UnreadBadge from '@/components/social/UnreadBadge';
@@ -42,7 +43,7 @@ const SIDEBAR_STYLE = {
 
 function NavItem({ l, active, onNavigate }: { l: NavLink; active: boolean; onNavigate?: () => void }) {
   return (
-    <a
+    <Link
       href={l.href}
       onClick={onNavigate}
       className="flex items-center gap-3 px-3 py-2 rounded-2xl transition-all duration-150 font-semibold text-[13px] relative group"
@@ -70,7 +71,7 @@ function NavItem({ l, active, onNavigate }: { l: NavLink; active: boolean; onNav
       {active && (
         <span className="ml-auto w-1.5 h-1.5 rounded-full bg-white opacity-80 flex-shrink-0" />
       )}
-    </a>
+    </Link>
   );
 }
 
