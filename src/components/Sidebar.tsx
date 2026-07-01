@@ -77,11 +77,12 @@ function NavItem({ l, active, onNavigate }: { l: NavLink; active: boolean; onNav
   );
 }
 
-function NavItems({ pathname, onNavigate }: { pathname: string; onNavigate?: () => void }) {
+function NavItems({ pathname, isAdmin, onNavigate }: { pathname: string; isAdmin?: boolean; onNavigate?: () => void }) {
+  const links = isAdmin ? LINKS : LINKS.filter((l) => l.href !== '/usuarios');
   return (
     <>
       <nav className="w-full px-3 space-y-0.5 flex-1 overflow-y-auto no-scrollbar">
-        {LINKS.map((l) => {
+        {links.map((l) => {
           const active = l.href === '/' ? pathname === '/' : pathname.startsWith(l.href);
           return <NavItem key={l.href} l={l} active={active} onNavigate={onNavigate} />;
         })}
@@ -106,7 +107,7 @@ function NavItems({ pathname, onNavigate }: { pathname: string; onNavigate?: () 
   );
 }
 
-export default function Sidebar({ userName }: { userName: string }) {
+export default function Sidebar({ userName, isAdmin }: { userName: string; isAdmin?: boolean }) {
   const pathname = usePathname();
   const [drawerOpen, setDrawerOpen] = useState(false);
 
@@ -179,7 +180,7 @@ export default function Sidebar({ userName }: { userName: string }) {
                 <X size={16} className="text-white/80" />
               </button>
             </div>
-            <NavItems pathname={pathname} onNavigate={() => setDrawerOpen(false)} />
+            <NavItems pathname={pathname} isAdmin={isAdmin} onNavigate={() => setDrawerOpen(false)} />
           </aside>
         </div>
       )}
@@ -198,7 +199,7 @@ export default function Sidebar({ userName }: { userName: string }) {
           <p className="text-white font-bold text-sm opacity-90">Olá, {userName}! <Sparkles size={13} className="inline-block text-yellow-200 ml-0.5" strokeWidth={2} /></p>
         </div>
 
-        <NavItems pathname={pathname} />
+        <NavItems pathname={pathname} isAdmin={isAdmin} />
       </aside>
     </>
   );

@@ -22,6 +22,7 @@ interface Props {
   secondColor?: string;
   height?: number;
   showGrid?: boolean;
+  tickColor?: string;
 }
 
 function CustomTooltip({ active, payload, label }: { active?: boolean; payload?: { value: number; name: string }[]; label?: string }) {
@@ -38,8 +39,8 @@ function CustomTooltip({ active, payload, label }: { active?: boolean; payload?:
   );
 }
 
-export default function TrendArea({ data, color = '#7C5CFC', secondColor, height = 140, showGrid = false }: Props) {
-  const id = `ta-${color.replace('#', '')}`;
+export default function TrendArea({ data, color = '#7C5CFC', secondColor, height = 140, showGrid = false, tickColor = '#9B97AA' }: Props) {
+  const id = `ta-${color.replace(/[^a-zA-Z0-9]/g, '')}`;
   return (
     <ResponsiveContainer width="100%" height={height}>
       <AreaChart data={data} margin={{ top: 6, right: 4, bottom: 0, left: -28 }}>
@@ -56,8 +57,8 @@ export default function TrendArea({ data, color = '#7C5CFC', secondColor, height
           )}
         </defs>
         {showGrid && <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.06)" vertical={false} />}
-        <XAxis dataKey="label" tick={{ fontSize: 11, fontWeight: 700, fill: '#9B97AA' }} axisLine={false} tickLine={false} />
-        <YAxis tick={{ fontSize: 11, fontWeight: 700, fill: '#9B97AA' }} axisLine={false} tickLine={false} />
+        <XAxis dataKey="label" tick={{ fontSize: 11, fontWeight: 700, fill: tickColor }} axisLine={false} tickLine={false} />
+        <YAxis tick={{ fontSize: 11, fontWeight: 700, fill: tickColor }} axisLine={false} tickLine={false} />
         <Tooltip content={<CustomTooltip />} />
         <Area
           type="monotone"

@@ -116,23 +116,24 @@ export default async function Dashboard() {
           style={{ minHeight: 160 }}>
           <div className="flex justify-between items-start z-10 relative">
             <div className="flex-1 min-w-0 pr-2">
-              <p className="text-white/70 text-[11px] font-bold">Bom dia,</p>
+              <p className="text-white/80 text-[11px] font-bold">Bom dia,</p>
               <h2 className="text-lg font-black text-white truncate flex items-center gap-1.5">
                 {user.name} <Sun size={16} strokeWidth={2} className="text-yellow-200 flex-shrink-0" />
               </h2>
-              <p className="text-white/80 text-xs font-medium mt-0.5 truncate">{nextAction}</p>
+              <p className="text-white/90 text-xs font-medium mt-0.5 truncate">{nextAction}</p>
             </div>
             <div className="text-right flex-shrink-0">
-              <p className="text-white/60 text-[9px] font-bold uppercase tracking-wider">Kcal semana</p>
+              <p className="text-white/75 text-[9px] font-black uppercase tracking-wider">Kcal semana</p>
               <p className="text-2xl font-black text-white">{kcalW.reduce((a, p) => a + p.value, 0)}</p>
               {user.targetKcal && (
-                <p className="text-white/70 text-[10px] font-bold">meta {user.targetKcal}/dia</p>
+                <p className="text-white/80 text-[10px] font-bold">meta {user.targetKcal}/dia</p>
               )}
             </div>
           </div>
           <div className="-mx-1 mt-1">
             <TrendArea data={heroData} color="rgba(255,255,255,0.9)"
-              secondColor={user.targetKcal ? 'rgba(255,255,255,0.35)' : undefined} height={72} />
+              secondColor={user.targetKcal ? 'rgba(255,255,255,0.35)' : undefined}
+              height={72} tickColor="rgba(255,255,255,0.60)" />
           </div>
           <div className="absolute right-[-10%] top-[-40%] w-48 h-48 bg-white/10 rounded-full blur-3xl pointer-events-none" />
           <div className="absolute left-[-5%] bottom-[-30%] w-36 h-36 bg-white/10 rounded-full blur-3xl pointer-events-none" />

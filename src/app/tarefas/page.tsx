@@ -1,26 +1,28 @@
 ﻿import React from 'react';
 import { prisma } from '@/lib/prisma';
+import { getCurrentUser } from '@/lib/user';
 import TaskCheckbox from '@/components/TaskCheckbox';
 import { createTaskForm, deleteTask } from '@/app/actions/tasks';
 import PageFrame from '@/components/PageFrame';
 import ModIcon from '@/components/ModIcon';
+import { CheckCircle2, Plus } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
 const PRIORITY_LABEL: Record<number, string> = { 3: '🔴 Urgente', 2: '🟠 Alta', 1: '🟡 Média', 0: '⚪ Normal' };
 
 export default async function TarefasPage() {
-  const user = await prisma.user.findFirst({
-    include: { tasks: { orderBy: [{ priority: 'desc' }, { due: 'asc' }] } }
+  const user = await getCurrentUser();
+  const tasks = await prisma.task.findMany({
+    where: { userId: user.id },
+    orderBy: [{ priority: 'desc' }, { due: 'asc' }],
   });
 
-  if (!user) return <div>Carregando...</div>;
-
-  const pendingTasks = user.tasks.filter(t => t.status === 'pending');
-  const completedTasks = user.tasks.filter(t => t.status === 'completed');
+  const pendingTasks = tasks.filter(t => t.status === 'pending');
+  const completedTasks = tasks.filter(t => t.status === 'completed');
 
   const doneCount = completedTasks.length;
-  const totalCount = user.tasks.length;
+  const totalCount = tasks.length;
   const donePct = totalCount ? Math.round((doneCount / totalCount) * 100) : 0;
 
   return (
@@ -76,9 +78,10 @@ export default async function TarefasPage() {
               </div>
             ))}
             {pendingTasks.length === 0 && (
-              <p className="text-center py-8 font-bold text-sm" style={{ color: 'var(--text-soft)' }}>
-                Tudo limpo por aqui! 🎉
-              </p>
+              <div className="flex flex-col items-center justify-center py-8 gap-2" style={{ color: 'var(--text-soft)' }}>
+                <CheckCircle2 size={36} strokeWidth={1.5} style={{ color: 'var(--mod-tarefas)' }} />
+                <p className="font-bold text-sm">Tudo limpo por aqui!</p>
+              </div>
             )}
           </div>
 
@@ -98,8 +101,10 @@ export default async function TarefasPage() {
         {/* Right Column: Add Task */}
         <div className="clay-card p-5 h-fit" style={{ borderTop: '3px solid var(--mod-tarefas)' }}>
           <div className="flex items-center gap-2 mb-5">
-            <span className="w-8 h-8 rounded-xl flex items-center justify-center text-base"
-              style={{ background: 'var(--mod-tarefas-bg)' }}>➕</span>
+            <span className="w-8 h-8 rounded-xl flex items-center justify-center"
+              style={{ background: 'linear-gradient(135deg,#1A9E6E,#2BC48A)', boxShadow: '0 2px 8px rgba(0,0,0,0.12)' }}>
+              <Plus size={16} color="white" strokeWidth={2.5} />
+            </span>
             <h2 className="text-base font-extrabold" style={{ color: 'var(--text-strong)' }}>Nova Tarefa</h2>
           </div>
           <form action={createTaskForm} className="space-y-4">
