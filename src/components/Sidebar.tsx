@@ -21,7 +21,7 @@ interface NavLink {
 }
 
 const LINKS: NavLink[] = [
-  { href: '/',              label: 'Dashboard',    Icon: LayoutDashboard, iconBg: 'linear-gradient(135deg,#6D49E8,#9871F5)', accent: '#7C5CFC', accentBg: '#EDE8FF' },
+  { href: '/dashboard',     label: 'Dashboard',    Icon: LayoutDashboard, iconBg: 'linear-gradient(135deg,#6D49E8,#9871F5)', accent: '#7C5CFC', accentBg: '#EDE8FF' },
   { href: '/agenda',        label: 'Agenda',       Icon: CalendarDays,    iconBg: 'linear-gradient(135deg,#3A6BCF,#5B8DEF)', accent: '#5B8DEF', accentBg: '#E5EFFD' },
   { href: '/tarefas',       label: 'Tarefas',      Icon: CheckSquare,     iconBg: 'linear-gradient(135deg,#1A9E6E,#2BC48A)', accent: '#2BC48A', accentBg: '#E0F7EE' },
   { href: '/metas',         label: 'Metas',        Icon: Target,          iconBg: 'linear-gradient(135deg,#D94C91,#FF6FB5)', accent: '#FF6FB5', accentBg: '#FFE9F4' },
@@ -81,7 +81,7 @@ function NavItems({ pathname, isAdmin, onNavigate }: { pathname: string; isAdmin
     <>
       <nav className="w-full px-3 space-y-0.5 flex-1 overflow-y-auto no-scrollbar">
         {links.map((l) => {
-          const active = l.href === '/' ? pathname === '/' : pathname.startsWith(l.href);
+          const active = l.href === '/dashboard' ? pathname === '/dashboard' : pathname.startsWith(l.href);
           return <NavItem key={l.href} l={l} active={active} onNavigate={onNavigate} />;
         })}
       </nav>
@@ -138,7 +138,7 @@ export default function Sidebar({ userName, isAdmin }: { userName: string; isAdm
         <div className="flex-1 flex items-center gap-2">
           <div className="w-7 h-7 rounded-lg flex items-center justify-center"
             style={{ background: 'rgba(255,255,255,0.20)' }}>
-            <img src="https://i.imgur.com/5MU9NOg.png" alt="Vitalis" width={20} height={20} />
+            <img src="/images/vitalis-logo.png" alt="Vitalis" width={20} height={20} />
           </div>
           <span className="text-white font-black text-sm">Vitalis</span>
         </div>
@@ -163,7 +163,7 @@ export default function Sidebar({ userName, isAdmin }: { userName: string; isAdm
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-2xl flex items-center justify-center"
                   style={{ background: 'rgba(255,255,255,0.18)' }}>
-                  <img src="https://i.imgur.com/5MU9NOg.png" alt="Vitalis" width={28} height={28} />
+                  <img src="/images/vitalis-logo.png" alt="Vitalis" width={28} height={28} />
                 </div>
                 <div>
                   <p className="text-white font-bold text-sm">Olá, {userName}! <Sparkles size={13} className="inline-block text-yellow-200 ml-0.5" strokeWidth={2} /></p>
@@ -192,7 +192,7 @@ export default function Sidebar({ userName, isAdmin }: { userName: string; isAdm
         <div className="flex flex-col items-center mb-5 flex-shrink-0">
           <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-1.5"
             style={{ background: 'rgba(255,255,255,0.18)' }}>
-            <img src="https://i.imgur.com/5MU9NOg.png" alt="Vitalis" width={40} height={40} />
+            <img src="/images/vitalis-logo.png" alt="Vitalis" width={40} height={40} />
           </div>
           <p className="text-white font-bold text-sm opacity-90">Olá, {userName}! <Sparkles size={13} className="inline-block text-yellow-200 ml-0.5" strokeWidth={2} /></p>
         </div>

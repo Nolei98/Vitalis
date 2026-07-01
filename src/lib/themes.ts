@@ -8,6 +8,23 @@ export interface Theme {
 
 export const THEMES: Theme[] = [
   {
+    id: 'vitalis',
+    label: 'Vitalis',
+    emoji: '🌿',
+    preview: '#8A9A5B',
+    vars: {
+      '--brand-600': '#76844e',
+      '--brand-500': '#8A9A5B',
+      '--brand-400': '#9fb06d',
+      '--brand-300': '#B7C48E',
+      '--brand-100': '#EAECE5',
+      '--app-bg':    '#F4F5F1',
+      '--sidebar-from': '#5D6A3C',
+      '--sidebar-mid':  '#8A9A5B',
+      '--sidebar-to':   '#B7C48E',
+    },
+  },
+  {
     id: 'violet',
     label: 'Violeta',
     emoji: '💜',
@@ -39,23 +56,6 @@ export const THEMES: Theme[] = [
       '--sidebar-from': '#1D4ED8',
       '--sidebar-mid':  '#2563EB',
       '--sidebar-to':   '#60A5FA',
-    },
-  },
-  {
-    id: 'forest',
-    label: 'Floresta',
-    emoji: '🌿',
-    preview: '#059669',
-    vars: {
-      '--brand-600': '#047857',
-      '--brand-500': '#059669',
-      '--brand-400': '#10B981',
-      '--brand-300': '#6EE7B7',
-      '--brand-100': '#D1FAE5',
-      '--app-bg':    '#F0FDF4',
-      '--sidebar-from': '#047857',
-      '--sidebar-mid':  '#059669',
-      '--sidebar-to':   '#34D399',
     },
   },
   {

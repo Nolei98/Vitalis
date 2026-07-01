@@ -44,7 +44,7 @@ export async function registerUser(_prev: AuthState, formData: FormData): Promis
   }
 
   await createSession(userId);
-  redirect('/');
+  redirect('/dashboard');
 }
 
 /** Login por e-mail + senha. Cria a sessão e redireciona para o dashboard. */
@@ -59,7 +59,7 @@ export async function loginUser(_prev: AuthState, formData: FormData): Promise<A
   if (user.passwordHash !== sha256(password)) return { error: 'Senha incorreta.' };
 
   await createSession(user.id);
-  redirect('/');
+  redirect('/dashboard');
 }
 
 /** Encerra a sessão atual. */

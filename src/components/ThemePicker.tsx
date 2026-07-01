@@ -1,11 +1,11 @@
-﻿'use client';
+'use client';
 
 import { useState, useEffect } from 'react';
 import { Palette } from 'lucide-react';
 import { THEMES } from '@/lib/themes';
 
 export default function ThemePicker() {
-  const [active, setActive] = useState('violet');
+  const [active, setActive] = useState('vitalis');
 
   useEffect(() => {
     const saved = localStorage.getItem('lifeos_theme');
