@@ -3,7 +3,8 @@ import { prisma } from '@/lib/prisma';
 import { getCurrentUser } from '@/lib/user';
 import AgendaView from '@/components/AgendaView';
 import SyncButton from '@/components/SyncButton';
-import { startOfDay, addDays } from 'date-fns';
+import { addDays } from 'date-fns';
+import { dayRangeInTimezone } from '@/lib/timezone';
 import PageFrame from '@/components/PageFrame';
 import ModIcon from '@/components/ModIcon';
 
@@ -11,7 +12,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function AgendaPage() {
   const user = await getCurrentUser();
-  const from = startOfDay(new Date());
+  const { start: from } = dayRangeInTimezone(user.timezone);
   const to = addDays(from, 7);
 
   const events = await prisma.calendarEvent.findMany({

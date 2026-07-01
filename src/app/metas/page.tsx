@@ -2,19 +2,20 @@
 import { prisma } from '@/lib/prisma';
 import { getCurrentUser } from '@/lib/user';
 import { createGoal, updateGoalProgress, deleteGoal } from '@/app/actions/goals';
-import { createHabit, deleteHabit, toggleHabitToday } from '@/app/actions/habits';
+import { createHabit, deleteHabit } from '@/app/actions/habits';
 import { startSessionAction } from '@/app/actions/study';
-import { startOfDay } from 'date-fns';
+import { dayRangeInTimezone } from '@/lib/timezone';
 import DonutRing from '@/components/charts/DonutRing';
 import PageFrame from '@/components/PageFrame';
 import ModIcon from '@/components/ModIcon';
+import HabitToggle from '@/components/HabitToggle';
 import { Target, RefreshCw, BookOpen } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
 export default async function MetasPage() {
   const user = await getCurrentUser();
-  const today = startOfDay(new Date());
+  const { start: today } = dayRangeInTimezone(user.timezone);
 
   const [goals, habits, todayLogs] = await Promise.all([
     prisma.goal.findMany({ where: { userId: user.id, type: { not: 'vault' } }, orderBy: { deadline: 'asc' } }),
@@ -139,13 +140,7 @@ export default async function MetasPage() {
                     <p className="text-xs font-bold" style={{ color: '#FFB020' }}>🔥 {h.streak} dias</p>
                   </div>
                   <div className="flex items-center gap-2">
-                    <form action={toggleHabitToday}>
-                      <input type="hidden" name="id" value={h.id} />
-                      <button className="clay-btn text-sm font-bold px-3 py-2 text-white"
-                        style={{ background: done ? 'var(--mod-tarefas)' : 'rgba(0,0,0,0.10)', color: done ? 'white' : 'var(--text-soft)' }}>
-                        {done ? '✓' : 'ok'}
-                      </button>
-                    </form>
+                    <HabitToggle habitId={h.id} done={done} />
                     <form action={deleteHabit}>
                       <input type="hidden" name="id" value={h.id} />
                       <button className="text-xs font-bold" style={{ color: '#FB7185' }}>✕</button>

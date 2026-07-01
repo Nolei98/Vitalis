@@ -2,6 +2,7 @@
 import { prisma } from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
 import { getCurrentUser, getCurrentUserId } from '@/lib/user'
+import { dayRangeInTimezone } from '@/lib/timezone'
 
 const WATER_GOAL = 2000
 
@@ -30,8 +31,9 @@ export async function saveWaterReminder(data: {
 /** Total (ml) bebido hoje + meta — usado pelo lembrete no cliente pra saber se já bateu a meta. */
 export async function getWaterStatus(): Promise<{ total: number; goal: number }> {
   const user = await getCurrentUser()
+  const { start } = dayRangeInTimezone(user.timezone)
   const logs = await prisma.waterLog.findMany({
-    where: { userId: user.id, createdAt: { gte: new Date(new Date().setHours(0, 0, 0, 0)) } },
+    where: { userId: user.id, createdAt: { gte: start } },
   })
   return { total: logs.reduce((acc, l) => acc + l.amount, 0), goal: WATER_GOAL }
 }

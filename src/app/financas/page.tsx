@@ -81,7 +81,7 @@ export default async function FinancasPage() {
                   color="rgba(255,255,255,0.85)"
                   color2="rgba(255,255,255,0.30)"
                   height={90}
-                  formatValue={(v) => `R$${v}`}
+                  unit="R$"
                 />
               </div>
             )}

@@ -1,8 +1,9 @@
 ﻿import React from 'react';
 import { prisma } from '@/lib/prisma';
 import { getCurrentUser } from '@/lib/user';
-import { subDays, startOfDay, format } from 'date-fns';
+import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { daysAgoInTimezone } from '@/lib/timezone';
 import BarChartSimple from '@/components/charts/BarChartSimple';
 import PageFrame from '@/components/PageFrame';
 import ModIcon from '@/components/ModIcon';
@@ -13,7 +14,7 @@ const brl = (n: number) => n.toLocaleString('pt-BR', { style: 'currency', curren
 
 export default async function RelatoriosPage() {
   const user = await getCurrentUser();
-  const since = subDays(startOfDay(new Date()), 30);
+  const since = daysAgoInTimezone(user.timezone, 30);
 
   const [transactions, waterLogs, meals, goals] = await Promise.all([
     prisma.transaction.findMany({ where: { userId: user.id, date: { gte: since } } }),
@@ -81,8 +82,7 @@ export default async function RelatoriosPage() {
             <p className="font-bold text-sm" style={{ color: 'var(--text-soft)' }}>Sem despesas no período.</p>
           )}
           {barCatData.length > 0 && (
-            <BarChartSimple data={barCatData} color="var(--mod-financas)" height={150}
-              formatValue={(v) => `R$${v}`} />
+            <BarChartSimple data={barCatData} color="var(--mod-financas)" height={150} unit="R$" />
           )}
           <div className="space-y-2.5 mt-4">
             {catRows.map(([cat, val]) => (

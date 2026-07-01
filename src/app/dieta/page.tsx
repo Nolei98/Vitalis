@@ -4,17 +4,19 @@ import { getCurrentUser } from '@/lib/user';
 import DietaClient from '@/components/nutrition/DietaClient';
 import SaveToSheetsButton from '@/components/nutrition/SaveToSheetsButton';
 import { sheetsConfigured } from '@/lib/integrations/sheets';
+import { dayRangeInTimezone } from '@/lib/timezone';
 import type { FoodItem, Goal } from '@/lib/nutrition/types';
 
 export const dynamic = 'force-dynamic';
 
 export default async function DietaPage() {
   const user = await getCurrentUser();
+  const { start } = dayRangeInTimezone(user.timezone);
 
   const meals = await prisma.meal.findMany({
     where: {
       userId: user.id,
-      createdAt: { gte: new Date(new Date().setHours(0, 0, 0, 0)) },
+      createdAt: { gte: start },
     },
     orderBy: { createdAt: 'asc' },
   });

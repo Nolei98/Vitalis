@@ -12,7 +12,10 @@ function revalidate() {
 export async function toggleTask(taskId: string, isCompleted: boolean) {
   const task = await prisma.task.update({
     where: { id: taskId },
-    data: { status: isCompleted ? 'completed' : 'pending' },
+    data: {
+      status: isCompleted ? 'completed' : 'pending',
+      completedAt: isCompleted ? new Date() : null,
+    },
   })
   // Bidirecional: reflete a mudança no ClickUp se a task veio de lá.
   if (task.source === 'clickup' && task.externalId) {

@@ -2,8 +2,8 @@ import 'server-only';
 import { prisma } from '@/lib/prisma';
 import { getCurrentUser } from '@/lib/user';
 import { notifyDiscord, COLORS, type DiscordEmbed } from '@/lib/integrations/connectors/discord';
-import { startOfDay, endOfDay } from 'date-fns';
 import { formatInTimeZone } from 'date-fns-tz';
+import { dayRangeInTimezone } from '@/lib/timezone';
 
 const WATER_GOAL = 2000;
 
@@ -58,8 +58,7 @@ export async function runNotifications(userId?: string): Promise<NotifyResult> {
   const hhmm = formatInTimeZone(now, tz, 'HH:mm');
   const nowMin = toMinutes(hhmm)!;
   const weekday = Number(formatInTimeZone(now, tz, 'i'));
-  const dayStart = startOfDay(now);
-  const dayEnd = endOfDay(now);
+  const { start: dayStart, end: dayEnd } = dayRangeInTimezone(tz, now);
 
   const embeds: DiscordEmbed[] = [];
   const rulesFired: string[] = [];

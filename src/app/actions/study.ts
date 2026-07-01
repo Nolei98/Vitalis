@@ -2,7 +2,8 @@
 import { prisma } from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
-import { getCurrentUserId } from '@/lib/user'
+import { getCurrentUserId, getCurrentUser } from '@/lib/user'
+import { dayRangeInTimezone } from '@/lib/timezone'
 import type { StudySession, StudySettings } from '@prisma/client'
 
 function revalidate() {
@@ -167,10 +168,9 @@ export async function getActiveSession(): Promise<StudySession | null> {
 }
 
 export async function todayFocusMinutes(): Promise<number> {
-  const userId = await getCurrentUserId()
-  const start = new Date()
-  start.setHours(0, 0, 0, 0)
-  const sessions = await prisma.studySession.findMany({ where: { userId, startedAt: { gte: start } } })
+  const user = await getCurrentUser()
+  const { start } = dayRangeInTimezone(user.timezone)
+  const sessions = await prisma.studySession.findMany({ where: { userId: user.id, startedAt: { gte: start } } })
   return Math.round(sessions.reduce((a, s) => a + s.focusSeconds, 0) / 60)
 }
 

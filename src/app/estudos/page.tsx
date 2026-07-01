@@ -8,7 +8,7 @@ import {
   getStudySettings, listSubjects, getStudyReport,
   startSessionAction, upsertStudySettings, createSubject,
 } from '@/app/actions/study';
-import { startOfDay, startOfWeek, startOfMonth, subDays } from 'date-fns';
+import { dayRangeInTimezone, daysAgoInTimezone, startOfWeekInTimezone, startOfMonthInTimezone } from '@/lib/timezone';
 import { BookOpen, Clock, BarChart3 } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
@@ -47,10 +47,10 @@ export default async function EstudosPage({
   }
 
   const now = new Date();
-  const report = await getStudyReport(startOfDay(subDays(now, 29)), now);
-  const todayStart = startOfDay(now);
-  const weekStart = startOfWeek(now, { weekStartsOn: 1 });
-  const monthStart = startOfMonth(now);
+  const report = await getStudyReport(daysAgoInTimezone(user.timezone, 29), now);
+  const { start: todayStart } = dayRangeInTimezone(user.timezone);
+  const weekStart = startOfWeekInTimezone(user.timezone);
+  const monthStart = startOfMonthInTimezone(user.timezone);
   const sumSince = (d: Date) => report.sessions.filter((s) => s.startedAt >= d).reduce((a, s) => a + s.focusSeconds, 0);
   const todaySec = sumSince(todayStart);
   const weekSec = sumSince(weekStart);

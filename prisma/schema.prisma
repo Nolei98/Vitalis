@@ -136,11 +136,12 @@ model Task {
   project String? 
   status String @default("pending") 
   priority Int @default(0) 
-  due DateTime? 
-  createdAt DateTime @default(now()) 
+  due DateTime?
+  createdAt DateTime @default(now())
+  completedAt DateTime?
   source String? @default("internal")
   externalId String?
-  user User @relation(fields:[userId], references:[id], onDelete: Cascade) 
+  user User @relation(fields:[userId], references:[id], onDelete: Cascade)
 }
 
 model WaterLog { 

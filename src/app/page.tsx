@@ -6,7 +6,8 @@ import WaterButtons from '@/components/WaterButtons';
 import ModIcon from '@/components/ModIcon';
 import BalanceDisplay from '@/components/BalanceDisplay';
 import { fmtTime, sourceColor } from '@/lib/calendar';
-import { startOfDay, endOfDay, startOfMonth } from 'date-fns';
+import { startOfMonth } from 'date-fns';
+import { dayRangeInTimezone } from '@/lib/timezone';
 import { kcalTrend, waterTrend, taskTrend, eventTrend } from '@/lib/weekTrend';
 import TrendArea from '@/components/charts/TrendArea';
 import SparkLine from '@/components/charts/SparkLine';
@@ -21,8 +22,7 @@ const WATER_GOAL = 2000;
 export default async function Dashboard() {
   const user = await getCurrentUser();
   const now = new Date();
-  const dayStart = startOfDay(now);
-  const dayEnd = endOfDay(now);
+  const { start: dayStart, end: dayEnd } = dayRangeInTimezone(user.timezone);
 
   const [events, pendingTasks, waterLogs, meals, finAccounts, budgets, monthTx, goals] = await Promise.all([
     prisma.calendarEvent.findMany({
@@ -42,10 +42,10 @@ export default async function Dashboard() {
   ]);
 
   const [kcalW, waterW, taskW, eventW, studyMinutesToday] = await Promise.all([
-    kcalTrend(user.id),
-    waterTrend(user.id),
-    taskTrend(user.id),
-    eventTrend(user.id),
+    kcalTrend(user.id, user.timezone),
+    waterTrend(user.id, user.timezone),
+    taskTrend(user.id, user.timezone),
+    eventTrend(user.id, user.timezone),
     todayFocusMinutes(),
   ]);
 
