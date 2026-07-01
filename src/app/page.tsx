@@ -51,8 +51,8 @@ export default async function LandingPage() {
             </div>
 
             {/* Title */}
-            <h1 className="text-4xl md:text-6xl font-black tracking-tighter text-[#14150F] uppercase leading-none mb-6">
-              SEU SISTEMA PESSOAL DE <span className="text-[#8A9A5B]">BEM-ESTAR</span>
+            <h1 className="text-3xl sm:text-4xl md:text-6xl font-black tracking-tighter text-[#14150F] uppercase leading-none mb-6">
+              SEU SISTEMA PESSOAL DE <span className="text-[#8A9A5B] whitespace-nowrap">BEM-ESTAR</span>
             </h1>
 
             {/* Subtitle */}
