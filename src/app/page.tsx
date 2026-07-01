@@ -87,6 +87,7 @@ export default async function LandingPage() {
           <div className="flex-1 w-full max-w-md h-[130px] sm:h-[220px] md:h-[400px] flex flex-col items-center justify-center relative z-10 order-1 md:order-2">
             <HeroWrapper />
             <MobilePlayButton />
+          </div>
           {/* Subtle botanical watermarks */}
           <LeafMonstera className="absolute top-[10%] left-[-5%] w-72 h-72 text-[#8A9A5B] opacity-[0.025] pointer-events-none select-none z-0 rotate-45 hidden md:block" />
           <LeafBranch className="absolute bottom-[8%] right-[-5%] w-80 h-80 text-[#8A9A5B] opacity-[0.025] pointer-events-none select-none z-0 rotate-[-30deg]" />
