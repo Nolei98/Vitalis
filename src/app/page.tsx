@@ -10,6 +10,7 @@ import HeroWrapper from '@/components/marketing/HeroWrapper';
 import ScrollToTop from '@/components/marketing/ScrollToTop';
 import HeroActions from '@/components/marketing/HeroActions';
 import { User, Users, Briefcase, Handshake, Sparkles } from 'lucide-react';
+import MobilePlayButton from '@/components/marketing/MobilePlayButton';
 
 export const dynamic = 'force-dynamic';
 
@@ -83,8 +84,9 @@ export default async function LandingPage() {
           </div>
 
           {/* 3D Canvas Area */}
-          <div className="flex-1 w-full max-w-md h-[400px] flex items-center justify-center relative z-10 order-1 md:order-2">
+          <div className="flex-1 w-full max-w-md h-[220px] sm:h-[300px] md:h-[400px] flex flex-col items-center justify-center relative z-10 order-1 md:order-2">
             <HeroWrapper />
+            <MobilePlayButton />
           </div>
         </div>
       </section>

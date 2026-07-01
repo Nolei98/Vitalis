@@ -17,6 +17,9 @@ export default function HeroActions({ hasSession, ctaUrl }: HeroActionsProps) {
   // Ensure portal only mounts on the client-side
   useEffect(() => {
     setMounted(true);
+    const handleOpen = () => setIsVideoOpen(true);
+    window.addEventListener('open-vitalis-video', handleOpen);
+    return () => window.removeEventListener('open-vitalis-video', handleOpen);
   }, []);
 
   const modalOverlay = isVideoOpen && (
@@ -83,7 +86,7 @@ export default function HeroActions({ hasSession, ctaUrl }: HeroActionsProps) {
         <button
           onClick={() => setIsVideoOpen(true)}
           aria-label="Assistir vídeo de apresentação"
-          className="w-12 h-12 rounded-full bg-white/45 border border-white/60 hover:bg-white/80 active:scale-95 text-[#14150F] hover:text-[#8A9A5B] shadow-md flex items-center justify-center transition-all duration-300 hover:scale-110 cursor-pointer flex-shrink-0"
+          className="hidden md:flex w-12 h-12 rounded-full bg-white/45 border border-white/60 hover:bg-white/80 active:scale-95 text-[#14150F] hover:text-[#8A9A5B] shadow-md items-center justify-center transition-all duration-300 hover:scale-110 cursor-pointer flex-shrink-0"
         >
           <Play size={16} className="fill-current ml-0.5" />
         </button>

@@ -17,9 +17,9 @@ export default function Navbar({ hasSession }: NavbarProps) {
       <div className="max-w-6xl mx-auto rounded-full border border-white/50 bg-white/35 backdrop-blur-xl shadow-lg shadow-black/5 relative">
         
         {/* Navigation bar content */}
-        <div className="grid grid-cols-3 items-center md:flex md:justify-between px-4 sm:px-6 py-2 sm:py-3">
+        <div className="flex justify-between items-center px-4 sm:px-6 py-2 sm:py-3">
           
-          {/* 1. Mobile Left: Hamburger Toggle */}
+          {/* 1. Mobile Left: Hamburger Toggle (hidden on desktop) */}
           <div className="flex items-center md:hidden">
             <button
               onClick={() => setIsOpen(!isOpen)}
@@ -30,14 +30,14 @@ export default function Navbar({ hasSession }: NavbarProps) {
             </button>
           </div>
 
-          {/* 2. Mobile Center / Desktop Left: Logo */}
-          <div className="flex justify-center md:justify-start flex-shrink-0">
+          {/* 2. Desktop Left: Logo (hidden on mobile) */}
+          <div className="hidden md:flex flex-shrink-0">
             <Link href="/" className="flex items-center gap-2 group">
-              <img src="/images/vitalis-logo.png" alt="Vitalis" className="h-6 sm:h-8 w-auto object-contain transition-all duration-300 group-hover:scale-105" />
+              <img src="/images/vitalis-logo.png" alt="Vitalis" className="h-8 w-auto object-contain transition-all duration-300 group-hover:scale-105" />
             </Link>
           </div>
 
-          {/* 3. Desktop Center: Links */}
+          {/* 3. Desktop Center: Links (hidden on mobile) */}
           <div className="hidden md:flex items-center gap-8 text-xs font-bold uppercase tracking-widest text-[#6B6F63]">
             <a href="#sobre" className="hover:text-[#14150F] transition-all">Sobre</a>
             <a href="#como-funciona" className="hover:text-[#14150F] transition-all">Funcionamento</a>
@@ -45,8 +45,8 @@ export default function Navbar({ hasSession }: NavbarProps) {
             <a href="#mockups" className="hover:text-[#14150F] transition-all">Visual</a>
           </div>
 
-          {/* 4. Mobile Right / Desktop Right: CTA */}
-          <div className="flex justify-end flex-shrink-0">
+          {/* 4. CTA Button (always visible on the right) */}
+          <div className="flex-shrink-0">
             <Link
               href={ctaUrl}
               className="inline-flex items-center justify-center gap-1.5 px-4 sm:px-6 py-2 sm:py-2.5 rounded-full bg-gradient-to-r from-[#8A9A5B] to-[#76844e] text-[#F4F5F1] hover:scale-105 active:scale-95 text-[9px] sm:text-xs font-black uppercase tracking-wider transition-all duration-300 shadow-md shadow-[#8A9A5B]/20 border border-white/25 cursor-pointer"
