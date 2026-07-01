@@ -2,6 +2,7 @@
 import { prisma } from '@/lib/prisma';
 import { getCurrentUser } from '@/lib/user';
 import WaterButtons from '@/components/WaterButtons';
+import WaterReminder from '@/components/WaterReminder';
 import DonutRing from '@/components/charts/DonutRing';
 import PageFrame from '@/components/PageFrame';
 import ModIcon from '@/components/ModIcon';
@@ -85,6 +86,16 @@ export default async function AguaPage() {
               </div>
             )}
           </div>
+        </div>
+
+        {/* Lembretes */}
+        <div className="lg:col-span-2">
+          <WaterReminder
+            initialWakeTime={user.wakeTime}
+            initialInterval={user.waterReminderInterval}
+            initialEnabled={user.waterReminderEnabled}
+            goal={goal}
+          />
         </div>
       </div>
       </div>

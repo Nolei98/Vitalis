@@ -39,6 +39,11 @@ model User {
   bio           String?
   avatarUrl     String?
 
+  // Lembrete de hidratação
+  wakeTime               String?  // "HH:mm" — horário que acorda
+  waterReminderInterval  Int?     // minutos entre lembretes
+  waterReminderEnabled   Boolean  @default(false)
+
   accounts      Account[]
   sessions      Session[]
   tasks         Task[]
