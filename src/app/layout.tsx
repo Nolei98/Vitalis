@@ -5,17 +5,32 @@ import "./globals.css";
 const font = Nunito({ subsets: ["latin"], weight: ["400", "500", "600", "700", "800", "900"] });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://vitalis.vercel.app"),
   title: {
-    default: "Vitalis — Seu sistema pessoal de bem-estar",
+    default: "Vitalis — Sistema Pessoal de Bem-Estar e Produtividade",
     template: "%s · Vitalis",
   },
-  description: "Vitalis é o seu sistema pessoal de bem-estar. Gerencie nutrição, hidratação, finanças, agenda, tarefas e metas em um só lugar.",
-  keywords: ["bem-estar", "saúde", "nutrição", "finanças pessoais", "produtividade", "vitalis"],
+  description: "Vitalis é um sistema integrado de bem-estar. Monitore sua nutrição, ingestão de água, finanças pessoais, agenda unificada e tarefas diárias em um único painel sofisticado.",
+  keywords: [
+    "vitalis", 
+    "bem-estar", 
+    "saúde", 
+    "nutrição", 
+    "finanças pessoais", 
+    "produtividade", 
+    "gestão de tempo", 
+    "organização pessoal", 
+    "dieta", 
+    "hábitos saudáveis"
+  ],
   authors: [{ name: "eu", url: "https://portfolio-jr-lilac.vercel.app/?lang=pt" }],
   creator: "eu",
+  applicationName: "Vitalis",
+  generator: "Next.js",
+  category: "lifestyle",
   openGraph: {
-    title: "Vitalis — Seu sistema pessoal de bem-estar",
-    description: "Gerencie nutrição, hidratação, finanças, agenda, tarefas e metas em um só lugar.",
+    title: "Vitalis — Sistema Pessoal de Bem-Estar e Produtividade",
+    description: "Gerencie nutrição, hidratação, finanças, agenda, tarefas e metas em um único painel com estética glassmorphism.",
     url: "https://vitalis.vercel.app",
     siteName: "Vitalis",
     images: [
@@ -23,7 +38,7 @@ export const metadata: Metadata = {
         url: "/images/vitalis-logo.png",
         width: 512,
         height: 512,
-        alt: "Vitalis — logo",
+        alt: "Vitalis Logo",
       },
     ],
     locale: "pt_BR",
@@ -31,12 +46,14 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary",
-    title: "Vitalis — Seu sistema pessoal de bem-estar",
-    description: "Gerencie nutrição, hidratação, finanças, agenda, tarefas e metas em um só lugar.",
-    images: ["https://i.imgur.com/5MU9NOg.png"],
+    title: "Vitalis — Sistema Pessoal de Bem-Estar e Produtividade",
+    description: "Gerencie nutrição, hidratação, finanças, agenda, tarefas e metas em um único painel.",
+    images: ["/images/vitalis-logo.png"],
   },
   icons: {
-    icon: "https://i.imgur.com/5MU9NOg.png",
+    icon: "/images/vitalis-logo.png",
+    shortcut: "/images/vitalis-logo.png",
+    apple: "/images/vitalis-logo.png",
   },
 };
 
