@@ -13,9 +13,9 @@ export const metadata: Metadata = {
     template: "%s · Vitalis",
   },
   description: "Vitalis é o seu sistema pessoal de bem-estar. Gerencie nutrição, hidratação, finanças, agenda, tarefas e metas em um só lugar.",
-  keywords: ["bem-estar", "saúde", "nutrição", "finanças pessoais", "produtividade", "vitalis", "nolei creative"],
-  authors: [{ name: "Nolei Creative" }],
-  creator: "Nolei Creative",
+  keywords: ["bem-estar", "saúde", "nutrição", "finanças pessoais", "produtividade", "vitalis"],
+  authors: [{ name: "João Rodrigues", url: "https://portfolio-jr-lilac.vercel.app/?lang=pt" }],
+  creator: "João Rodrigues",
   openGraph: {
     title: "Vitalis — Seu sistema pessoal de bem-estar",
     description: "Gerencie nutrição, hidratação, finanças, agenda, tarefas e metas em um só lugar.",
@@ -125,18 +125,20 @@ function Footer() {
           </a>
           <span style={{ color: 'var(--text-soft)', opacity: 0.4 }}>·</span>
           <span className="text-[10px] font-bold" style={{ color: 'var(--text-soft)' }}>
-            Desenvolvido por <span style={{ color: 'var(--brand-500)' }}>Nolei Creative</span>
+            Desenvolvido por{' '}
+            <a href="https://portfolio-jr-lilac.vercel.app/?lang=pt" target="_blank" rel="noopener noreferrer"
+              className="hover:underline" style={{ color: 'var(--brand-500)' }}>João Rodrigues</a>
           </span>
         </div>
         <p className="text-[9px]" style={{ color: 'var(--text-soft)', opacity: 0.5 }}>
-          © {new Date().getFullYear()} Nolei Creative
+          © {new Date().getFullYear()} Vitalis
         </p>
       </div>
 
       {/* Desktop: distribuído */}
       <div className="hidden md:flex items-center justify-between">
         <p className="text-[10px] font-bold" style={{ color: 'var(--text-soft)' }}>
-          © {new Date().getFullYear()} Nolei Creative · Todos os direitos reservados
+          © {new Date().getFullYear()} Vitalis · Todos os direitos reservados
         </p>
         <div className="flex items-center gap-2">
           <a href="/termos" className="text-[10px] font-bold hover:underline" style={{ color: 'var(--text-soft)' }}>
@@ -144,7 +146,9 @@ function Footer() {
           </a>
           <span style={{ color: 'var(--text-soft)', opacity: 0.4 }}>·</span>
           <span className="text-[10px] font-bold" style={{ color: 'var(--text-soft)' }}>
-            Desenvolvido por <span style={{ color: 'var(--brand-500)' }}>Nolei Creative</span>
+            Desenvolvido por{' '}
+            <a href="https://portfolio-jr-lilac.vercel.app/?lang=pt" target="_blank" rel="noopener noreferrer"
+              className="hover:underline" style={{ color: 'var(--brand-500)' }}>João Rodrigues</a>
           </span>
         </div>
       </div>

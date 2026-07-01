@@ -77,7 +77,7 @@ export default function LoginPage() {
       </div>
 
       <p className="text-[11px] font-medium" style={{ color: 'var(--clay-text-mute)' }}>
-        © {new Date().getFullYear()} Nolei Creative
+        © {new Date().getFullYear()} Vitalis
       </p>
     </div>
   );
