@@ -7,6 +7,7 @@ import { startOfDay } from 'date-fns';
 import DonutRing from '@/components/charts/DonutRing';
 import PageFrame from '@/components/PageFrame';
 import ModIcon from '@/components/ModIcon';
+import { Target, RefreshCw } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
@@ -36,7 +37,10 @@ export default async function MetasPage() {
         {/* Metas */}
         <div className="lg:col-span-2 space-y-4">
           <div className="clay-card p-5 space-y-4">
-            <h2 className="text-base font-extrabold" style={{ color: 'var(--text-strong)' }}>🎯 Minhas Metas</h2>
+            <div className="flex items-center gap-2 mb-1">
+              <Target size={16} strokeWidth={2} style={{ color: 'var(--mod-metas)' }} />
+              <h2 className="text-base font-extrabold" style={{ color: 'var(--text-strong)' }}>Minhas Metas</h2>
+            </div>
             {goals.length === 0 && (
               <p className="text-center py-6 font-bold text-sm" style={{ color: 'var(--text-soft)' }}>
                 Nenhuma meta ainda.
@@ -57,7 +61,7 @@ export default async function MetasPage() {
                   <div className="flex-1 min-w-0">
                     <p className="font-extrabold text-sm truncate" style={{ color: 'var(--text-strong)' }}>{g.title}</p>
                     <p className="text-xs font-bold" style={{ color: 'var(--text-soft)' }}>
-                      {g.metric ?? 'meta'} · {g.status === 'done' ? '✅ concluída' : g.type}
+                      {g.metric ?? 'meta'} · {g.status === 'done' ? '· concluída' : g.type}
                     </p>
                     {g.target != null && (
                       <div className="flex items-center gap-2 mt-1.5">
@@ -109,7 +113,10 @@ export default async function MetasPage() {
         {/* Hábitos */}
         <div className="space-y-4">
           <div className="clay-card p-5 space-y-3">
-            <h2 className="text-base font-extrabold" style={{ color: 'var(--text-strong)' }}>🔁 Hábitos</h2>
+            <div className="flex items-center gap-2">
+              <RefreshCw size={15} strokeWidth={2} style={{ color: 'var(--mod-metas)' }} />
+              <h2 className="text-base font-extrabold" style={{ color: 'var(--text-strong)' }}>Hábitos</h2>
+            </div>
             {habits.length === 0 && (
               <p className="text-center py-4 font-bold text-sm" style={{ color: 'var(--text-soft)' }}>Sem hábitos.</p>
             )}

@@ -1,6 +1,7 @@
 ﻿'use client';
 
 import { useState, useEffect } from 'react';
+import { Palette } from 'lucide-react';
 import { THEMES } from '@/lib/themes';
 
 export default function ThemePicker() {
@@ -23,8 +24,10 @@ export default function ThemePicker() {
   return (
     <div className="clay-card p-6 space-y-4" style={{ borderTop: '3px solid var(--brand-500)' }}>
       <div className="flex items-center gap-3 mb-2">
-        <span className="w-9 h-9 rounded-2xl flex items-center justify-center text-xl"
-          style={{ background: 'var(--brand-100)' }}>🎨</span>
+        <span className="w-9 h-9 rounded-2xl flex items-center justify-center"
+          style={{ background: 'var(--brand-100)' }}>
+          <Palette size={18} strokeWidth={2} style={{ color: 'var(--brand-500)' }} />
+        </span>
         <div>
           <h2 className="text-base font-extrabold" style={{ color: 'var(--text-strong)' }}>Cor do App</h2>
           <p className="text-xs font-bold" style={{ color: 'var(--text-soft)' }}>
@@ -55,7 +58,7 @@ export default function ThemePicker() {
                 }}
               />
               <span className="text-[11px] font-bold" style={{ color: isActive ? t.preview : 'var(--text-soft)' }}>
-                {t.emoji} {t.label}
+                {t.label}
               </span>
               {isActive && (
                 <span className="text-[10px] font-black" style={{ color: t.preview }}>✓ ativo</span>

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { UtensilsCrossed, BookOpen, Leaf, User } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import ProgressRing from './ProgressRing';
 import MealBuilder from './MealBuilder';
@@ -26,11 +27,11 @@ interface Props {
 }
 
 type Tab = 'hoje' | 'alimentos' | 'recomendacoes' | 'perfil';
-const TABS: { id: Tab; label: string }[] = [
-  { id: 'hoje', label: '🍽️ Hoje' },
-  { id: 'alimentos', label: '📚 Alimentos' },
-  { id: 'recomendacoes', label: '🌿 Recomendações' },
-  { id: 'perfil', label: '👤 Perfil' },
+const TABS: { id: Tab; label: string; Icon: React.ElementType }[] = [
+  { id: 'hoje', label: 'Hoje', Icon: UtensilsCrossed },
+  { id: 'alimentos', label: 'Alimentos', Icon: BookOpen },
+  { id: 'recomendacoes', label: 'Recomendações', Icon: Leaf },
+  { id: 'perfil', label: 'Perfil', Icon: User },
 ];
 
 const MACROS = [
@@ -68,12 +69,12 @@ export default function DietaClient({ profile, targets, todayTotals, meals, cust
             <button
               key={t.id}
               onClick={() => setTab(t.id)}
-              className="px-4 py-2 rounded-xl text-sm font-bold whitespace-nowrap transition-all"
+              className="px-4 py-2 rounded-xl text-sm font-bold whitespace-nowrap transition-all flex items-center gap-1.5"
               style={tab === t.id
                 ? { background: 'var(--mod-dieta)', color: 'white' }
                 : { background: 'var(--clay-surface)', color: 'var(--clay-text-soft)', boxShadow: 'var(--clay-shadow)' }
               }
-            >{t.label}</button>
+            ><t.Icon size={14} strokeWidth={2.2} />{t.label}</button>
           ))}
         </div>
       </header>
@@ -125,7 +126,7 @@ export default function DietaClient({ profile, targets, todayTotals, meals, cust
               <div className="flex-1 overflow-y-auto no-scrollbar space-y-2">
                 {meals.length === 0 && (
                   <div className="flex flex-col items-center justify-center py-12" style={{ color: 'var(--clay-text-mute)' }}>
-                    <span className="text-4xl mb-3">🍽️</span>
+                    <ModIcon mod="dieta" size="lg" className="mb-3" />
                     <p className="font-bold">Nada registrado ainda.</p>
                   </div>
                 )}

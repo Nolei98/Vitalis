@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useTransition } from 'react';
+import { RefreshCw } from 'lucide-react';
 import { syncNow } from '@/app/actions/sync';
 
 export default function SyncButton() {
@@ -28,9 +29,12 @@ export default function SyncButton() {
       <button
         onClick={run}
         disabled={pending}
-        className="clay-btn bg-[#9871F5] text-white font-bold py-3 px-6 hover:scale-[0.98] transition-transform disabled:opacity-60"
+        className="clay-btn bg-[#9871F5] text-white font-bold py-3 px-6 hover:scale-[0.98] transition-transform disabled:opacity-60 flex items-center justify-center gap-2"
       >
-        {pending ? '🔄 Sincronizando...' : '🔄 Sincronizar agora'}
+        {pending
+          ? <><RefreshCw size={14} strokeWidth={2.2} className="animate-spin" /> Sincronizando...</>
+          : <><RefreshCw size={14} strokeWidth={2.2} /> Sincronizar agora</>
+        }
       </button>
       {msg && <p className="text-xs text-gray-500 font-bold">{msg}</p>}
     </div>

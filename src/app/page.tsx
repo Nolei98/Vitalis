@@ -68,7 +68,7 @@ export default async function Dashboard() {
     ? `${nextEvent.allDay ? 'Hoje' : fmtTime(nextEvent.start)} — ${nextEvent.title}`
     : topTasks[0]
     ? `Tarefa: ${topTasks[0].title}`
-    : 'Aproveite o dia livre! 🎉';
+    : 'Aproveite o dia livre!';
 
   const heroData = kcalW.map((p) => ({ label: p.label, value: p.value, target: user.targetKcal ?? undefined }));
 
@@ -224,7 +224,7 @@ export default async function Dashboard() {
           <div className="flex-1 overflow-y-auto no-scrollbar space-y-1.5">
             {events.length === 0 && (
               <p className="text-center py-6 font-bold text-xs" style={{ color: 'var(--text-soft)' }}>
-                Nada agendado hoje. 🌤️
+                Nada agendado hoje.
               </p>
             )}
             {events.map((e) => {

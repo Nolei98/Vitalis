@@ -7,6 +7,7 @@ import CreateSquadForm from '@/components/social/CreateSquadForm';
 import JoinSquadForm from '@/components/social/JoinSquadForm';
 import PageFrame from '@/components/PageFrame';
 import ModIcon from '@/components/ModIcon';
+import { Users, Trophy, MessageCircle, Star } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
@@ -41,13 +42,15 @@ export default async function SocialHub() {
           </div>
         </div>
         <div className="flex gap-2">
-          <Link href="/social/amigos" className="clay-btn px-4 py-2 text-sm font-bold"
+          <Link href="/social/amigos" className="clay-btn px-4 py-2 text-sm font-bold flex items-center gap-1.5"
             style={{ background: 'var(--mod-social-bg)', color: 'var(--mod-social-strong)' }}>
-            👥 Amigos {pending.length > 0 && <span className="ml-1 bg-[var(--mod-social)] text-white text-[10px] rounded-full px-1.5">{pending.length}</span>}
+            <Users size={14} strokeWidth={2.2} />
+            Amigos {pending.length > 0 && <span className="ml-1 bg-[var(--mod-social)] text-white text-[10px] rounded-full px-1.5">{pending.length}</span>}
           </Link>
-          <Link href="/social/ranking" className="clay-btn px-4 py-2 text-sm font-bold"
+          <Link href="/social/ranking" className="clay-btn px-4 py-2 text-sm font-bold flex items-center gap-1.5"
             style={{ background: 'var(--mod-social-bg)', color: 'var(--mod-social-strong)' }}>
-            🏆 Ranking
+            <Trophy size={14} strokeWidth={2.2} />
+            Ranking
           </Link>
         </div>
       </header>
@@ -59,7 +62,7 @@ export default async function SocialHub() {
           <h2 className="text-base font-extrabold" style={{ color: 'var(--text-strong)' }}>Meus Squads</h2>
           {squads.length === 0 && (
             <div className="clay-card p-8 flex flex-col items-center gap-3 text-center">
-              <span className="text-4xl">🏆</span>
+              <Trophy size={40} strokeWidth={1.5} style={{ color: 'var(--mod-social)' }} />
               <p className="font-bold text-sm" style={{ color: 'var(--text-soft)' }}>Nenhum squad ainda.</p>
               <p className="text-xs" style={{ color: 'var(--text-soft)' }}>Crie um ou entre com um código de convite.</p>
             </div>
@@ -81,11 +84,11 @@ export default async function SocialHub() {
                     </div>
                   </div>
                   <div className="flex gap-4 text-xs font-bold" style={{ color: 'var(--text-soft)' }}>
-                    <span>👥 {sq._count.members} membros</span>
-                    <span>💬 {sq._count.messages} msgs</span>
-                    <span className="ml-auto capitalize font-bold"
+                    <span className="flex items-center gap-1"><Users size={12} strokeWidth={2} /> {sq._count.members} membros</span>
+                    <span className="flex items-center gap-1"><MessageCircle size={12} strokeWidth={2} /> {sq._count.messages} msgs</span>
+                    <span className="ml-auto capitalize font-bold flex items-center gap-1"
                       style={{ color: sq.members[0]?.role === 'admin' ? 'var(--mod-social)' : 'var(--text-soft)' }}>
-                      {sq.members[0]?.role === 'admin' ? '⭐ admin' : 'membro'}
+                      {sq.members[0]?.role === 'admin' ? <><Star size={11} strokeWidth={2} /> admin</> : 'membro'}
                     </span>
                   </div>
                 </Link>

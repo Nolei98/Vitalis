@@ -11,6 +11,7 @@ import {
 import SyncButton from '@/components/SyncButton';
 import PageFrame from '@/components/PageFrame';
 import ModIcon from '@/components/ModIcon';
+import { ShieldCheck } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
@@ -74,7 +75,9 @@ export default async function ConexoesPage() {
           </p>
           {google?.connected ? (
             <div className="flex items-center justify-between">
-              <span className="text-emerald-600 font-bold text-sm">✓ Tokens no cofre</span>
+              <span className="text-emerald-600 font-bold text-sm flex items-center gap-1.5">
+                <ShieldCheck size={16} strokeWidth={2} /> Tokens no cofre
+              </span>
               <Disconnect provider="google" />
             </div>
           ) : (

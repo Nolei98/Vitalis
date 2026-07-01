@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useMemo, useState } from 'react';
+import { Bot } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { FOOD_DATABASE } from '@/lib/nutrition/foods';
 import { kcalFromMacros } from '@/lib/nutrition/calc';
@@ -63,7 +64,7 @@ export default function MealBuilder({ customFoods, aiEnabled }: Props) {
       protein: Math.round(r.proteinG), carbs: Math.round(r.carbsG), fat: Math.round(r.fatG),
       calories: Math.round(r.energyKcal || kcalFromMacros(r.proteinG, r.carbsG, r.fatG)),
     }]);
-    if (r.advice) setAiMsg('💡 ' + r.advice);
+    if (r.advice) setAiMsg('✦ ' + r.advice);
     setDesc('');
   };
 
@@ -91,7 +92,7 @@ export default function MealBuilder({ customFoods, aiEnabled }: Props) {
 
       {/* IA */}
       <div className="bg-white/60 rounded-2xl p-4 space-y-2">
-        <label className="text-xs font-bold uppercase tracking-wider text-amber-800">🤖 Descrever refeição (IA)</label>
+        <label className="text-xs font-bold uppercase tracking-wider text-amber-800"><Bot size={13} strokeWidth={2} className="inline-block mr-1" /> Descrever refeição (IA)</label>
         <textarea
           rows={2}
           value={desc}
