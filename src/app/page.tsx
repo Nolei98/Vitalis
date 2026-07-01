@@ -55,8 +55,8 @@ export default async function LandingPage() {
               SEU SISTEMA PESSOAL DE <span className="text-[#8A9A5B] whitespace-nowrap">BEM-ESTAR</span>
             </h1>
 
-            {/* Subtitle (Hidden on mobile to save space) */}
-            <p className="hidden md:block text-sm md:text-base text-[#6B6F63] font-semibold mb-6 max-w-lg leading-relaxed">
+            {/* Subtitle */}
+            <p className="block text-xs sm:text-sm md:text-base text-[#6B6F63] font-semibold mb-4 md:mb-6 max-w-lg leading-relaxed">
               Organize sua nutrição, monitore sua hidratação diária, controle suas finanças e mantenha suas tarefas e agenda alinhadas em um único painel minimalista e sofisticado.
             </p>
 
