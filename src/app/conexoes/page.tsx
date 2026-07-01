@@ -73,6 +73,7 @@ export default async function ConexoesPage() {
                       'Passe o mouse na agenda desejada (menu à esquerda) → clique nos 3 pontinhos → "Configurações e compartilhamento".',
                       'Role até "Integrar agenda".',
                       'Copie o "Endereço secreto em formato iCal" (ou o público, se a agenda for pública).',
+                      'Quer a agenda completa (todos os calendários)? Repita pra cada calendário e cole um link por linha no campo abaixo.',
                     ]}
                   />
                 </h2>
@@ -82,14 +83,15 @@ export default async function ConexoesPage() {
             <StatusBadge status={google?.status} />
           </div>
           <p className="text-gray-600 text-sm mb-6 font-medium">
-            Cole o link iCal da agenda (veja o &quot;?&quot; ao lado do título para o passo a passo).
+            Cole o(s) link(s) iCal da agenda — um por linha pra juntar vários calendários (veja o &quot;?&quot; ao lado do título).
           </p>
           <form action={saveGoogleIcalUrl} className="space-y-3">
-            <input
+            <textarea
               name="icalUrl"
+              rows={3}
               defaultValue={google?.hasIcal ? '•••••• (salvo)' : ''}
-              placeholder="https://calendar.google.com/calendar/ical/....ics"
-              className="clay-card w-full px-4 py-2 text-sm outline-none border-none"
+              placeholder={'https://calendar.google.com/calendar/ical/....ics\nhttps://calendar.google.com/calendar/ical/....ics (opcional, outro calendário)'}
+              className="clay-card w-full px-4 py-2 text-sm outline-none border-none resize-none"
             />
             <button className="clay-btn bg-blue-600 text-white font-bold py-2 px-5 text-sm">Salvar</button>
           </form>

@@ -59,7 +59,7 @@ export default function AdminUserCard({ user, isSelf }: { user: UserData; isSelf
   return (
     <div
       className={`clay-card p-4 transition-all ${isPending ? 'opacity-60 pointer-events-none' : ''}`}
-      style={{ borderLeft: `3px solid ${user.role === 'admin' ? 'var(--brand-500)' : 'var(--text-soft)'}` }}
+      style={{ borderLeft: `3px solid ${user.role === 'admin' ? 'var(--brand-500)' : user.role === 'pro' ? '#8b5cf6' : 'var(--text-soft)'}` }}
     >
       {!editing ? (
         /* ── View mode ── */
@@ -76,9 +76,11 @@ export default function AdminUserCard({ user, isSelf }: { user: UserData; isSelf
               <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
                 user.role === 'admin'
                   ? 'bg-amber-100 text-amber-700'
+                  : user.role === 'pro'
+                  ? 'bg-violet-100 text-violet-700'
                   : 'bg-gray-100 text-gray-500'
               }`}>
-                {user.role === 'admin' ? '👑 admin' : '👤 user'}
+                {user.role === 'admin' ? '👑 admin' : user.role === 'pro' ? '💎 pro' : '👤 user'}
               </span>
               {!user.passwordHash && (
                 <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-red-50 text-red-500">
@@ -162,6 +164,7 @@ export default function AdminUserCard({ user, isSelf }: { user: UserData; isSelf
                   className="w-full clay-card px-3 py-1.5 text-sm outline-none"
                 >
                   <option value="user">👤 Usuário</option>
+                  <option value="pro">💎 Pro</option>
                   <option value="admin">👑 Admin</option>
                 </select>
               </div>

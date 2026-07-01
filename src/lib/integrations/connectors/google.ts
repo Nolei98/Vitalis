@@ -5,19 +5,31 @@ import { getDecrypted, markSync } from '@/lib/integrations/vault';
 import type { SyncResult } from '@/lib/integrations/connectors/canvas';
 
 /**
- * Lê o link público .ics do Google Calendar (Configurações > Integrar agenda >
- * "Endereço público em formato iCal") e faz upsert em CalendarEvent (source=google).
+ * Lê o(s) link(s) .ics do Google Calendar (Configurações > Integrar agenda >
+ * "Endereço secreto/público em formato iCal") e faz upsert em CalendarEvent
+ * (source=google). Aceita múltiplas URLs (uma por linha ou separadas por vírgula)
+ * pra juntar várias agendas do mesmo usuário numa sincronização só.
  * Sem OAuth: evita cadastro de app no Google Cloud Console.
  */
 export async function syncGoogle(userId: string): Promise<SyncResult> {
   const integ = await getDecrypted('google', userId);
   if (!integ?.icalUrl) return { provider: 'google', ok: false, count: 0, error: 'sem icalUrl' };
 
+  const urls = integ.icalUrl
+    .split(/[\n,]+/)
+    .map((u) => u.trim())
+    .filter(Boolean);
+
   try {
-    const data = await ical.async.fromURL(integ.icalUrl);
-    const events = Object.values(data).filter(
-      (e): e is ical.VEvent => (e as ical.VEvent).type === 'VEVENT',
-    );
+    const events: ical.VEvent[] = [];
+    for (const url of urls) {
+      const data = await ical.async.fromURL(url);
+      events.push(
+        ...Object.values(data).filter(
+          (e): e is ical.VEvent => (e as ical.VEvent).type === 'VEVENT',
+        ),
+      );
+    }
 
     let count = 0;
     for (const ev of events) {

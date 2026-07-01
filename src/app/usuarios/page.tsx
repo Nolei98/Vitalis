@@ -24,6 +24,7 @@ export default async function UsuariosPage() {
 
   const configured = sheetsConfigured();
   const adminCount = users.filter((u) => u.role === 'admin').length;
+  const proCount = users.filter((u) => u.role === 'pro').length;
 
   return (
     <div className="h-full flex flex-col gap-3 page-enter">
@@ -35,7 +36,7 @@ export default async function UsuariosPage() {
           <div>
             <h1 className="text-xl font-black" style={{ color: 'var(--text-strong)' }}>Vitalis Usuários</h1>
             <p className="text-[11px] font-bold" style={{ color: 'var(--text-soft)' }}>
-              {users.length} cadastrados · {adminCount} admin · apenas admins veem esta página
+              {users.length} cadastrados · {adminCount} admin · {proCount} pro · apenas admins veem esta página
             </p>
           </div>
         </div>
@@ -50,10 +51,11 @@ export default async function UsuariosPage() {
       </header>
 
       {/* Estatísticas rápidas */}
-      <div className="flex-shrink-0 grid grid-cols-4 gap-2 px-1">
+      <div className="flex-shrink-0 grid grid-cols-5 gap-2 px-1">
         {[
           { label: 'Total', value: users.length, icon: '👥' },
           { label: 'Admins', value: adminCount, icon: '👑' },
+          { label: 'Pro', value: proCount, icon: '💎' },
           { label: 'Com senha', value: users.filter((u) => u.passwordHash).length, icon: '🔒' },
           { label: 'Com backup', value: users.filter((u) => u.lastBackupAt).length, icon: '☁️' },
         ].map((s) => (

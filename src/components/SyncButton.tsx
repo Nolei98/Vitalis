@@ -1,12 +1,14 @@
 'use client';
 
 import { useState, useTransition } from 'react';
+import { useRouter } from 'next/navigation';
 import { RefreshCw } from 'lucide-react';
 import { syncNow } from '@/app/actions/sync';
 
 export default function SyncButton() {
   const [pending, startTransition] = useTransition();
   const [msg, setMsg] = useState<string | null>(null);
+  const router = useRouter();
 
   function run() {
     setMsg(null);
@@ -21,6 +23,7 @@ export default function SyncButton() {
           .map((r) => `${r.provider}: ${r.ok ? `${r.count} itens` : `erro (${r.error ?? '?'})`}`)
           .join(' · '),
       );
+      router.refresh();
     });
   }
 

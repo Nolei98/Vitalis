@@ -8,11 +8,14 @@ import { notifyDiscord, COLORS } from '@/lib/integrations/connectors/discord';
 const urlSchema = z.string().url();
 
 export async function saveGoogleIcalUrl(formData: FormData) {
-  const url = String(formData.get('icalUrl') ?? '').trim();
-  if (url.startsWith('••')) return;
-  const parsed = urlSchema.safeParse(url);
-  if (!parsed.success) return;
-  await saveIntegration('google', { icalUrl: parsed.data, label: 'Google Calendar' });
+  const raw = String(formData.get('icalUrl') ?? '').trim();
+  if (raw.startsWith('••')) return;
+  const urls = raw
+    .split(/[\n,]+/)
+    .map((u) => u.trim())
+    .filter(Boolean);
+  if (!urls.length || !urls.every((u) => urlSchema.safeParse(u).success)) return;
+  await saveIntegration('google', { icalUrl: urls.join('\n'), label: 'Google Calendar' });
   revalidatePath('/conexoes');
 }
 
