@@ -12,9 +12,6 @@ const RESTRICTION_LABEL: Record<string, string> = {
   frutos_do_mar: 'Frutos do mar', peixe: 'Peixe', soja: 'Soja',
 };
 
-function csvToText(s?: string) {
-  return s ?? '';
-}
 function textToArr(s: string): string[] {
   return s.split(',').map((x) => x.trim()).filter(Boolean);
 }
@@ -37,6 +34,7 @@ export default function ProfileWizard({ nutritionGoals }: { nutritionGoals: Nutr
   const [dislikedText, setDislikedText] = useState('');
   const [availableText, setAvailableText] = useState('');
   const [mealsPerDay, setMealsPerDay] = useState(4);
+  const [budget, setBudget] = useState<'economico' | 'moderado' | 'sem_restricao'>('moderado');
   const [endDate, setEndDate] = useState(() => {
     const d = new Date();
     d.setMonth(d.getMonth() + 2);
@@ -56,7 +54,7 @@ export default function ProfileWizard({ nutritionGoals }: { nutritionGoals: Nutr
       try {
         const input: DietProfileInput = {
           goal, sex, age, weightKg, heightCm, activity, style,
-          restrictions, mealsPerDay,
+          restrictions, mealsPerDay, budget,
           preferred: textToArr(preferredText), disliked: textToArr(dislikedText), available: textToArr(availableText),
         };
         await saveDietProfile(input);
@@ -168,9 +166,23 @@ export default function ProfileWizard({ nutritionGoals }: { nutritionGoals: Nutr
 
       {step === 3 && (
         <div className="space-y-3">
-          <label className="block text-xs font-bold text-gray-500">Alimentos que ama (separe por vírgula)
+          <label className="block text-xs font-bold text-gray-500">Quais alimentos você quer incluir no plano? (separe por vírgula)
             <input value={preferredText} onChange={(e) => setPreferredText(e.target.value)} placeholder="frango, batata doce, banana"
               className="clay-card w-full px-3 py-2 text-sm outline-none border-none mt-1" />
+          </label>
+          <p className="text-[11px] font-medium text-gray-400">
+            O que faltar pra bater sua meta de kcal/macros, a IA completa — priorizando o que você definir abaixo.
+          </p>
+          <label className="block text-xs font-bold text-gray-500">Ao completar o restante, priorizar
+            <div className="grid grid-cols-3 gap-2 mt-1">
+              {(['economico', 'moderado', 'sem_restricao'] as const).map((b) => (
+                <button key={b} type="button" onClick={() => setBudget(b)}
+                  className="clay-btn py-2 text-xs font-bold"
+                  style={budget === b ? { background: 'var(--mod-dieta)', color: 'white' } : { background: 'var(--clay-surface)', color: 'var(--clay-text-soft)' }}>
+                  {b === 'economico' ? 'Alimentos baratos' : b === 'moderado' ? 'Equilibrado' : 'Sem restrição'}
+                </button>
+              ))}
+            </div>
           </label>
           <label className="block text-xs font-bold text-gray-500">Alimentos que odeia
             <input value={dislikedText} onChange={(e) => setDislikedText(e.target.value)} placeholder="brócolis, fígado"

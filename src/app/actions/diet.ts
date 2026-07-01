@@ -36,6 +36,7 @@ function profileToPrefs(profile: DietProfile): DietPrefs {
     preferred: parseCsv(profile.preferred),
     disliked: parseCsv(profile.disliked),
     available: parseCsv(profile.available),
+    budget: profile.budget,
   };
 }
 
@@ -71,6 +72,7 @@ export interface DietProfileInput {
   preferred?: string[];
   disliked?: string[];
   available?: string[];
+  budget?: 'economico' | 'moderado' | 'sem_restricao';
 }
 
 export async function saveDietProfile(input: DietProfileInput): Promise<DietProfile> {
@@ -89,6 +91,7 @@ export async function saveDietProfile(input: DietProfileInput): Promise<DietProf
     preferred: csv(input.preferred),
     disliked: csv(input.disliked),
     available: csv(input.available),
+    budget: input.budget ?? 'moderado',
     kcalTarget: targets.kcal,
     proteinTarget: targets.proteinG,
     carbTarget: targets.carbG,

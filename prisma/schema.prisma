@@ -522,9 +522,10 @@ model DietProfile {
   style         String   @default("onivoro") // onivoro | vegetariano | vegano | low_carb | cetogenica
   restrictions  String?  // CSV: glúten,lactose,amendoim...
   mealsPerDay   Int      @default(4)
-  preferred     String?  // CSV
+  preferred     String?  // CSV — alimentos que o usuário quer incluir no plano
   disliked      String?  // CSV
   available     String?  // CSV
+  budget        String   @default("moderado") // economico | moderado | sem_restricao — prioriza alimentos baratos ao preencher o que falta
   kcalTarget    Int?
   proteinTarget Int?
   carbTarget    Int?
