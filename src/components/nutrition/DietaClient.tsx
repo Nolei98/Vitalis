@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { UtensilsCrossed, BookOpen, Leaf, User } from 'lucide-react';
+import { UtensilsCrossed, BookOpen, Leaf, User, CalendarRange } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import ProgressRing from './ProgressRing';
 import MealBuilder from './MealBuilder';
@@ -11,6 +11,8 @@ import ProfileForm from './ProfileForm';
 import { deleteMeal } from '@/app/actions/meals';
 import type { FoodItem, Goal, MacroTargets, NutritionProfile } from '@/lib/nutrition/types';
 import ModIcon from '@/components/ModIcon';
+import DietPlanTab from '@/components/diet/DietPlanTab';
+import type { DietPlanRow, DietProfileRow, NutritionGoalOption } from '@/components/diet/types';
 
 interface MealRow {
   id: string; type: string; food: string; grams: number | null;
@@ -24,11 +26,15 @@ interface Props {
   meals: MealRow[];
   customFoods: FoodItem[];
   aiEnabled: boolean;
+  dietProfile: DietProfileRow | null;
+  dietPlan: DietPlanRow | null;
+  nutritionGoals: NutritionGoalOption[];
 }
 
-type Tab = 'hoje' | 'alimentos' | 'recomendacoes' | 'perfil';
+type Tab = 'hoje' | 'plano' | 'alimentos' | 'recomendacoes' | 'perfil';
 const TABS: { id: Tab; label: string; Icon: React.ElementType }[] = [
   { id: 'hoje', label: 'Hoje', Icon: UtensilsCrossed },
+  { id: 'plano', label: 'Meu Plano', Icon: CalendarRange },
   { id: 'alimentos', label: 'Alimentos', Icon: BookOpen },
   { id: 'recomendacoes', label: 'Recomendações', Icon: Leaf },
   { id: 'perfil', label: 'Perfil', Icon: User },
@@ -40,7 +46,7 @@ const MACROS = [
   { key: 'fat' as const, label: 'Gordura', color: '#fcd38a', tcolor: 'text-amber-700' },
 ];
 
-export default function DietaClient({ profile, targets, todayTotals, meals, customFoods, aiEnabled }: Props) {
+export default function DietaClient({ profile, targets, todayTotals, meals, customFoods, aiEnabled, dietProfile, dietPlan, nutritionGoals }: Props) {
   const router = useRouter();
   const [tab, setTab] = useState<Tab>('hoje');
 
@@ -156,6 +162,7 @@ export default function DietaClient({ profile, targets, todayTotals, meals, cust
           </div>
         )}
 
+        {tab === 'plano' && <DietPlanTab dietProfile={dietProfile} dietPlan={dietPlan} nutritionGoals={nutritionGoals} />}
         {tab === 'alimentos' && <div className="clay-card p-5"><FoodLibrary customFoods={customFoods} /></div>}
         {tab === 'recomendacoes' && <div className="clay-card p-5"><Recommendations defaultGoal={(profile.goal as Goal) || undefined} /></div>}
         {tab === 'perfil' && <ProfileForm profile={profile} />}

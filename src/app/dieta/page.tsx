@@ -5,6 +5,7 @@ import DietaClient from '@/components/nutrition/DietaClient';
 import SaveToSheetsButton from '@/components/nutrition/SaveToSheetsButton';
 import { sheetsConfigured } from '@/lib/integrations/sheets';
 import { dayRangeInTimezone } from '@/lib/timezone';
+import { getDietProfile, getLatestPlan } from '@/app/actions/diet';
 import type { FoodItem, Goal } from '@/lib/nutrition/types';
 
 export const dynamic = 'force-dynamic';
@@ -25,6 +26,12 @@ export default async function DietaPage() {
     where: { userId: user.id },
     orderBy: { createdAt: 'desc' },
   });
+
+  const [dietProfile, dietPlan, nutritionGoals] = await Promise.all([
+    getDietProfile(),
+    getLatestPlan(),
+    prisma.goal.findMany({ where: { userId: user.id, type: { not: 'vault' }, status: 'active' }, orderBy: { deadline: 'asc' } }),
+  ]);
 
   const customFoods: FoodItem[] = customRows.map(f => ({
     id: f.id,
@@ -84,6 +91,9 @@ export default async function DietaPage() {
       }))}
       customFoods={customFoods}
       aiEnabled={!!process.env.GEMINI_API_KEY}
+      dietProfile={dietProfile}
+      dietPlan={dietPlan}
+      nutritionGoals={nutritionGoals.map((g) => ({ id: g.id, title: g.title, deadline: g.deadline?.toISOString() ?? null }))}
     />
     </div>
   );

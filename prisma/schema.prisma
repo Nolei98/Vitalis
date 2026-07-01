@@ -74,6 +74,10 @@ model User {
   studySubjects     StudySubject[]
   studySessions     StudySession[]
   studySettings     StudySettings?
+
+  // Dieta (perfil + planos gerados)
+  dietProfile       DietProfile?
+  dietPlans         DietPlan[]
 }
 
 model Account { 
@@ -213,8 +217,9 @@ model Goal {
   target Float? 
   current Float @default(0) 
   deadline DateTime? 
-  status String @default("active") 
-  user User @relation(fields:[userId], references:[id], onDelete: Cascade) 
+  status String @default("active")
+  user User @relation(fields:[userId], references:[id], onDelete: Cascade)
+  dietPlans DietPlan[] 
 }
 
 model Habit {
@@ -501,4 +506,96 @@ model StudySettings {
   autoStartWork  Boolean @default(false)
   soundOn        Boolean @default(true)
   user           User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// ===== Dieta: perfil + plano gerado (semana-molde + rotação) =====
+
+model DietProfile {
+  id            String   @id @default(cuid())
+  userId        String   @unique
+  goal          String   // cut | maintain | bulk
+  sex           String
+  age           Int
+  weightKg      Float
+  heightCm      Float
+  activity      String   // sedentary | light | moderate | active | athlete
+  style         String   @default("onivoro") // onivoro | vegetariano | vegano | low_carb | cetogenica
+  restrictions  String?  // CSV: glúten,lactose,amendoim...
+  mealsPerDay   Int      @default(4)
+  preferred     String?  // CSV
+  disliked      String?  // CSV
+  available     String?  // CSV
+  kcalTarget    Int?
+  proteinTarget Int?
+  carbTarget    Int?
+  fatTarget     Int?
+  updatedAt     DateTime @updatedAt
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model DietPlan {
+  id            String    @id @default(cuid())
+  userId        String
+  name          String
+  status        String    @default("draft") // draft | active | archived
+  generatedBy   String    @default("ai")     // ai | manual
+  goalId        String?                      // amarra o plano a uma Goal (período = prazo da meta)
+  startDate     DateTime  @default(now())
+  endDate       DateTime?
+  rotation      String    @default("weekly") // weekly = repete a semana-molde até endDate
+  kcalTarget    Int
+  proteinTarget Int
+  carbTarget    Int
+  fatTarget     Int
+  createdAt     DateTime  @default(now())
+  days          PlannedDay[]
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  goal          Goal?     @relation(fields: [goalId], references: [id], onDelete: SetNull)
+  @@index([userId, status])
+}
+
+model PlannedDay {
+  id      String @id @default(cuid())
+  planId  String
+  weekday Int    // 0=seg ... 6=dom (dia-molde da semana)
+  plan    DietPlan @relation(fields: [planId], references: [id], onDelete: Cascade)
+  meals   PlannedMeal[]
+  @@unique([planId, weekday])
+}
+
+model PlannedMeal {
+  id     String @id @default(cuid())
+  dayId  String
+  type   String // cafe | almoco | lanche | jantar
+  name   String
+  order  Int    @default(0)
+  day    PlannedDay @relation(fields: [dayId], references: [id], onDelete: Cascade)
+  items  PlannedItem[]
+}
+
+model PlannedItem {
+  id        String @id @default(cuid())
+  mealId    String
+  foodId    String?
+  name      String
+  quantityG Float
+  kcal      Int
+  proteinG  Int
+  carbG     Int
+  fatG      Int
+  meal      PlannedMeal @relation(fields: [mealId], references: [id], onDelete: Cascade)
+}
+
+/** Banco de alimentos de referência (seed TACO + Open Food Facts + custom), separado do Food (itens pessoais do usuário). */
+model FoodCatalogItem {
+  id         String  @id @default(cuid())
+  source     String  // taco | off | custom
+  externalId String?
+  name       String
+  per100Kcal Int
+  per100P    Float
+  per100C    Float
+  per100F    Float
+  tags       String? // CSV: vegano,low-carb...
+  @@index([name])
 }
