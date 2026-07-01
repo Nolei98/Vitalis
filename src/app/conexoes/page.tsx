@@ -11,6 +11,7 @@ import {
 import SyncButton from '@/components/SyncButton';
 import PageFrame from '@/components/PageFrame';
 import ModIcon from '@/components/ModIcon';
+import HelpHint from '@/components/HelpHint';
 
 export const dynamic = 'force-dynamic';
 
@@ -63,14 +64,25 @@ export default async function ConexoesPage() {
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-2xl shadow-sm border border-gray-100 font-black text-blue-600">G</div>
               <div>
-                <h2 className="text-xl font-bold text-[#4a3f72]">Google Calendar</h2>
+                <h2 className="text-xl font-bold text-[#4a3f72] inline-flex items-center">
+                  Google Calendar
+                  <HelpHint
+                    title="Como pegar o link iCal"
+                    steps={[
+                      'Abra o Google Calendar no navegador.',
+                      'Passe o mouse na agenda desejada (menu à esquerda) → clique nos 3 pontinhos → "Configurações e compartilhamento".',
+                      'Role até "Integrar agenda".',
+                      'Copie o "Endereço secreto em formato iCal" (ou o público, se a agenda for pública).',
+                    ]}
+                  />
+                </h2>
                 <p className="text-sm font-bold text-gray-500">Leitura via link iCal</p>
               </div>
             </div>
             <StatusBadge status={google?.status} />
           </div>
           <p className="text-gray-600 text-sm mb-6 font-medium">
-            Cole o link público iCal (Configurações da agenda → Integrar agenda → &quot;Endereço público em formato iCal&quot;).
+            Cole o link iCal da agenda (veja o &quot;?&quot; ao lado do título para o passo a passo).
           </p>
           <form action={saveGoogleIcalUrl} className="space-y-3">
             <input
@@ -90,7 +102,17 @@ export default async function ConexoesPage() {
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 bg-red-100 text-red-600 rounded-full flex items-center justify-center text-2xl shadow-sm font-black border border-red-200">C</div>
               <div>
-                <h2 className="text-xl font-bold text-[#4a3f72]">Canvas LMS</h2>
+                <h2 className="text-xl font-bold text-[#4a3f72] inline-flex items-center">
+                  Canvas LMS
+                  <HelpHint
+                    title="Como pegar o feed iCal do Canvas"
+                    steps={[
+                      'Entre no Canvas e abra "Calendário" no menu lateral.',
+                      'No canto inferior direito da tela, clique em "Feeds do calendário" (Calendar Feed).',
+                      'Copie o link exibido (termina em .ics).',
+                    ]}
+                  />
+                </h2>
                 <p className="text-sm font-bold text-gray-500">Leitura via feed iCal</p>
               </div>
             </div>
@@ -114,7 +136,17 @@ export default async function ConexoesPage() {
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center text-2xl shadow-sm font-black border border-indigo-200">D</div>
               <div>
-                <h2 className="text-xl font-bold text-[#4a3f72]">Discord</h2>
+                <h2 className="text-xl font-bold text-[#4a3f72] inline-flex items-center">
+                  Discord
+                  <HelpHint
+                    title="Como pegar o webhook do Discord"
+                    steps={[
+                      'No servidor, abra "Configurações do servidor" → "Integrações".',
+                      'Clique em "Webhooks" → "Novo Webhook".',
+                      'Escolha o canal, clique em "Copiar URL do Webhook".',
+                    ]}
+                  />
+                </h2>
                 <p className="text-sm font-bold text-gray-500">Notificações e digest</p>
               </div>
             </div>
@@ -145,7 +177,17 @@ export default async function ConexoesPage() {
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 bg-pink-100 text-pink-600 rounded-full flex items-center justify-center text-2xl shadow-sm font-black border border-pink-200">U</div>
               <div>
-                <h2 className="text-xl font-bold text-[#4a3f72]">ClickUp</h2>
+                <h2 className="text-xl font-bold text-[#4a3f72] inline-flex items-center">
+                  ClickUp
+                  <HelpHint
+                    title="Como pegar o token e o ID do projeto"
+                    steps={[
+                      'Token: clique no seu avatar (canto inferior esquerdo) → "Configurações" → "Apps" → "API Token" → "Gerar" e copie.',
+                      'ID do projeto (Pasta): abra a Pasta desejada no ClickUp → clique nos "..." ao lado do nome → "Copiar ID".',
+                      'Sem ID de projeto, o sync traz tarefas do workspace inteiro.',
+                    ]}
+                  />
+                </h2>
                 <p className="text-sm font-bold text-gray-500">Tarefas com data (bidirecional)</p>
               </div>
             </div>
@@ -156,6 +198,12 @@ export default async function ConexoesPage() {
               name="token"
               defaultValue={clickup?.hasToken ? '•••••• (salvo)' : ''}
               placeholder="pk_xxxxx (Personal API Token)"
+              className="clay-card w-full px-4 py-2 text-sm outline-none border-none"
+            />
+            <input
+              name="projectId"
+              defaultValue={clickup?.scopes ?? ''}
+              placeholder="ID do projeto/pasta (opcional — vazio = workspace inteiro)"
               className="clay-card w-full px-4 py-2 text-sm outline-none border-none"
             />
             <button className="clay-btn bg-[#9871F5] text-white font-bold py-2 px-5 text-sm">Salvar</button>

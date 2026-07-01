@@ -39,8 +39,10 @@ export async function syncClickUp(userId: string): Promise<SyncResult> {
     const token = integ.accessToken;
     const teamId = await resolveTeamId(token, integ.syncCursor, userId);
 
+    const projectId = integ.scopes?.trim();
+    const scopeParam = projectId ? `&project_ids[]=${encodeURIComponent(projectId)}` : '';
     const data = await cu(
-      `/team/${teamId}/task?subtasks=true&include_closed=true&order_by=due_date`,
+      `/team/${teamId}/task?subtasks=true&include_closed=true&order_by=due_date${scopeParam}`,
       token,
     );
     const tasks: Array<{

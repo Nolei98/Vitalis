@@ -101,6 +101,7 @@ export interface IntegrationView {
   hasToken: boolean;
   hasWebhook: boolean;
   hasIcal: boolean;
+  scopes: string | null;
 }
 
 export async function listIntegrations(userId?: string): Promise<IntegrationView[]> {
@@ -115,6 +116,7 @@ export async function listIntegrations(userId?: string): Promise<IntegrationView
     hasToken: !!r.accessToken,
     hasWebhook: !!r.webhookUrl,
     hasIcal: !!r.icalUrl,
+    scopes: r.scopes,
   }));
 }
 

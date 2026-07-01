@@ -36,9 +36,14 @@ export async function saveDiscordWebhook(formData: FormData) {
 
 export async function saveClickUpToken(formData: FormData) {
   const token = String(formData.get('token') ?? '').trim();
-  if (token.startsWith('••')) return;
-  if (token.length < 10) return;
-  await saveIntegration('clickup', { accessToken: token, label: 'ClickUp', syncCursor: null });
+  const projectId = String(formData.get('projectId') ?? '').trim();
+  const data: Parameters<typeof saveIntegration>[1] = { label: 'ClickUp', scopes: projectId || null };
+  if (!token.startsWith('••')) {
+    if (token.length < 10) return;
+    data.accessToken = token;
+    data.syncCursor = null;
+  }
+  await saveIntegration('clickup', data);
   revalidatePath('/conexoes');
 }
 
