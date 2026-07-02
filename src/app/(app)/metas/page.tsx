@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { prisma } from '@/lib/prisma';
 import { getCurrentUser } from '@/lib/user';
 import { createGoal, updateGoalProgress, deleteGoal } from '@/app/actions/goals';
@@ -91,7 +91,7 @@ export default async function MetasPage() {
                       <input type="hidden" name="sourceId" value={g.id} />
                       <input type="hidden" name="label" value={g.title} />
                       <button type="submit" className="flex items-center gap-1 text-[10px] font-bold" style={{ color: 'var(--mod-estudos)' }}>
-                        <BookOpen size={11} strokeWidth={2.2} /> estudar
+                        <BookOpen size={11} strokeWidth={2.2} /> foco YPT
                       </button>
                     </form>
                     <form action={deleteGoal}>

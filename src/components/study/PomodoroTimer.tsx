@@ -129,7 +129,7 @@ export default function PomodoroTimer({ session, soundOn, autoStartBreak, autoSt
   async function advancePhase() {
     if (soundOn) beep();
     if (systemNotif && 'Notification' in window && Notification.permission === 'granted') {
-      new Notification(`⏰ ${PHASE_LABEL[phase]} concluída`, { body: 'Vitalis Estudos', silent: true });
+      new Notification(`⏰ ${PHASE_LABEL[phase]} concluída`, { body: 'Vitalis YPT', silent: true });
     }
     // credita o bloco que terminou
     if (phase === 'work') focusAccumRef.current += session.workMin * 60;

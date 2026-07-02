@@ -14,7 +14,7 @@ interface DockItem {
 const ITEMS: DockItem[] = [
   { href: '/agua',     label: 'Hidratação', Icon: Droplets, mod: 'agua' },
   { href: '/dieta',    label: 'Nutrição',   Icon: Salad,    mod: 'dieta' },
-  { href: '/estudos',  label: 'Estudos',    Icon: BookOpen, mod: 'estudos' },
+  { href: '/estudos',  label: 'YPT',        Icon: BookOpen, mod: 'estudos' },
   { href: '/financas', label: 'Finanças',   Icon: Wallet,   mod: 'financas' },
 ];
 

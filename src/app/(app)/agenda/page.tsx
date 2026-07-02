@@ -43,13 +43,14 @@ export default async function AgendaPage() {
 
   const serializedTasks = tasks.map((t) => ({
     id: t.id,
-    title: `📝 ${t.project ? `[${t.project}] ` : ''}${t.title}${t.status === 'completed' ? ' (concluída)' : ''}`,
+    title: `📝 ${t.project ? `[${t.project}] ` : ''}${t.title}`,
     start: t.due!.toISOString(),
     end: t.due!.toISOString(),
     allDay: false,
     source: t.source || 'tasks',
     location: null,
     url: null,
+    isCompleted: t.status === 'completed',
   }));
 
   // 3. Combina ambos

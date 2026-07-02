@@ -5,7 +5,7 @@ import { createSquad } from '@/app/actions/social';
 
 const EMOJIS = ['🏆','📚','🏋️','🛒','🎯','⚡','🔥','🎮','🎵','🌟'];
 const TYPES = [
-  { value: 'estudos',  label: '📚 Estudos' },
+  { value: 'estudos',  label: '📚 YPT' },
   { value: 'academia', label: '🏋️ Academia' },
   { value: 'compras',  label: '🛒 Compras' },
   { value: 'metas',    label: '🎯 Metas livres' },

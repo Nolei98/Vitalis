@@ -1,9 +1,11 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { BookOpen } from 'lucide-react';
 import { groupByDay, fmtTime, fmtDay, sourceColor, type CalEvent } from '@/lib/calendar';
 import { startSessionAction } from '@/app/actions/study';
+import { toggleTask } from '@/app/actions/tasks';
 
 interface RawEvent {
   id: string;
@@ -14,10 +16,13 @@ interface RawEvent {
   source: string;
   location?: string | null;
   url?: string | null;
+  isCompleted?: boolean;
 }
 
 export default function AgendaView({ events }: { events: RawEvent[] }) {
   const [view, setView] = useState<'semana' | 'lista'>('semana');
+  const router = useRouter();
+  
   const parsed: CalEvent[] = events.map((e) => ({
     ...e,
     start: new Date(e.start),
@@ -80,21 +85,49 @@ export default function AgendaView({ events }: { events: RawEvent[] }) {
 }
 
 function EventRow({ e }: { e: CalEvent }) {
+  const router = useRouter();
   const c = sourceColor(e.source);
+  const isTask = e.source === 'tasks' || e.source === 'clickup';
+  
+  const handleToggle = async () => {
+    await toggleTask(e.id, !e.isCompleted);
+    router.refresh();
+  };
+
   return (
     <div className={`group flex items-center gap-2 rounded-xl px-3 py-2 flex-1 ${c.bg}`}>
-      <span className={`w-2 h-2 rounded-full ${c.dot} shrink-0`} />
+      {isTask ? (
+        <button
+          onClick={handleToggle}
+          className="focus:outline-none shrink-0"
+          title={e.isCompleted ? "Marcar como pendente" : "Marcar como concluída"}
+        >
+          <div className={`w-4 h-4 rounded border flex items-center justify-center transition-all ${
+            e.isCompleted 
+              ? 'bg-emerald-500 border-emerald-600 text-white' 
+              : 'border-gray-300 hover:border-emerald-500 bg-white'
+          }`}>
+            {e.isCompleted && (
+              <svg className="w-2.5 h-2.5 fill-current" viewBox="0 0 20 20">
+                <path d="M0 11l2-2 5 5L18 3l2 2L7 18z" />
+              </svg>
+            )}
+          </div>
+        </button>
+      ) : (
+        <span className={`w-2 h-2 rounded-full ${c.dot} shrink-0`} />
+      )}
       <span className="text-xs font-bold text-gray-400 w-12 shrink-0">
         {e.allDay ? 'dia' : fmtTime(e.start)}
       </span>
-      <span className={`text-sm font-bold flex-1 ${c.text} truncate`}>{e.title}</span>
+      <span className={`text-sm font-bold flex-1 ${c.text} truncate ${e.isCompleted ? 'line-through opacity-50' : ''}`}>{e.title}</span>
       <form action={startSessionAction} className="shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
-        <input type="hidden" name="sourceType" value="calendar" />
+        <input type="hidden" name="sourceType" value={isTask ? 'task' : 'calendar'} />
         <input type="hidden" name="sourceId" value={e.id} />
         <input type="hidden" name="label" value={e.title} />
         <button
           type="submit"
-          title="Estudar agora"
+          title="Iniciar foco YPT"
           className="w-6 h-6 rounded-lg flex items-center justify-center"
           style={{ background: 'var(--mod-estudos)' }}
         >

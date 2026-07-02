@@ -40,8 +40,8 @@ export default function FeatureGrid() {
       color: 'bg-gradient-to-br from-[#FF6FB5] to-[#D94C91] text-white border border-white/20 shadow-[0_8px_16px_rgba(217,76,145,0.35)]',
     },
     {
-      title: 'Controle de Estudos',
-      desc: 'Monitore seu foco diário acumulando minutos de leitura, estudo ou trabalho concentrado.',
+      title: 'Foco YPT',
+      desc: 'Monitore seu foco diário acumulando minutos de estudo, trabalho, leitura ou qualquer atividade concentrada.',
       icon: BookOpen,
       color: 'bg-gradient-to-br from-[#818CF8] to-[#4338CA] text-white border border-white/20 shadow-[0_8px_16px_rgba(67,56,202,0.35)]',
     },

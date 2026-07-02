@@ -28,7 +28,7 @@ interface Props {
 }
 
 const SESSION_TYPES: Record<string, { emoji: string; label: string }[]> = {
-  estudos:  [{ emoji: '📚', label: 'Estudo geral' }, { emoji: '📝', label: 'Revisão' }, { emoji: '🔢', label: 'Exercícios' }],
+  estudos:  [{ emoji: '📚', label: 'Foco geral' }, { emoji: '📝', label: 'Revisão' }, { emoji: '🔢', label: 'Exercícios' }],
   academia: [{ emoji: '🏋️', label: 'Musculação' }, { emoji: '🏃', label: 'Cardio' }, { emoji: '🧘', label: 'Yoga/Flex' }],
   compras:  [{ emoji: '🛒', label: 'Compras' }],
   metas:    [{ emoji: '🎯', label: 'Progresso' }],
@@ -287,7 +287,7 @@ export default function SquadTabs({ squadId, squadType, squadGoals, challenges, 
               style={{ borderTop: `3px solid ${accentColor}` }}>
               <input type="hidden" name="squadId" value={squadId} />
               <h3 className="text-sm font-extrabold" style={{ color: 'var(--text-strong)' }}>Novo Desafio</h3>
-              <input name="title" placeholder="Ex: 30h de estudo essa semana" required
+              <input name="title" placeholder="Ex: 30h de foco essa semana" required
                 className="clay-card w-full px-4 py-2 text-sm outline-none" />
               <input name="metricTarget" type="number" step="any" placeholder="Meta numérica (opcional)"
                 className="clay-card w-full px-4 py-2 text-sm outline-none" />

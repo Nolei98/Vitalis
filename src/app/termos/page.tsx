@@ -14,7 +14,7 @@ export default function TermosPage() {
     },
     {
       title: '2. Descrição do Serviço',
-      body: `O Vitalis é um sistema pessoal de bem-estar que reúne funcionalidades de agenda, tarefas, dieta e nutrição, hidratação, estudos, finanças, metas, alarmes, relatórios e social em uma única plataforma. O serviço é fornecido no estado em que se encontra ("as is"), podendo ser atualizado, modificado ou descontinuado a qualquer momento, é de uso pessoal e não substitui acompanhamento médico, nutricional ou financeiro profissional.`,
+      body: `O Vitalis é um sistema pessoal de bem-estar que reúne funcionalidades de agenda, tarefas, dieta e nutrição, hidratação, YPT, finanças, metas, alarmes, relatórios e social em uma única plataforma. O serviço é fornecido no estado em que se encontra ("as is"), podendo ser atualizado, modificado ou descontinuado a qualquer momento, é de uso pessoal e não substitui acompanhamento médico, nutricional ou financeiro profissional.`,
     },
     {
       title: '3. Dados Coletados e Finalidade',

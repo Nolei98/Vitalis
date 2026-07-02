@@ -279,7 +279,7 @@ export default async function Dashboard() {
             style={{ background: 'var(--mod-estudos-bg)' }}>
             <BookOpen size={12} strokeWidth={2.2} style={{ color: 'var(--mod-estudos-strong)' }} />
             <span className="text-[10px] font-bold" style={{ color: 'var(--mod-estudos-strong)' }}>
-              Estudo hoje: {studyMinutesToday}min
+              Foco YPT hoje: {studyMinutesToday}min
             </span>
           </Link>
           <div className="flex-1 overflow-y-auto no-scrollbar space-y-1.5">

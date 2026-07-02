@@ -64,8 +64,8 @@ export default async function EstudosPage({
       <header className="flex-shrink-0 flex items-center gap-3 pt-2">
         <ModIcon mod="estudos" size="lg" />
         <div>
-          <h1 className="text-2xl font-black" style={{ color: 'var(--text-strong)' }}>Vitalis Estudos</h1>
-          <p className="text-sm font-bold" style={{ color: 'var(--mod-estudos)' }}>Cronômetro, Pomodoro e relatório de tempo</p>
+          <h1 className="text-2xl font-black" style={{ color: 'var(--text-strong)' }}>Vitalis YPT</h1>
+          <p className="text-sm font-bold" style={{ color: 'var(--mod-estudos)' }}>Cronômetro, Pomodoro e relatórios de foco</p>
         </div>
       </header>
 
@@ -97,18 +97,18 @@ export default async function EstudosPage({
               <form action={startSessionAction} className="clay-card p-6 space-y-3">
                 <div className="flex items-center gap-2 mb-1">
                   <BookOpen size={16} strokeWidth={2.2} style={{ color: 'var(--mod-estudos)' }} />
-                  <h2 className="text-base font-extrabold" style={{ color: 'var(--text-strong)' }}>Iniciar estudo</h2>
+                  <h2 className="text-base font-extrabold" style={{ color: 'var(--text-strong)' }}>Iniciar sessão YPT</h2>
                 </div>
                 <input type="hidden" name="sourceType" value="manual" />
                 {subjects.length > 0 && (
                   <select name="subjectId" className="clay-card w-full px-4 py-2 text-sm outline-none border-none">
-                    <option value="">Sem matéria específica</option>
+                    <option value="">Sem categoria específica</option>
                     {subjects.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
                   </select>
                 )}
                 <input
                   name="label"
-                  placeholder="Ou digite a atividade (ex: Cálculo II)"
+                  placeholder="Ou digite a atividade (ex: Trabalho, Leitura)"
                   className="clay-card w-full px-4 py-2 text-sm outline-none border-none"
                 />
                 <button
@@ -124,8 +124,8 @@ export default async function EstudosPage({
             )}
 
             <form action={createSubject} className="clay-card p-5 space-y-2">
-              <h2 className="text-sm font-extrabold" style={{ color: 'var(--text-strong)' }}>Nova matéria</h2>
-              <input name="name" placeholder="Ex: Cálculo II" required
+              <h2 className="text-sm font-extrabold" style={{ color: 'var(--text-strong)' }}>Nova categoria</h2>
+              <input name="name" placeholder="Ex: Trabalho" required
                 className="clay-card w-full px-4 py-2 text-sm outline-none border-none" />
               <button className="clay-btn w-full font-bold py-2 text-sm text-white" style={{ background: 'var(--mod-estudos)' }}>
                 Adicionar +
@@ -185,7 +185,7 @@ export default async function EstudosPage({
             <div className="clay-card p-5 space-y-3">
               <div className="flex items-center gap-2">
                 <BarChart3 size={16} strokeWidth={2.2} style={{ color: 'var(--mod-estudos)' }} />
-                <h2 className="text-base font-extrabold" style={{ color: 'var(--text-strong)' }}>Por matéria (últimos 30 dias)</h2>
+                <h2 className="text-base font-extrabold" style={{ color: 'var(--text-strong)' }}>Por categoria (últimos 30 dias)</h2>
               </div>
               {report.bySubject.length === 0 && (
                 <p className="text-center py-4 font-bold text-sm" style={{ color: 'var(--text-soft)' }}>Sem sessões ainda.</p>

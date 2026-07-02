@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { prisma } from '@/lib/prisma';
 import { getCurrentUser } from '@/lib/user';
 import TaskCheckbox from '@/components/TaskCheckbox';
@@ -77,7 +77,7 @@ export default async function TarefasPage() {
                     <input type="hidden" name="label" value={task.title} />
                     <button
                       type="submit"
-                      title="Iniciar sessão de estudo"
+                      title="Iniciar foco YPT"
                       className="w-5 h-5 rounded-lg flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
                       style={{ background: 'var(--mod-estudos)' }}
                     >
