@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     siteName: "Vitalis",
     images: [
       {
-        url: "/images/vitalis-logo.png",
+        url: "https://vitalis.vercel.app/images/vitalis-logo.png",
         width: 512,
         height: 512,
         alt: "Vitalis Logo",
@@ -48,7 +48,7 @@ export const metadata: Metadata = {
     card: "summary",
     title: "Vitalis — Sistema Pessoal de Bem-Estar e Produtividade",
     description: "Gerencie nutrição, hidratação, finanças, agenda, tarefas e metas em um único painel.",
-    images: ["/images/vitalis-logo.png"],
+    images: ["https://vitalis.vercel.app/images/vitalis-logo.png"],
   },
   icons: {
     icon: "/images/vitalis-logo.png",
