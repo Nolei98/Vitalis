@@ -6,9 +6,10 @@ import type { SyncResult } from '@/lib/integrations/connectors/canvas';
 const API = 'https://api.clickup.com/api/v2';
 
 async function cu(path: string, token: string, init?: RequestInit) {
+  const authHeader = token.startsWith('pk_') ? token : `Bearer ${token}`;
   const res = await fetch(`${API}${path}`, {
     ...init,
-    headers: { Authorization: token, 'Content-Type': 'application/json', ...(init?.headers ?? {}) },
+    headers: { Authorization: authHeader, 'Content-Type': 'application/json', ...(init?.headers ?? {}) },
   });
   if (!res.ok) {
     const body = await res.text().catch(() => '');
@@ -28,6 +29,57 @@ async function resolveTeamId(token: string, cached: string | null, userId: strin
 }
 
 /**
+ * Resolve o nome de uma pasta (Project) ou lista (List) para o seu respectivo ID numérico.
+ * Suporta busca case-insensitive por texto livre (ex: "Nolei Creative").
+ */
+async function resolveProjectScope(token: string, teamId: string, scopeQuery: string): Promise<{ projectId?: string; listId?: string } | null> {
+  const query = scopeQuery.trim().toLowerCase();
+  if (!query || query === 'null' || query === 'undefined') return null;
+
+  // Se for um ID numérico puro, assume ID de projeto/pasta diretamente
+  if (!isNaN(Number(query))) {
+    return { projectId: query };
+  }
+
+  try {
+    const spaceData = await cu(`/team/${teamId}/space`, token);
+    const spaces = spaceData.spaces || [];
+
+    for (const s of spaces) {
+      // 1. Busca Folders (Projects)
+      const folderData = await cu(`/space/${s.id}/folder`, token);
+      const folders = folderData.folders || [];
+      for (const f of folders) {
+        if (f.name.toLowerCase() === query) {
+          return { projectId: f.id };
+        }
+        // 2. Busca Listas dentro do Folder
+        const listData = await cu(`/folder/${f.id}/list`, token);
+        const lists = listData.lists || [];
+        for (const l of lists) {
+          if (l.name.toLowerCase() === query) {
+            return { listId: l.id };
+          }
+        }
+      }
+
+      // 3. Busca Listas soltas no Space (sem folder)
+      const listData = await cu(`/space/${s.id}/list`, token);
+      const lists = listData.lists || [];
+      for (const l of lists) {
+        if (l.name.toLowerCase() === query) {
+          return { listId: l.id };
+        }
+      }
+    }
+  } catch (err) {
+    console.error('Erro ao resolver projeto por nome no ClickUp:', err);
+  }
+
+  return null;
+}
+
+/**
  * Importa tasks com data do ClickUp → Task (source=clickup).
  * ClickUp é a fonte da verdade para tasks importadas (evita loop de sync).
  */
@@ -39,12 +91,21 @@ export async function syncClickUp(userId: string): Promise<SyncResult> {
     const token = integ.accessToken;
     const teamId = await resolveTeamId(token, integ.syncCursor, userId);
 
-    const projectId = integ.scopes?.trim();
-    const scopeParam = projectId ? `&project_ids[]=${encodeURIComponent(projectId)}` : '';
-    const data = await cu(
-      `/team/${teamId}/task?subtasks=true&include_closed=true&order_by=due_date${scopeParam}`,
-      token,
-    );
+    const scopeQuery = integ.scopes?.trim();
+    const resolvedScope = scopeQuery ? await resolveProjectScope(token, teamId, scopeQuery) : null;
+
+    let data;
+    if (resolvedScope?.listId) {
+      // Busca tarefas de uma lista específica
+      data = await cu(`/list/${resolvedScope.listId}/task?subtasks=true&include_closed=true&order_by=due_date`, token);
+    } else if (resolvedScope?.projectId) {
+      // Busca tarefas filtradas por pasta específica
+      data = await cu(`/team/${teamId}/task?subtasks=true&include_closed=true&order_by=due_date&project_ids[]=${encodeURIComponent(resolvedScope.projectId)}`, token);
+    } else {
+      // Busca tarefas de todo o workspace (sem filtro)
+      data = await cu(`/team/${teamId}/task?subtasks=true&include_closed=true&order_by=due_date`, token);
+    }
+
     const tasks: Array<{
       id: string;
       name: string;
@@ -98,7 +159,7 @@ export async function pushClickUpStatus(
       method: 'PUT',
       body: JSON.stringify({ status: completed ? 'complete' : 'to do' }),
     });
-  } catch {
-    // best-effort; status do ClickUp será reconciliado no próximo sync
+  } catch (e) {
+    console.error('Erro ao empurrar status ao ClickUp:', e);
   }
 }
