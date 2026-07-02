@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { prisma } from '@/lib/prisma';
 import { getCurrentUser } from '@/lib/user';
 import AgendaView from '@/components/AgendaView';
@@ -15,12 +15,13 @@ export default async function AgendaPage() {
   const { start: from } = dayRangeInTimezone(user.timezone);
   const to = addDays(from, 7);
 
+  // 1. Busca eventos de calendário (Google, Canvas)
   const events = await prisma.calendarEvent.findMany({
     where: { userId: user.id, start: { gte: from, lt: to } },
     orderBy: { start: 'asc' },
   });
 
-  const serialized = events.map((e) => ({
+  const serializedEvents = events.map((e) => ({
     id: e.id,
     title: e.title,
     start: e.start.toISOString(),
@@ -30,6 +31,29 @@ export default async function AgendaPage() {
     location: e.location,
     url: e.url,
   }));
+
+  // 2. Busca tarefas com data de entrega nos próximos 7 dias
+  const tasks = await prisma.task.findMany({
+    where: {
+      userId: user.id,
+      due: { gte: from, lt: to },
+    },
+    orderBy: { due: 'asc' },
+  });
+
+  const serializedTasks = tasks.map((t) => ({
+    id: t.id,
+    title: `📝 ${t.project ? `[${t.project}] ` : ''}${t.title}${t.status === 'completed' ? ' (concluída)' : ''}`,
+    start: t.due!.toISOString(),
+    end: t.due!.toISOString(),
+    allDay: false,
+    source: t.source || 'tasks',
+    location: null,
+    url: null,
+  }));
+
+  // 3. Combina ambos
+  const combined = [...serializedEvents, ...serializedTasks];
 
   return (
     <PageFrame>
@@ -46,7 +70,7 @@ export default async function AgendaPage() {
         <SyncButton />
       </header>
       <div className="flex-1 min-h-0 overflow-y-auto no-scrollbar">
-        <AgendaView events={serialized} />
+        <AgendaView events={combined} />
       </div>
     </PageFrame>
   );
