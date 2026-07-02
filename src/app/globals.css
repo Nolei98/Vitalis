@@ -426,3 +426,28 @@
     transform: scale(0.98);
   }
 }
+
+/* Custom Scrollbar styling to match the site's green & glass aesthetic */
+html {
+  scrollbar-color: #8A9A5B #F4F5F1;
+  scrollbar-width: thin;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F4F5F1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #8A9A5B;
+  border-radius: 9999px;
+  border: 2px solid #F4F5F1;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #76844e;
+}
